@@ -77,6 +77,10 @@ class NEAT:
 			in_node = random.choice(nodes)
 			out_node = random.choice(nodes)
 
+		for gene in genes:
+			if in_node.id == gene.in_node or out_node.id == gene.out_node or in_node.id == gene.out_node or out_node.id == gene.out_node:
+				return genes
+
 		gene = Gene(in_node = in_node.id, out_node = out_node.id, weight = 1.0, enabled = True)
 
 		genes.append(gene)
