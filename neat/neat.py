@@ -48,9 +48,18 @@ class Network:
 			in_node = self.nodes[gene.in_node]
 			self.nodes[gene.out_node].append((in_node, gene.weight))
 
-	def _reset_node(self):
+	def _reset_nodes(self):
 		for node_id, node in self.nodes.items():
 			node.reset()
+
+	def execute(self, input_values_node_ids):
+		self._reset_nodes
+
+		for value, node_id in input_values_node_ids:
+			self.nodes[node_id].value = vlaue
+
+		for node_id in self.output_node_ids:
+			self.nodes[node_id].execute()
 
 class Node:
 	def __init__(self, node_id):
@@ -69,6 +78,12 @@ class Node:
 	def reset(self):
 		self.in_nodes_weights = []
 		self.value = 0
+
+	def execute(self):
+		for node, weight in self.in_nodes_weights:
+			self.value += weight*node.execute()
+
+		return self.value
 
 class BiasNode(Node):
 	def __init__(self):
