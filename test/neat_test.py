@@ -6,6 +6,7 @@ sys.path.append('../.')
 from neat.neat import Node
 from neat.neat import Gene
 from neat.neat import Network
+from neat.neat import NEAT
 
 class TestNetwork(Network):
 	def __init__(self):
@@ -23,7 +24,7 @@ class TestNetwork(Network):
 		gene2 = Gene(in_node = 2, out_node = 4, weight = 3.0, enabled = True)
 		gene3 = Gene(in_node = 4, out_node = 3, weight = 7.0, enabled = True)
 
-		self.set_genes((gene1, gene2, gene3))
+		self.set_genes([gene1, gene2, gene3])
 
 class NetworkTest(unittest.TestCase):
 	def test_network_initialization(self):
@@ -68,3 +69,10 @@ class NetworkTest(unittest.TestCase):
 
 		self.assertEqual(network.nodes[4].value, 11)
 		self.assertEqual(network.nodes[3].value, 77)
+
+class NEATTest(unittest.TestCase):
+	def test_neat(self):
+		neat = NEAT()
+		network = TestNetwork()
+
+		new_network = neat.mutate(network)
