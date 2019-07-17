@@ -27,10 +27,9 @@ class Network:
 				in_node = self.nodes[gene.in_node]
 				self.nodes[gene.out_node].append((in_node, gene.weight))
 
-
 class Node:
-	def __init__(self):
-		self.id = None
+	def __init__(self, node_id):
+		self.id = node_id
 		self.in_nodes_weights = []
 		self.value = 0
 
@@ -40,7 +39,7 @@ class Node:
 		for node_weight in self.in_nodes_weights:
 			input_nodes_weights.append((node_weight[0].id, node_weight[1]))
 
-		return "Input node-weights: " + str(input_nodes_weights) + ". Value: " + str(self.value) + "."
+		return "ID: " + str(self.id) + ". Input node-weights: " + str(input_nodes_weights) + ". Value: " + str(self.value) + "."
 
 class Gene:
 	def __init__(self):
