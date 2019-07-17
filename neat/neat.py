@@ -19,7 +19,7 @@ import random
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 1.1
+		self.new_node_prob = 0.1
 		self.new_connection_prob = 0.2
 		self.new_activation_status_prob = 0.3
 
@@ -35,18 +35,14 @@ class NEAT:
 		self._change_weights(genes)
 
 		if rand_nr < self.new_node_prob:
-			genes = self._generate_new_node(genes, nodes)
+			(node_id, genes) = self._generate_new_node(genes, nodes)
 		elif rand_nr < self.new_connection_prob:
-			node_id_genes = self._generate_new_connection(genes, nodes)
-			node_id = node_id_genes[0]
-			genes = node_id_genes[1]
+			genes = self._generate_new_connection(genes, nodes)
 		elif rand_nr < self.new_activation_status_prob:
 			genes = self._generate_new_connection_status(genes)
 
 		if node_id:
 			new_network._add_hidden_node(node_id)
-
-		print(genes)
 
 		new_network.set_genes(genes)
 
