@@ -44,9 +44,9 @@ class Network:
 			self.nodes[node_id] = Node(node_id)
 
 	def _connect_gene(self, gene):
-		if gene.enabled:
+		if gene.enabled and gene.out_node not in self.input_node_ids:
 			in_node = self.nodes[gene.in_node]
-			self.nodes[gene.out_node].append((in_node, gene.weight))
+			self.nodes[gene.out_node].in_nodes_weights.append((in_node, gene.weight))
 
 	def _reset_nodes(self):
 		for node_id, node in self.nodes.items():
@@ -56,7 +56,7 @@ class Network:
 		self._reset_nodes
 
 		for value, node_id in input_values_node_ids:
-			self.nodes[node_id].value = vlaue
+			self.nodes[node_id].value = value
 
 		for node_id in self.output_node_ids:
 			self.nodes[node_id].execute()
@@ -95,8 +95,8 @@ class BiasNode(Node):
 		self.value = 1.0
 
 class Gene:
-	def __init__(self):
-		self.in_node = None
-		self.out_node = None
-		self.weight = 1.0
-		self.enabled = False
+	def __init__(self, in_node = None, out_node = None, weight = 1.0, enabled = False):
+		self.in_node = in_node
+		self.out_node = out_node
+		self.weight = weight
+		self.enabled = enabled
