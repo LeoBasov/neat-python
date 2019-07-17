@@ -16,31 +16,41 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 class Network:
 	def __init__(self):
-		self.nodes = {}
-		self.inputs = []
-		self.output = []
+		self.nodes = {0 : BiasNode()} #Bias node has always the id = 0
+		self.input_node_ids = []
+		self.output_node_ids = []
 		self.genes = []
 
 	def set_genes(self, genes):
 		self.genes = genes
 
+		for gene in self.genes:
+			self._add_hidden_node(gene.in_node)
+			self._add_hidden_node(gene.out_node)
+			self._connect_gene(gene)
+
+	def _add_hidden_node(self, node_id):
+		if node_id not in self.nodes:
+			self.nodes[node_id] = Node(node_id)
+
+	def _add_input_node(self, node_id):
+		if node_id not in self.nodes and node_id not in self.input_node_ids:
+			self.input_node_ids.append(node_id)
+			self.nodes[node_id] = Node(node_id)
+
+	def _add_output_node(self, node_id):
+		if node_id not in self.nodes and node_id not in self.output_node_ids:
+			self.output_node_ids.append(node_id)
+			self.nodes[node_id] = Node(node_id)
+
+	def _connect_gene(self, gene):
+		if gene.enabled:
+			in_node = self.nodes[gene.in_node]
+			self.nodes[gene.out_node].append((in_node, gene.weight))
+
+	def _reset_node(self):
 		for node_id, node in self.nodes.items():
 			node.reset()
-
-		for gene in self.genes:
-			if gene.in_node not in self.nodes:
-				self.nodes = Node(gene.in_node)
-
-			if gene.out_node not in self.nodes:
-				self.nodes = Node(gene.out_node)
-
-		self._set_up()
-
-	def _set_up(self):
-		for gene in self.genes:
-			if gene.enabled:
-				in_node = self.nodes[gene.in_node]
-				self.nodes[gene.out_node].append((in_node, gene.weight))
 
 class Node:
 	def __init__(self, node_id):
@@ -59,6 +69,15 @@ class Node:
 	def reset(self):
 		self.in_nodes_weights = []
 		self.value = 0
+
+class BiasNode(Node):
+	def __init__(self):
+		super().__init__(node_id = 0)
+		self.value = 1.0
+
+	def reset(self):
+		self.in_nodes_weights = []
+		self.value = 1.0
 
 class Gene:
 	def __init__(self):
