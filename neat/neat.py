@@ -73,6 +73,10 @@ class NEAT:
 		in_node = random.choice(nodes)
 		out_node = random.choice(nodes)
 
+		while in_node == out_node:
+			in_node = random.choice(nodes)
+			out_node = random.choice(nodes)
+
 		gene = Gene(in_node = in_node.id, out_node = out_node.id, weight = 1.0, enabled = True)
 
 		genes.append(gene)
@@ -94,6 +98,7 @@ class Network:
 
 	def set_genes(self, genes):
 		self.genes = genes
+		self._reset_node_connections()
 
 		for gene in self.genes:
 			self._add_hidden_node(gene.in_node)
@@ -115,16 +120,21 @@ class Network:
 			self.nodes[node_id] = Node(node_id)
 
 	def _connect_gene(self, gene):
-		if gene.enabled and gene.out_node not in self.input_node_ids:
+		if gene.enabled and gene.out_node != 0:
 			in_node = self.nodes[gene.in_node]
 			self.nodes[gene.out_node].in_nodes_weights.append((in_node, gene.weight))
 
-	def _reset_nodes(self):
+	def _reset_node_values(self):
 		for node_id, node in self.nodes.items():
-			node.reset()
+			node.reset_value()
+
+	def _reset_node_connections(self):
+		for node_id, node in self.nodes.items():
+			node.reset_connection()
+
 
 	def execute(self, input_values_node_ids):
-		self._reset_nodes
+		self._reset_node_values()
 
 		for value, node_id in input_values_node_ids:
 			self.nodes[node_id].value = value
@@ -150,6 +160,12 @@ class Node:
 		self.in_nodes_weights = []
 		self.value = 0
 
+	def reset_value(self):
+		self.value = 0
+
+	def reset_connection(self):
+		self.in_nodes_weights = []
+
 	def execute(self):
 		for node, weight in self.in_nodes_weights:
 			self.value += weight*node.execute()
@@ -163,6 +179,9 @@ class BiasNode(Node):
 
 	def reset(self):
 		self.in_nodes_weights = []
+		self.value = 1.0
+
+	def reset_value(self):
 		self.value = 1.0
 
 class Gene:
