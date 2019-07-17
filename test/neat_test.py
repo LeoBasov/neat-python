@@ -71,8 +71,24 @@ class NetworkTest(unittest.TestCase):
 		self.assertEqual(network.nodes[3].value, 77)
 
 class NEATTest(unittest.TestCase):
-	def test_neat(self):
+	def test_new_node_neat(self):
 		neat = NEAT()
 		network = TestNetwork()
 
+		neat.new_node_prob = 1.0
+
 		new_network = neat.mutate(network)
+
+		self.assertEqual(len(network.nodes), 5)
+		self.assertEqual(len(new_network.nodes), 6)
+
+	def test_new_connection_neat(self):
+		neat = NEAT()
+		network = TestNetwork()
+
+		neat.new_connection_prob = 1.0
+
+		new_network = neat.mutate(network)
+
+		self.assertEqual(len(network.genes), 3)
+		self.assertEqual(len(new_network.genes), 4)
