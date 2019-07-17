@@ -19,28 +19,30 @@ import random
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 0.1
-		self.new_connection_prob = 0.2
-		self.new_activation_status_prob = 0.3
+		self.new_node_prob = 0.0
+		self.new_connection_prob = 1.0
+		self.new_activation_status_prob = 0.0
 
 		self.weight_variation = 0.1
+
+		self.max_id = 3
 
 	def mutate(self, network):
 		new_network = copy.deepcopy(network)
 		rand_nr = random.random()
 		genes = new_network.genes
+		nodes = new_network.nodes
 
 		self._change_weights(genes)
 
 		if rand_nr < self.new_node_prob:
-			#generate new node
-			pass
+			genes = self._generate_new_node(genes, nodes)
 		elif rand_nr < self.new_connection_prob:
-			#generate new connection
-			pass
+			genes = self._generate_new_connection(genes, nodes)
 		elif rand_nr < self.new_activation_status_prob:
-			#change activation status
-			pass
+			genes = self._generate_new_connection_status(genes)
+
+		new_network.set_genes(genes)
 
 		return new_network
 
@@ -51,9 +53,9 @@ class NEAT:
 			else:
 				gene.weight = ((1.0 + self.weight_variation) - 2.0*self.weight_variation*random.random())*gene.weight
 
-	def _generate_new_connection(self, genes, nodes):
-		new_node_id = self._get_new_id(new_network)
-		genes = new_network.genes
+	def _generate_new_node(self, genes, nodes):
+		new_node_id = self._get_new_id()
+		gene = random.choice(genes)
 
 		gene1 = Gene(in_node = gene.in_node, out_node = new_node_id, weight = 1.0, enabled = True)
 		gene2 = Gene(in_node = new_node_id, out_node = gene.out_node, weight = 1.0, enabled = True)
@@ -63,8 +65,28 @@ class NEAT:
 		genes.append(gene1)
 		genes.append(gene2)
 
-	def _get_new_id(self, new_network):
-		pass
+		return genes
+
+	def _generate_new_connection(self, genes, nodes):
+		in_node = random.choice(nodes)
+		out_node = random.choice(nodes)
+
+		gene = Gene(in_node = in_node.id, out_node = out_node.id, weight = 1.0, enabled = True)
+
+		genes.append(gene)
+
+		return genes
+
+	def _generate_new_connection_status(self, genes):
+		gene = random.choice(genes)
+		gene.enabled = not gene.enabled
+
+		return genes
+
+	def _get_new_id(self):
+		self.max_id += 1
+
+		return self.max_id
 
 class Network:
 	def __init__(self):
