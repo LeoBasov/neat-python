@@ -14,6 +14,58 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
+import copy
+import random
+
+class NEAT:
+	def __init__(self):
+		self.new_node_prob = 0.1
+		self.new_connection_prob = 0.2
+		self.new_activation_status_prob = 0.3
+
+		self.weight_variation = 0.1
+
+	def mutate(self, network):
+		new_network = copy.deepcopy(network)
+		rand_nr = random.random()
+		genes = new_network.genes
+
+		self._change_weights(genes)
+
+		if rand_nr < self.new_node_prob:
+			#generate new node
+			pass
+		elif rand_nr < self.new_connection_prob:
+			#generate new connection
+			pass
+		elif rand_nr < self.new_activation_status_prob:
+			#change activation status
+			pass
+
+		return new_network
+
+	def _change_weights(self, genes):
+		for gene in genes:
+			if gene.weight == 0.0:
+				gene.weight = ((1.0 + self.weight_variation) - 2.0*self.weight_variation*random.random())
+			else:
+				gene.weight = ((1.0 + self.weight_variation) - 2.0*self.weight_variation*random.random())*gene.weight
+
+	def _generate_new_connection(self, genes, nodes):
+		new_node_id = self._get_new_id(new_network)
+		genes = new_network.genes
+
+		gene1 = Gene(in_node = gene.in_node, out_node = new_node_id, weight = 1.0, enabled = True)
+		gene2 = Gene(in_node = new_node_id, out_node = gene.out_node, weight = 1.0, enabled = True)
+
+		gene.enabled = False
+
+		genes.append(gene1)
+		genes.append(gene2)
+
+	def _get_new_id(self, new_network):
+		pass
+
 class Network:
 	def __init__(self):
 		self.nodes = {0 : BiasNode()} #Bias node has always the id = 0
