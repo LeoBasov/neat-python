@@ -19,9 +19,18 @@ class Network:
 		self.nodes = {}
 		self.inputs = []
 		self.output = []
+		self.genes = []
+
+	def set_up(self):
+		for gene in genes:
+			if gene.enabled:
+				in_node = self.nodes[gene.in_node]
+				self.nodes[gene.out_node].append((in_node, gene.weight))
+
 
 class Node:
 	def __init__(self):
+		self.in_nodes_weights = []
 		self.value = 0
 
 class Gene:
