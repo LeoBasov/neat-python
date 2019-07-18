@@ -20,9 +20,9 @@ import math
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 0.1
-		self.new_connection_prob = 0.2
-		self.new_activation_status_prob = 0.3
+		self.new_node_prob = 0.0
+		self.new_connection_prob = 0.0
+		self.new_activation_status_prob = 0.0
 
 		self.weight_variation = 0.1
 
@@ -50,11 +50,10 @@ class NEAT:
 		return new_network
 
 	def _change_weights(self, genes):
-		for gene in genes:
-			if gene.weight == 0.0:
-				gene.weight = ((1.0 + self.weight_variation) - 2.0*self.weight_variation*random.random())
-			else:
-				gene.weight = ((1.0 + self.weight_variation) - 2.0*self.weight_variation*random.random())*gene.weight
+		gene = random.choice(genes)
+		gene.weight = gene.weight*(1.0 + self.weight_variation - 2.0*self.weight_variation*random.random())
+
+		return genes
 
 	def _generate_new_node(self, genes, nodes):
 		new_node_id = max(list(nodes.keys())) + 1
