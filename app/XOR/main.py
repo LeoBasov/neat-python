@@ -76,14 +76,26 @@ def execute(val1, val2, network):
 	network.execute(input_values_node_ids)
 	val = 1.0 - abs(float(val1 != val2) - sigmoid(network.nodes[3].value))
 
-	return val*val
+	return val
 
 def mutate(evaluated_networks):
 	neat = NEAT()
 	new_networks = len(evaluated_networks)*[None]
 
 	for i in range(len(evaluated_networks)):
-		new_networks[i] = neat.mutate(evaluated_networks[i][1])
+		if (i < 0.2*len(evaluated_networks)) and (evaluated_networks[i][0] > 0.75):
+			new_networks[i] = evaluated_networks[i][1]
+		elif i < 0.6*len(evaluated_networks):
+			new_networks[i] = neat.mutate(evaluated_networks[i][1])
+		else:
+			genes = evaluated_networks[i][1].genes
+
+			for gene in evaluated_networks[i][1].genes:
+				gene.weight = 10 - 20.0*random.random()
+
+			evaluated_networks[i][1].set_genes(genes)
+
+			new_networks[i] = evaluated_networks[i][1]
 
 	return new_networks
 
@@ -91,8 +103,8 @@ def sigmoid(x):
 	return 1 / (1 + math.exp(-x))
 
 def main():
-	number_networks = 1
-	number_itterations = 1
+	number_networks = 100
+	number_itterations = 10000
 	networks = generate_networks(number_networks)
 
 	print("Evaluating networks")

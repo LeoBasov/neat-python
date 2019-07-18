@@ -25,7 +25,7 @@ from .network import NodeType
 class NEAT:
 	def __init__(self):
 		self.new_node_prob = 0.0
-		self.new_connection_prob = 0.5
+		self.new_connection_prob = 5.0
 		self.new_activation_status_prob = 0.0
 
 		self.weight_variation = 0.1
