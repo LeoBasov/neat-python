@@ -85,10 +85,6 @@ def mutate(evaluated_networks):
 	for i in range(len(evaluated_networks)):
 		new_networks[i] = neat.mutate(evaluated_networks[i][1])
 
-	print(80*"-")
-	for key, node in new_networks[0].nodes.items():
-		print(node)
-
 	return new_networks
 
 def sigmoid(x):
@@ -121,9 +117,9 @@ def print_best(lis):
 	for key, node in lis[0][1].nodes.items():
 		print(node)
 
-	print(80*"-")
+	"""print(80*"-")
 
-	"""print("Second best fitness:", lis[1][0])
+	print("Second best fitness:", lis[1][0])
 
 	for key, node in lis[1][1].nodes.items():
 		print(node)
