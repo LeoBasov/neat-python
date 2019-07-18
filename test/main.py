@@ -2,7 +2,7 @@
 
 import unittest
 
-#from neat_test import*
+from neat_test import*
 from network_test import*
 from utility_test import*
 

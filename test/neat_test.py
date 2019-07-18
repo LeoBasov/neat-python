@@ -39,6 +39,7 @@ class NEATTest(unittest.TestCase):
 		self.assertEqual(len(new_network.nodes), 6)
 
 	def test_new_connection_neat(self):
+		pass
 		"""neat = NEAT()
 		network = TestNetwork()
 
