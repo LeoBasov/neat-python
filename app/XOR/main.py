@@ -23,20 +23,18 @@ class XORNetwork(Network):
 		self._set_up_genes()
 
 	def _set_up_genes(self):
-		gene1 = Gene(in_node = 0, out_node = 4, weight = 10 - 20.0*random.random(), enabled = True)
-		gene2 = Gene(in_node = 0, out_node = 5, weight = 10 - 20.0*random.random(), enabled = True)
-		gene3 = Gene(in_node = 0, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
+		gene1 = Gene(in_node = 0, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
+		gene2 = Gene(in_node = 0, out_node = 4, weight = 10 - 20.0*random.random(), enabled = True)
 
+		gene3 = Gene(in_node = 1, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
 		gene4 = Gene(in_node = 1, out_node = 4, weight = 10 - 20.0*random.random(), enabled = True)
-		gene5 = Gene(in_node = 1, out_node = 5, weight = 10 - 20.0*random.random(), enabled = True)
 
+		gene5 = Gene(in_node = 2, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
 		gene6 = Gene(in_node = 2, out_node = 4, weight = 10 - 20.0*random.random(), enabled = True)
-		gene7 = Gene(in_node = 2, out_node = 5, weight = 10 - 20.0*random.random(), enabled = True)
 
-		gene8 = Gene(in_node = 4, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
-		gene9 = Gene(in_node = 5, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
+		gene7 = Gene(in_node = 4, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
 
-		self.set_genes([gene1, gene2, gene3, gene4, gene5, gene6, gene7, gene8, gene9])
+		self.set_genes([gene1, gene2, gene3, gene4, gene5, gene6, gene7])
 
 def generate_networks(number):
 	networks = []
@@ -89,8 +87,8 @@ def sigmoid(x):
 	return 1 / (1 + math.exp(-x))
 
 def main():
-	number_networks = 10
-	number_itterations = 10000
+	number_networks = 100
+	number_itterations = 1000
 	networks = generate_networks(number_networks)
 
 	print("Evaluating networks")
@@ -125,7 +123,7 @@ def test_best(network):
 		value = sigmoid(network.nodes[3].value)
 		fitness = 1.0 - abs(float(val1 != val2) - sigmoid(network.nodes[3].value))
 
-		print("Value 1: {}, Value 2: {}, XOR: {}, Network: {}, Fitness: {}".format(val1, val2, float(val1 != val2), value, fitness))
+		print("Value 1: {}, Value 2: {}, XOR: {}, Network: {}, Fitness: {}".format(val1, val2, int(val1 != val2), round(value), fitness))
 
 if __name__ == '__main__':
 	main()
