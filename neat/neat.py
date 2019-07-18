@@ -20,6 +20,7 @@ import random
 from .network import Node
 from .network import Gene
 from .network import Network
+from .network import NodeType
 
 class NEAT:
 	def __init__(self):
@@ -41,7 +42,7 @@ class NEAT:
 		if rand_nr < self.new_node_prob:
 			(node_id, genes) = self._generate_new_node(genes, nodes)
 		elif rand_nr < self.new_connection_prob:
-			genes = self._generate_new_connection(genes, nodes, new_network.input_node_ids, new_network.output_node_ids)
+			genes = self._generate_new_connection(genes, nodes)
 		elif rand_nr < self.new_activation_status_prob:
 			genes = self._generate_new_connection_status(genes)
 
@@ -72,7 +73,7 @@ class NEAT:
 
 		return (new_node_id, genes)
 
-	def _generate_new_connection(self, genes, nodes, input_nodes, output_nodes):
+	def _generate_new_connection(self, genes, nodes):
 		in_node = random.choice(nodes)
 		out_node = random.choice(nodes)
 
@@ -80,12 +81,13 @@ class NEAT:
 			in_node = random.choice(nodes)
 			out_node = random.choice(nodes)
 
+		if in_node.type == NodeType.OUTPUT_NODE:
+			return genes
+		elif out_node.type in NodeType.INPUT_NODE:
+			return genes
+
 		for gene in genes:
 			if in_node.id == gene.in_node or out_node.id == gene.out_node or in_node.id == gene.out_node or out_node.id == gene.out_node:
-				return genes
-			elif in_node.id in output_nodes:
-				return genes
-			elif out_node.id in input_nodes:
 				return genes
 
 		gene = Gene(in_node = in_node.id, out_node = out_node.id, weight = 1.0, enabled = True)
