@@ -24,9 +24,9 @@ from .network import NodeType
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 0.3
-		self.new_connection_prob = 0.4
-		self.new_activation_status_prob = 0.5
+		self.new_node_prob = 0.0
+		self.new_connection_prob = 0.5
+		self.new_activation_status_prob = 0.0
 
 		self.weight_variation = 0.1
 
@@ -77,17 +77,13 @@ class NEAT:
 		in_node = random.choice(nodes)
 		out_node = random.choice(nodes)
 
-		while in_node == out_node:
+		while (in_node == out_node) or (in_node.type == NodeType.OUTPUT_NODE) or (out_node.type == NodeType.INPUT_NODE) or (out_node.type == NodeType.BIAS_NODE):
 			in_node = random.choice(nodes)
 			out_node = random.choice(nodes)
 
-		if in_node.type == NodeType.OUTPUT_NODE:
-			return genes
-		elif out_node.type == NodeType.INPUT_NODE:
-			return genes
 
 		for gene in genes:
-			if in_node.id == gene.in_node or out_node.id == gene.out_node or in_node.id == gene.out_node or out_node.id == gene.out_node:
+			if (in_node.id == gene.in_node and out_node.id == gene.out_node) or (in_node.id == gene.out_node and out_node.id == gene.out_node):
 				return genes
 
 		gene = Gene(in_node = in_node.id, out_node = out_node.id, weight = 1.0, enabled = True)
