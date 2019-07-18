@@ -24,8 +24,8 @@ from .network import NodeType
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 0.0
-		self.new_connection_prob = 5.0
+		self.new_node_prob = 1.0
+		self.new_connection_prob = 0
 		self.new_activation_status_prob = 0.0
 
 		self.weight_variation = 0.1
@@ -60,7 +60,14 @@ class NEAT:
 		return genes
 
 	def _generate_new_node(self, genes, nodes):
-		new_node_id = max(list(nodes.keys())) + 1
+		new_node_id = 0
+
+		for key, node in nodes.items():
+			if node.id > new_node_id:
+				new_node_id = node.id
+
+		new_node_id += 1
+
 		gene = random.choice(genes)
 
 		gene1 = Gene(in_node = gene.in_node, out_node = new_node_id, weight = 1.0, enabled = True)
