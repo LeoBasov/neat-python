@@ -16,6 +16,7 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 import copy
 import random
+import math
 
 class NEAT:
 	def __init__(self):
@@ -116,7 +117,7 @@ class Network:
 	def _add_input_node(self, node_id):
 		if node_id not in self.nodes and node_id not in self.input_node_ids:
 			self.input_node_ids.append(node_id)
-			self.nodes[node_id] = Node(node_id)
+			self.nodes[node_id] = InputNode(node_id)
 
 	def _add_output_node(self, node_id):
 		if node_id not in self.nodes and node_id not in self.output_node_ids:
@@ -174,6 +175,16 @@ class Node:
 		for node, weight in self.in_nodes_weights:
 			self.value += weight*node.execute()
 
+		return self.sigmoid(self.value)
+
+	def sigmoid(self, value):
+		return 1.0/(1.0 + math.exp(-value))
+
+class InputNode(Node):
+	def __init__(self, node_id):
+		super().__init__(node_id)
+
+	def execute(self):
 		return self.value
 
 class BiasNode(Node):
@@ -187,6 +198,9 @@ class BiasNode(Node):
 
 	def reset_value(self):
 		self.value = 1.0
+
+	def execute(self):
+		return 1.0
 
 class Gene:
 	def __init__(self, in_node = None, out_node = None, weight = 1.0, enabled = False):
