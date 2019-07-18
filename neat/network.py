@@ -16,6 +16,8 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 import math
 
+from . import utility
+
 class Network:
 	def __init__(self):
 		self.nodes = {0 : BiasNode()} #Bias node has always the id = 0
@@ -97,10 +99,7 @@ class Node:
 		for node, weight in self.in_nodes_weights:
 			self.value += weight*node.execute()
 
-		return self.sigmoid(self.value)
-
-	def sigmoid(self, value):
-		return 1.0/(1.0 + math.exp(-value))
+		return utility.sigmoid(self.value)
 
 class InputNode(Node):
 	def __init__(self, node_id):
