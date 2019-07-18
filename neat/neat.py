@@ -24,9 +24,9 @@ from .network import NodeType
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 0.0
-		self.new_connection_prob = 0.0
-		self.new_activation_status_prob = 0.0
+		self.new_node_prob = 0.3
+		self.new_connection_prob = 0.4
+		self.new_activation_status_prob = 0.5
 
 		self.weight_variation = 0.1
 
@@ -83,7 +83,7 @@ class NEAT:
 
 		if in_node.type == NodeType.OUTPUT_NODE:
 			return genes
-		elif out_node.type in NodeType.INPUT_NODE:
+		elif out_node.type == NodeType.INPUT_NODE:
 			return genes
 
 		for gene in genes:
