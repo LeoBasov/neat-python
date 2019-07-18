@@ -51,23 +51,36 @@ def evaluate(networks):
 	for network in networks:
 		fitness = 0
 
-		for i in range(100):
-			val1 = round(random.random())
-			val2 = round(random.random())
+		val11 = 0
+		val21 = 0
 
-			input_values_node_ids = [(val1, 1), (val2, 2)]
+		val12 = 0
+		val22 = 1
 
-			network.execute(input_values_node_ids)
+		val13 = 1
+		val23 = 0
 
-			fitness += 1.0 - abs(float(val1 != val2) - sigmoid(network.nodes[3].value))
+		val14 = 1
+		val24 = 1
 
+		fitness += execute(val11, val21, network)
+		fitness += execute(val12, val22, network)
+		fitness += execute(val13, val23, network)
+		fitness += execute(val14, val24, network)
 
-		lis.append((fitness/100, network))
+		lis.append((fitness, network))
 
 	lis = sorted(lis, key = lambda x: x[0]) 
 	lis.reverse()
 
 	return lis
+
+def execute(val1, val2, network):
+	input_values_node_ids = [(val1, 1), (val2, 2)]
+
+	network.execute(input_values_node_ids)
+
+	return 1.0 - abs(float(val1 != val2) - sigmoid(network.nodes[3].value))
 
 def mutate(evaluated_networks):
 	neat = NEAT()
