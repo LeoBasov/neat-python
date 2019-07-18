@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 import math
+from enum import Enum
 
 from . import utility
 
@@ -36,7 +37,7 @@ class Network:
 
 	def _add_hidden_node(self, node_id):
 		if node_id not in self.nodes:
-			self.nodes[node_id] = Node(node_id)
+			self.nodes[node_id] = HiddenNode(node_id)
 
 	def _add_input_node(self, node_id):
 		if node_id not in self.nodes and node_id not in self.input_node_ids:
@@ -46,7 +47,7 @@ class Network:
 	def _add_output_node(self, node_id):
 		if node_id not in self.nodes and node_id not in self.output_node_ids:
 			self.output_node_ids.append(node_id)
-			self.nodes[node_id] = Node(node_id)
+			self.nodes[node_id] = OutputNode(node_id)
 
 	def _connect_gene(self, gene):
 		if gene.enabled and gene.out_node != 0:
@@ -101,9 +102,20 @@ class Node:
 
 		return utility.sigmoid(self.value)
 
+class OutputNode(Node):
+	def __init__(self, node_id):
+		super().__init__(node_id)
+		self.type = NodeType.OUTPUT_NODE
+
+class HiddenNode(Node):
+	def __init__(self, node_id):
+		super().__init__(node_id)
+		self.type = NodeType.HIDDEN_NODE
+
 class InputNode(Node):
 	def __init__(self, node_id):
 		super().__init__(node_id)
+		self.type = NodeType.INPUT_NODE
 
 	def execute(self):
 		return self.value
@@ -111,6 +123,7 @@ class InputNode(Node):
 class BiasNode(Node):
 	def __init__(self):
 		super().__init__(node_id = 0)
+		self.type = NodeType.BIAS_NODE
 		self.value = 1.0
 
 	def reset(self):
@@ -122,6 +135,12 @@ class BiasNode(Node):
 
 	def execute(self):
 		return 1.0
+
+class NodeType(Enum):
+	BIAS_NODE = 0
+	INPUT_NODE = 1
+	HIDDEN_NODE = 2
+	OUTPUT_NODE  = 3
 
 class Gene:
 	def __init__(self, in_node = None, out_node = None, weight = 1.0, enabled = False):
