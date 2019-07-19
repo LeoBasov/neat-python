@@ -98,7 +98,7 @@ class NEAT:
 
 		return new_node_id + 1
 
-	def _generate_new_connection(self, genes, nodes):
+	def _generate_new_connection(self, network):
 		"""in_node = random.choice(nodes)
 		out_node = random.choice(nodes)
 
@@ -116,6 +116,22 @@ class NEAT:
 		genes.append(gene)"""
 
 		return genes
+
+	def _check_connection_creteia(self, node_in, node_out, genes):
+		#Input output node criteria
+		if (node_in.type == NodeType.OUTPUT_NODE) or (node_out.type == NodeType.INPUT_NODE) or (node_out.type == NodeType.BIAS_NODE):
+			return False
+
+		#existence criteria
+		for gene in genes:
+			if (node_in.id == gene.in_node and node_out.id == gene.out_node) or (node_in.id == gene.out_node and node_out.id == gene.it_node):
+				return False
+
+		#no circular dependecy criteria
+		if (node_in.type != NodeType.INPUT_NODE) and (node_out.type != NodeType.OUTPUT_NODE) and (node_in.level >= node_out.level):
+			return False
+
+		return True
 
 	def _midifiy_connection_status(self, network):
 		genes = network.genes
