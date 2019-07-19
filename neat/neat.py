@@ -24,11 +24,12 @@ from .network import NodeType
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 0.1
-		self.new_connection_prob = 0.3
+		self.new_node_prob = 0.01
+		self.new_connection_prob = 0.2
 		self.set_new_weight_prob = 0.31
-		self.new_activation_status_prob = 0.0
+		self.new_activation_status_prob = 0.33
 		self.modify_weight_prob = 0.5
+		self.max_network_size = 10
 
 		self.weight_modification_variation = 0.1
 		self.weight_setting_variation = 10.0
@@ -37,14 +38,14 @@ class NEAT:
 		new_network = copy.deepcopy(network)
 		rand_nr = random.random()
 
-		if rand_nr < self.new_node_prob:
+		if rand_nr < self.new_node_prob and len(new_network.nodes) < self.max_network_size :
 			self._generate_new_node(new_network)
 
 		elif rand_nr < self.new_connection_prob:
 			self._generate_new_connection(new_network)
 
 		elif rand_nr < self.new_activation_status_prob:
-			self._generate_new_connection_status(new_network)
+			self._midifiy_connection_status(new_network)
 
 		elif rand_nr < self.modify_weight_prob:
 			self._modify_weight(new_network)
