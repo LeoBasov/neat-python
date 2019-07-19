@@ -187,6 +187,14 @@ class NEATTest(unittest.TestCase):
 
 	def test__generate_new_connection(self):
 		neat = NEAT()
-		network = TestNetwork()
 
-		neat._generate_new_connection(network)
+		for _ in range(10):
+			network = TestNetwork()
+
+			neat._generate_new_connection(network)
+
+			self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
+			self.assertEqual(network.nodes[2].in_nodes_weights[1][0].id, 0)
+
+			self.assertEqual(network.nodes[2].in_nodes_weights[0][1], 1.0)
+			self.assertEqual(network.nodes[2].in_nodes_weights[1][1], 1.0)

@@ -115,6 +115,10 @@ class NEAT:
 					found_possible_connection = True
 					break
 
+			else:
+				continue
+			break
+
 		if found_possible_connection:
 			gene = Gene(in_node = node_in.id, out_node = node_out.id, weight = 1.0, enabled = True)
 			genes.append(gene)
