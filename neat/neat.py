@@ -32,7 +32,7 @@ class NEAT:
 
 	def mutate(self, network):
 		new_network = copy.deepcopy(network)
-		rand_nr = random.random()
+		"""rand_nr = random.random()
 		genes = new_network.genes
 		nodes = new_network.nodes
 		node_id = None
@@ -49,7 +49,7 @@ class NEAT:
 		if node_id:
 			new_network._add_hidden_node(node_id)
 
-		new_network.set_genes(genes)
+		new_network.set_genes(genes)"""
 
 		return new_network
 
@@ -60,7 +60,7 @@ class NEAT:
 		return genes
 
 	def _generate_new_node(self, genes, nodes):
-		new_node_id = 0
+		"""new_node_id = 0
 
 		for key, node in nodes.items():
 			if node.id > new_node_id:
@@ -76,12 +76,12 @@ class NEAT:
 		gene.enabled = False
 
 		genes.append(gene1)
-		genes.append(gene2)
+		genes.append(gene2)"""
 
 		return (new_node_id, genes)
 
 	def _generate_new_connection(self, genes, nodes):
-		in_node = random.choice(nodes)
+		"""in_node = random.choice(nodes)
 		out_node = random.choice(nodes)
 
 		while (in_node == out_node) or (in_node.type == NodeType.OUTPUT_NODE) or (out_node.type == NodeType.INPUT_NODE) or (out_node.type == NodeType.BIAS_NODE):
@@ -95,12 +95,13 @@ class NEAT:
 
 		gene = Gene(in_node = in_node.id, out_node = out_node.id, weight = 1.0, enabled = True)
 
-		genes.append(gene)
+		genes.append(gene)"""
 
 		return genes
 
-	def _generate_new_connection_status(self, genes):
+	def _midifiy_connection_status(self, network):
+		genes = network.genes
 		gene = random.choice(genes)
 		gene.enabled = not gene.enabled
 
-		return genes
+		network.set_genes(genes)
