@@ -59,9 +59,9 @@ class Network:
 			self.nodes[node_id] = OutputNode(node_id)
 
 	def _connect_gene(self, gene):
-		if gene.enabled and gene.out_node != 0:
+		if gene.out_node != 0:
 			in_node = self.nodes[gene.in_node]
-			self.nodes[gene.out_node].in_nodes_weights.append((in_node, gene.weight))
+			self.nodes[gene.out_node].in_nodes_weights.append((in_node, gene.weight, gene.enabled))
 
 	def _reset_node_values(self):
 		for node_id, node in self.nodes.items():
@@ -107,15 +107,16 @@ class Node:
 		self.in_nodes_weights = []
 
 	def execute(self):
-		for node, weight in self.in_nodes_weights:
-			self.value += weight*node.execute()
+		for node, weight, enabled in self.in_nodes_weights:
+			if enabled:
+				self.value += weight*node.execute()
 
 		return utility.sigmoid(self.value)
 
 	def _get_level(self):
 		loc_level = 0
 
-		for node, weight in self.in_nodes_weights:
+		for node, weight, enabled in self.in_nodes_weights:
 			loc_level = max(node._get_level(), loc_level)
 
 		self.level = loc_level + 1
@@ -131,7 +132,7 @@ class OutputNode(Node):
 	def _get_level(self):
 		loc_level = 0
 
-		for node, weight in self.in_nodes_weights:
+		for node, weight, enabled in self.in_nodes_weights:
 			loc_level = max(node._get_level(), loc_level)
 
 		return loc_level
