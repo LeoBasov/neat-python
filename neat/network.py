@@ -32,25 +32,21 @@ class Network:
 		self._reset_node_connections()
 
 		for gene in self.genes:
-			self._add_hidden_node(gene.in_node, gene.out_node)
+			self._add_hidden_node(gene.in_node)
+			self._add_hidden_node(gene.out_node)
 			self._connect_gene(gene)
 
 		self._get_max_level()
-		self._adjust_level()
-
-	def _adjust_level(self):
-		for node_id in self.output_node_ids:
-			self.nodes[node_id]._adjust_level(self.max_level)
 
 	def _get_max_level(self):
 		self.max_level = 0
 
 		for node_id in self.output_node_ids:
-			self.max_level = max(self.nodes[node_id]._get_level(self.max_level), self.max_level)
+			self.max_level = max(self.nodes[node_id]._get_level(), self.max_level)
 
-	def _add_hidden_node(self, in_node_id, out_node_id):
-		if out_node_id not in self.nodes:
-			self.nodes[out_node_id] = HiddenNode(out_node_id)
+	def _add_hidden_node(self, node_id):
+		if node_id not in self.nodes:
+			self.nodes[node_id] = HiddenNode(node_id)
 
 	def _add_input_node(self, node_id):
 		if node_id not in self.nodes and node_id not in self.input_node_ids:
@@ -116,19 +112,15 @@ class Node:
 
 		return utility.sigmoid(self.value)
 
-	def _adjust_level(self, level):
-		self.level = level
-
-		for node, weight in self.in_nodes_weights:
-			node._adjust_level(level - 1)
-
-	def _get_level(self, level):
+	def _get_level(self):
 		loc_level = 0
 
 		for node, weight in self.in_nodes_weights:
-			loc_level = max(node._get_level(level), loc_level)
+			loc_level = max(node._get_level(), loc_level)
 
-		return level + loc_level + 1
+		self.level = loc_level + 1
+
+		return self.level
 
 class OutputNode(Node):
 	def __init__(self, node_id):
@@ -136,17 +128,13 @@ class OutputNode(Node):
 		self.type = NodeType.OUTPUT_NODE
 		self.level = None
 
-	def _adjust_level(self, level):
-		for node, weight in self.in_nodes_weights:
-			node._adjust_level(level)
-
-	def _get_level(self, level):
+	def _get_level(self):
 		loc_level = 0
 
 		for node, weight in self.in_nodes_weights:
-			loc_level = max(node._get_level(level), loc_level)
+			loc_level = max(node._get_level(), loc_level)
 
-		return level + loc_level
+		return loc_level
 
 class HiddenNode(Node):
 	def __init__(self, node_id):
@@ -161,11 +149,8 @@ class InputNode(Node):
 	def execute(self):
 		return self.value
 
-	def _adjust_level(self, level):
-		pass
-
-	def _get_level(self, level):
-		return level
+	def _get_level(self):
+		return 0
 
 class BiasNode(Node):
 	def __init__(self):
@@ -183,11 +168,8 @@ class BiasNode(Node):
 	def execute(self):
 		return 1.0
 
-	def _adjust_level(self, level):
-		pass
-
-	def _get_level(self, level):
-		return level
+	def _get_level(self):
+		return 0
 
 class NodeType(Enum):
 	BIAS_NODE = 0
