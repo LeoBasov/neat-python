@@ -165,3 +165,22 @@ class NEATTest(unittest.TestCase):
 		new_id = neat._get_net_network_node_id(network)
 
 		self.assertEqual(new_id, 6)
+
+	def test__generate_new_node(self):
+		neat = NEAT()
+		network = TestNetwork()
+
+		self.assertEqual(len(network.nodes), 3)
+
+		neat._generate_new_node(network)
+
+		self.assertEqual(len(network.nodes), 4)
+
+		self.assertEqual(network.nodes[3].in_nodes_weights[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 3)
+
+		self.assertEqual(network.nodes[3].in_nodes_weights[0][1], network.genes[1].weight)
+		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], network.genes[2].weight)
+
+		self.assertEqual(network.nodes[3].in_nodes_weights[0][1], 1.0)
+		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], 1.0)

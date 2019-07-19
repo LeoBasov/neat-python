@@ -77,19 +77,17 @@ class NEAT:
 		network.set_genes(genes)
 
 	def _generate_new_node(self, network):
-		"""new_node_id = self._get_net_network_node_id(network)
-
+		new_node_id = self._get_net_network_node_id(network)
+		genes = network.genes
 		gene = random.choice(genes)
-
-		gene1 = Gene(in_node = gene.in_node, out_node = new_node_id, weight = 1.0, enabled = True)
-		gene2 = Gene(in_node = new_node_id, out_node = gene.out_node, weight = 1.0, enabled = True)
-
 		gene.enabled = False
+		gene1 = Gene(in_node = gene.in_node, out_node = new_node_id, weight = 1.0, enabled = True)
+		gene2 = Gene(in_node = new_node_id, out_node = gene.out_node, weight = 1.0, enabled = True)		
 
 		genes.append(gene1)
 		genes.append(gene2)
 
-		return (new_node_id, genes)"""
+		network.set_genes(genes)
 
 	def _get_net_network_node_id(self, network):
 		new_node_id = 0
