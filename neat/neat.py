@@ -76,14 +76,8 @@ class NEAT:
 
 		network.set_genes(genes)
 
-	def _generate_new_node(self, genes, nodes):
-		"""new_node_id = 0
-
-		for key, node in nodes.items():
-			if node.id > new_node_id:
-				new_node_id = node.id
-
-		new_node_id += 1
+	def _generate_new_node(self, network):
+		"""new_node_id = self._get_net_network_node_id(network)
 
 		gene = random.choice(genes)
 
@@ -93,9 +87,18 @@ class NEAT:
 		gene.enabled = False
 
 		genes.append(gene1)
-		genes.append(gene2)"""
+		genes.append(gene2)
 
-		return (new_node_id, genes)
+		return (new_node_id, genes)"""
+
+	def _get_net_network_node_id(self, network):
+		new_node_id = 0
+
+		for key, node in network.nodes.items():
+			if node.id > new_node_id:
+				new_node_id = node.id
+
+		return new_node_id + 1
 
 	def _generate_new_connection(self, genes, nodes):
 		"""in_node = random.choice(nodes)

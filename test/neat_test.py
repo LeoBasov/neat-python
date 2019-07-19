@@ -139,3 +139,29 @@ class NEATTest(unittest.TestCase):
 		self.assertTrue(network.nodes[2].in_nodes_weights[1][1] != 1.0)
 		self.assertTrue(network.nodes[2].in_nodes_weights[2][1] != 1.0)
 		self.assertTrue(network.nodes[2].in_nodes_weights[3][1] != 1.0)
+
+	def test__get_net_network_node_id(self):
+		neat = NEAT()
+		network = TestNetwork()
+		genes = network.genes
+
+		gene1 = Gene(in_node = 1, out_node = 3, weight = 1.0, enabled = True)
+		gene2 = Gene(in_node = 1, out_node = 4, weight = 1.0, enabled = True)
+		gene3 = Gene(in_node = 1, out_node = 5, weight = 1.0, enabled = True)
+
+		gene4 = Gene(in_node = 3, out_node = 2, weight = 1.0, enabled = True)
+		gene5 = Gene(in_node = 4, out_node = 2, weight = 1.0, enabled = True)
+		gene6 = Gene(in_node = 5, out_node = 2, weight = 1.0, enabled = True)
+
+		genes.append(gene1)
+		genes.append(gene2)
+		genes.append(gene3)
+		genes.append(gene4)
+		genes.append(gene5)
+		genes.append(gene6)
+
+		network.set_genes(genes)
+
+		new_id = neat._get_net_network_node_id(network)
+
+		self.assertEqual(new_id, 6)
