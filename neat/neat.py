@@ -29,7 +29,7 @@ class NEAT:
 		self.new_activation_status_prob = 0.0
 
 		self.weight_modification_variation = 0.1
-		self.weight_setting_variation = 0.1
+		self.weight_setting_variation = 10.0
 
 	def mutate(self, network):
 		new_network = copy.deepcopy(network)
@@ -62,10 +62,19 @@ class NEAT:
 		network.set_genes(genes)
 
 	def _set_new_random_weight(self, network):
-		pass
+		genes = network.genes
+		gene = random.choice(genes)
+		gene.weight = 1.0 + self.weight_setting_variation*(1.0 - 2.0*random.random())
+
+		network.set_genes(genes)
 
 	def _set_new_random_weight_all(self, network):
-		pass
+		genes = network.genes
+		
+		for gene in genes:
+			gene.weight = 1.0 + self.weight_setting_variation*(1.0 - 2.0*random.random())
+
+		network.set_genes(genes)
 
 	def _generate_new_node(self, genes, nodes):
 		"""new_node_id = 0
