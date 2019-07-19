@@ -24,33 +24,30 @@ from .network import NodeType
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 1.0
-		self.new_connection_prob = 0
+		self.new_node_prob = 0.1
+		self.new_connection_prob = 0.3
+		self.set_new_weight_prob = 0.31
 		self.new_activation_status_prob = 0.0
+		self.modify_weight_prob = 0.5
 
 		self.weight_modification_variation = 0.1
 		self.weight_setting_variation = 10.0
 
 	def mutate(self, network):
 		new_network = copy.deepcopy(network)
-		"""rand_nr = random.random()
-		genes = new_network.genes
-		nodes = new_network.nodes
-		node_id = None
-
-		self._change_weights(genes)
+		rand_nr = random.random()
 
 		if rand_nr < self.new_node_prob:
-			(node_id, genes) = self._generate_new_node(genes, nodes)
+			self._generate_new_node(new_network)
+
 		elif rand_nr < self.new_connection_prob:
-			genes = self._generate_new_connection(genes, nodes)
+			self._generate_new_connection(new_network)
+
 		elif rand_nr < self.new_activation_status_prob:
-			genes = self._generate_new_connection_status(genes)
+			self._generate_new_connection_status(new_network)
 
-		if node_id:
-			new_network._add_hidden_node(node_id)
-
-		new_network.set_genes(genes)"""
+		elif rand_nr < self.modify_weight_prob:
+			self._modify_weight(new_network)
 
 		return new_network
 
@@ -131,7 +128,7 @@ class NEAT:
 
 		#existence criteria
 		for gene in genes:
-			if (node_in.id == gene.in_node and node_out.id == gene.out_node) or (node_in.id == gene.out_node and node_out.id == gene.it_node):
+			if (node_in.id == gene.in_node and node_out.id == gene.out_node) or (node_in.id == gene.out_node and node_out.id == gene.in_node):
 				return False
 
 		#no circular dependecy criteria
