@@ -53,9 +53,10 @@ class NEAT:
 
 		return new_network
 
-	def _change_weights(self, genes):
+	def _change_weights(self, network):
+		genes = network.genes
 		gene = random.choice(genes)
-		gene.weight = gene.weight*(1.0 + self.weight_variation - 2.0*self.weight_variation*random.random())
+		gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
 
 		return genes
 

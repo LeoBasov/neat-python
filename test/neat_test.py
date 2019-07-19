@@ -36,14 +36,12 @@ class NEATTest(unittest.TestCase):
 
 		self.assertTrue(network.genes[0].enabled)
 
-	def test_new_connection_neat(self):
-		pass
-		"""neat = NEAT()
+	def test__change_weights(self):
+		neat = NEAT()
 		network = TestNetwork()
 
-		neat.new_connection_prob = 1.0
+		self.assertEqual(network.genes[0].weight, 1.0)
 
-		new_network = neat.mutate(network)
+		neat._change_weights(network)
 
-		self.assertEqual(len(network.genes), 3)
-		self.assertEqual(len(new_network.genes), 4)"""
+		self.assertTrue(network.genes[0].weight != 1.0)
