@@ -31,13 +31,13 @@ class Network:
 		self._reset_node_connections()
 
 		for gene in self.genes:
-			self._add_hidden_node(gene.in_node)
-			self._add_hidden_node(gene.out_node)
+			self._add_hidden_node(gene.in_node, gene.out_node)
 			self._connect_gene(gene)
 
-	def _add_hidden_node(self, node_id):
-		if node_id not in self.nodes:
-			self.nodes[node_id] = HiddenNode(node_id)
+	def _add_hidden_node(self, in_node_id, out_node_id):
+		if out_node_id not in self.nodes:
+			new_level = self.nodes[in_node_id].level + 1
+			self.nodes[out_node_id] = HiddenNode(out_node_id, new_level)
 
 	def _add_input_node(self, node_id):
 		if node_id not in self.nodes and node_id not in self.input_node_ids:
@@ -77,6 +77,7 @@ class Node:
 		self.id = node_id
 		self.in_nodes_weights = []
 		self.value = 0
+		self.level = 0
 
 	def __str__(self):
 		input_nodes_weights = []
@@ -84,7 +85,7 @@ class Node:
 		for node_weight in self.in_nodes_weights:
 			input_nodes_weights.append((node_weight[0].id, node_weight[1]))
 
-		return "ID: " + str(self.id) + ". Input node-weights: " + str(input_nodes_weights) + ". Value: " + str(self.value) + "."
+		return "ID: " + str(self.id) + ". Level: " + str(self.level) + ". Input node-weights: " + str(input_nodes_weights) + ". Value: " + str(self.value) + "."
 
 	def reset(self):
 		self.in_nodes_weights = []
@@ -106,11 +107,13 @@ class OutputNode(Node):
 	def __init__(self, node_id):
 		super().__init__(node_id)
 		self.type = NodeType.OUTPUT_NODE
+		self.level = None
 
 class HiddenNode(Node):
-	def __init__(self, node_id):
+	def __init__(self, node_id, level):
 		super().__init__(node_id)
 		self.type = NodeType.HIDDEN_NODE
+		self.level = level
 
 class InputNode(Node):
 	def __init__(self, node_id):
