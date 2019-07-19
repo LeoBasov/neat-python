@@ -29,7 +29,7 @@ class NEAT:
 		self.set_new_weight_prob = 0.31
 		self.new_activation_status_prob = 0.33
 		self.modify_weight_prob = 0.5
-		self.max_network_size = 10
+		self.max_network_size = 7
 
 		self.weight_modification_variation = 0.1
 		self.weight_setting_variation = 10.0
@@ -133,7 +133,7 @@ class NEAT:
 				return False
 
 		#no circular dependecy criteria
-		if (node_in.type != NodeType.INPUT_NODE) and (node_out.type != NodeType.OUTPUT_NODE) and (node_in.level >= node_out.level):
+		if (node_out.type != NodeType.OUTPUT_NODE) and (node_in.level >= node_out.level):
 			return False
 
 		return True
