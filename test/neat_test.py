@@ -36,12 +36,18 @@ class NEATTest(unittest.TestCase):
 
 		self.assertTrue(network.genes[0].enabled)
 
-	def test__change_weights(self):
+		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], 1.0)
+
+	def test__modify_weights(self):
 		neat = NEAT()
 		network = TestNetwork()
 
 		self.assertEqual(network.genes[0].weight, 1.0)
 
-		neat._change_weights(network)
+		neat._modify_weight(network)
 
 		self.assertTrue(network.genes[0].weight != 1.0)
+
+		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], network.genes[0].weight)
