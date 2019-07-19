@@ -18,8 +18,6 @@ class XORNetwork(Network):
 		self._add_input_node(1)
 		self._add_input_node(2)
 
-		self._add_hidden_node(4)
-
 		self._add_output_node(3)
 
 		self._set_up_genes()
