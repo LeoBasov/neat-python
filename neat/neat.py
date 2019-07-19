@@ -99,23 +99,26 @@ class NEAT:
 		return new_node_id + 1
 
 	def _generate_new_connection(self, network):
-		"""in_node = random.choice(nodes)
-		out_node = random.choice(nodes)
+		node_ids = list(network.nodes.keys())
+		random.shuffle(node_ids)
+		genes = network.genes
+		found_possible_connection = False
+		node_in = None
+		node_out = None
 
-		while (in_node == out_node) or (in_node.type == NodeType.OUTPUT_NODE) or (out_node.type == NodeType.INPUT_NODE) or (out_node.type == NodeType.BIAS_NODE):
-			in_node = random.choice(nodes)
-			out_node = random.choice(nodes)
+		for node_in_id in node_ids:
+			for node_out_id in node_ids:
+				node_in = network.nodes[node_in_id]
+				node_out = network.nodes[node_out_id]
 
+				if self._check_connection_creteia(node_in, node_out, genes):
+					found_possible_connection = True
+					break
 
-		for gene in genes:
-			if (in_node.id == gene.in_node and out_node.id == gene.out_node) or (in_node.id == gene.out_node and out_node.id == gene.out_node):
-				return genes
-
-		gene = Gene(in_node = in_node.id, out_node = out_node.id, weight = 1.0, enabled = True)
-
-		genes.append(gene)"""
-
-		return genes
+		if found_possible_connection:
+			gene = Gene(in_node = node_in.id, out_node = node_out.id, weight = 1.0, enabled = True)
+			genes.append(gene)
+			network.set_genes(genes)
 
 	def _check_connection_creteia(self, node_in, node_out, genes):
 		#Input output node criteria
