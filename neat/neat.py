@@ -39,34 +39,34 @@ class NEAT:
 		rand_nr = random.random()
 
 		if rand_nr < self.new_node_prob and len(new_network.nodes) < self.max_network_size :
-			self._generate_new_node(new_network)
+			self.__generate_new_node(new_network)
 
 		elif rand_nr < self.new_connection_prob:
-			self._generate_new_connection(new_network)
+			self.__generate_new_connection(new_network)
 
 		elif rand_nr < self.new_activation_status_prob:
-			self._midifiy_connection_status(new_network)
+			self.__midifiy_connection_status(new_network)
 
 		elif rand_nr < self.modify_weight_prob:
-			self._modify_weight(new_network)
+			self.__modify_weight(new_network)
 
 		return new_network
 
-	def _modify_weight(self, network):
+	def __modify_weight(self, network):
 		genes = network.genes
 		gene = random.choice(genes)
 		gene.weight *= 1.0 + self.weight_modification_variation*(1.0 - 2.0*random.random())
 
 		network.set_genes(genes)
 
-	def _set_new_random_weight(self, network):
+	def __set_new_random_weight(self, network):
 		genes = network.genes
 		gene = random.choice(genes)
 		gene.weight = 1.0 + self.weight_setting_variation*(1.0 - 2.0*random.random())
 
 		network.set_genes(genes)
 
-	def _set_new_random_weight_all(self, network):
+	def __set_new_random_weight_all(self, network):
 		genes = network.genes
 		
 		for gene in genes:
@@ -74,8 +74,8 @@ class NEAT:
 
 		network.set_genes(genes)
 
-	def _generate_new_node(self, network):
-		new_node_id = self._get_net_network_node_id(network)
+	def __generate_new_node(self, network):
+		new_node_id = self.__get_net_network_node_id(network)
 		genes = network.genes
 		gene = random.choice(genes)
 		gene.enabled = False
@@ -87,7 +87,7 @@ class NEAT:
 
 		network.set_genes(genes)
 
-	def _get_net_network_node_id(self, network):
+	def __get_net_network_node_id(self, network):
 		new_node_id = 0
 
 		for key, node in network.nodes.items():
@@ -96,7 +96,7 @@ class NEAT:
 
 		return new_node_id + 1
 
-	def _generate_new_connection(self, network):
+	def __generate_new_connection(self, network):
 		node_ids = list(network.nodes.keys())
 		random.shuffle(node_ids)
 		genes = network.genes
@@ -109,7 +109,7 @@ class NEAT:
 				node_in = network.nodes[node_in_id]
 				node_out = network.nodes[node_out_id]
 
-				if self._check_connection_creteia(node_in, node_out, genes):
+				if self.__check_connection_creteia(node_in, node_out, genes):
 					found_possible_connection = True
 					break
 
@@ -122,7 +122,7 @@ class NEAT:
 			genes.append(gene)
 			network.set_genes(genes)
 
-	def _check_connection_creteia(self, node_in, node_out, genes):
+	def __check_connection_creteia(self, node_in, node_out, genes):
 		#Input output node criteria
 		if (node_in.type == NodeType.OUTPUT_NODE) or (node_out.type == NodeType.INPUT_NODE) or (node_out.type == NodeType.BIAS_NODE):
 			return False
@@ -138,7 +138,7 @@ class NEAT:
 
 		return True
 
-	def _midifiy_connection_status(self, network):
+	def __midifiy_connection_status(self, network):
 		genes = network.genes
 		gene = random.choice(genes)
 		gene.enabled = not gene.enabled

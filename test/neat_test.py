@@ -28,11 +28,11 @@ class NEATTest(unittest.TestCase):
 
 		self.assertTrue(network.genes[0].enabled)
 
-		neat._midifiy_connection_status(network)
+		neat._NEAT__midifiy_connection_status(network)
 
 		self.assertFalse(network.genes[0].enabled)
 
-		neat._midifiy_connection_status(network)
+		neat._NEAT__midifiy_connection_status(network)
 
 		self.assertTrue(network.genes[0].enabled)
 
@@ -45,7 +45,7 @@ class NEATTest(unittest.TestCase):
 
 		self.assertEqual(network.genes[0].weight, 1.0)
 
-		neat._modify_weight(network)
+		neat._NEAT__modify_weight(network)
 
 		self.assertTrue(network.genes[0].weight != 1.0)
 
@@ -58,7 +58,7 @@ class NEATTest(unittest.TestCase):
 
 		self.assertEqual(network.genes[0].weight, 1.0)
 
-		neat._set_new_random_weight(network)
+		neat._NEAT__set_new_random_weight(network)
 
 		self.assertTrue(network.genes[0].weight != 1.0)
 
@@ -108,7 +108,7 @@ class NEATTest(unittest.TestCase):
 		self.assertEqual(network.nodes[2].in_nodes_weights[2][1], network.genes[5].weight)
 		self.assertEqual(network.nodes[2].in_nodes_weights[3][1], network.genes[6].weight)
 
-		neat._set_new_random_weight_all(network)
+		neat._NEAT__set_new_random_weight_all(network)
 
 		for gene in network.genes:
 			self.assertTrue(gene.weight != 1.0)
@@ -162,7 +162,7 @@ class NEATTest(unittest.TestCase):
 
 		network.set_genes(genes)
 
-		new_id = neat._get_net_network_node_id(network)
+		new_id = neat._NEAT__get_net_network_node_id(network)
 
 		self.assertEqual(new_id, 6)
 
@@ -172,7 +172,7 @@ class NEATTest(unittest.TestCase):
 
 		self.assertEqual(len(network.nodes), 3)
 
-		neat._generate_new_node(network)
+		neat._NEAT__generate_new_node(network)
 
 		self.assertEqual(len(network.nodes), 4)
 
@@ -191,7 +191,7 @@ class NEATTest(unittest.TestCase):
 		for _ in range(10):
 			network = TestNetwork()
 
-			neat._generate_new_connection(network)
+			neat._NEAT__generate_new_connection(network)
 
 			self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
 			self.assertEqual(network.nodes[2].in_nodes_weights[1][0].id, 0)
