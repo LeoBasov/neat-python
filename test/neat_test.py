@@ -36,8 +36,8 @@ class NEATTest(unittest.TestCase):
 
 		self.assertTrue(network.genes[0].enabled)
 
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], 1.0)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], 1.0)
 
 	def test__modify_weights(self):
 		neat = NEAT()
@@ -49,8 +49,8 @@ class NEATTest(unittest.TestCase):
 
 		self.assertTrue(network.genes[0].weight != 1.0)
 
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], network.genes[0].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
 
 	def test__set_new_random_weight(self):
 		neat = NEAT()
@@ -62,8 +62,8 @@ class NEATTest(unittest.TestCase):
 
 		self.assertTrue(network.genes[0].weight != 1.0)
 
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], network.genes[0].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
 
 	def test__set_new_random_weight_all(self):
 		neat = NEAT()
@@ -90,55 +90,55 @@ class NEATTest(unittest.TestCase):
 		for gene in network.genes:
 			self.assertEqual(gene.weight, 1.0)
 
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[4].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[5].in_nodes_weights[0][0].id, 1)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[4].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[5].in_node_weights_status[0][0].id, 1)
 
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_nodes_weights[1][0].id, 3)
-		self.assertEqual(network.nodes[2].in_nodes_weights[2][0].id, 4)
-		self.assertEqual(network.nodes[2].in_nodes_weights[3][0].id, 5)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 3)
+		self.assertEqual(network.nodes[2].in_node_weights_status[2][0].id, 4)
+		self.assertEqual(network.nodes[2].in_node_weights_status[3][0].id, 5)
 
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][1], network.genes[1].weight)
-		self.assertEqual(network.nodes[4].in_nodes_weights[0][1], network.genes[2].weight)
-		self.assertEqual(network.nodes[5].in_nodes_weights[0][1], network.genes[3].weight)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], network.genes[1].weight)
+		self.assertEqual(network.nodes[4].in_node_weights_status[0][1], network.genes[2].weight)
+		self.assertEqual(network.nodes[5].in_node_weights_status[0][1], network.genes[3].weight)
 
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], network.genes[0].weight)
-		self.assertEqual(network.nodes[2].in_nodes_weights[1][1], network.genes[4].weight)
-		self.assertEqual(network.nodes[2].in_nodes_weights[2][1], network.genes[5].weight)
-		self.assertEqual(network.nodes[2].in_nodes_weights[3][1], network.genes[6].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[1][1], network.genes[4].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[2][1], network.genes[5].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[3][1], network.genes[6].weight)
 
 		neat._NEAT__set_new_random_weight_all(network)
 
 		for gene in network.genes:
 			self.assertTrue(gene.weight != 1.0)
 
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[4].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[5].in_nodes_weights[0][0].id, 1)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[4].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[5].in_node_weights_status[0][0].id, 1)
 
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_nodes_weights[1][0].id, 3)
-		self.assertEqual(network.nodes[2].in_nodes_weights[2][0].id, 4)
-		self.assertEqual(network.nodes[2].in_nodes_weights[3][0].id, 5)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 3)
+		self.assertEqual(network.nodes[2].in_node_weights_status[2][0].id, 4)
+		self.assertEqual(network.nodes[2].in_node_weights_status[3][0].id, 5)
 
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][1], network.genes[1].weight)
-		self.assertEqual(network.nodes[4].in_nodes_weights[0][1], network.genes[2].weight)
-		self.assertEqual(network.nodes[5].in_nodes_weights[0][1], network.genes[3].weight)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], network.genes[1].weight)
+		self.assertEqual(network.nodes[4].in_node_weights_status[0][1], network.genes[2].weight)
+		self.assertEqual(network.nodes[5].in_node_weights_status[0][1], network.genes[3].weight)
 
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], network.genes[0].weight)
-		self.assertEqual(network.nodes[2].in_nodes_weights[1][1], network.genes[4].weight)
-		self.assertEqual(network.nodes[2].in_nodes_weights[2][1], network.genes[5].weight)
-		self.assertEqual(network.nodes[2].in_nodes_weights[3][1], network.genes[6].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[1][1], network.genes[4].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[2][1], network.genes[5].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[3][1], network.genes[6].weight)
 
-		self.assertTrue(network.nodes[3].in_nodes_weights[0][1] != 1.0)
-		self.assertTrue(network.nodes[4].in_nodes_weights[0][1] != 1.0)
-		self.assertTrue(network.nodes[5].in_nodes_weights[0][1] != 1.0)
+		self.assertTrue(network.nodes[3].in_node_weights_status[0][1] != 1.0)
+		self.assertTrue(network.nodes[4].in_node_weights_status[0][1] != 1.0)
+		self.assertTrue(network.nodes[5].in_node_weights_status[0][1] != 1.0)
 
-		self.assertTrue(network.nodes[2].in_nodes_weights[0][1] != 1.0)
-		self.assertTrue(network.nodes[2].in_nodes_weights[1][1] != 1.0)
-		self.assertTrue(network.nodes[2].in_nodes_weights[2][1] != 1.0)
-		self.assertTrue(network.nodes[2].in_nodes_weights[3][1] != 1.0)
+		self.assertTrue(network.nodes[2].in_node_weights_status[0][1] != 1.0)
+		self.assertTrue(network.nodes[2].in_node_weights_status[1][1] != 1.0)
+		self.assertTrue(network.nodes[2].in_node_weights_status[2][1] != 1.0)
+		self.assertTrue(network.nodes[2].in_node_weights_status[3][1] != 1.0)
 
 	def test__get_net_network_node_id(self):
 		neat = NEAT()
@@ -176,14 +176,14 @@ class NEATTest(unittest.TestCase):
 
 		self.assertEqual(len(network.nodes), 4)
 
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 3)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 3)
 
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][1], network.genes[1].weight)
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], network.genes[2].weight)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], network.genes[1].weight)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[2].weight)
 
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][1], 1.0)
-		self.assertEqual(network.nodes[2].in_nodes_weights[0][1], 1.0)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], 1.0)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], 1.0)
 
 	def test__generate_new_connection(self):
 		neat = NEAT()
@@ -193,8 +193,8 @@ class NEATTest(unittest.TestCase):
 
 			neat._NEAT__generate_new_connection(network)
 
-			self.assertEqual(network.nodes[2].in_nodes_weights[0][0].id, 1)
-			self.assertEqual(network.nodes[2].in_nodes_weights[1][0].id, 0)
+			self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
+			self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 0)
 
-			self.assertEqual(network.nodes[2].in_nodes_weights[0][1], 1.0)
-			self.assertEqual(network.nodes[2].in_nodes_weights[1][1], 1.0)
+			self.assertEqual(network.nodes[2].in_node_weights_status[0][1], 1.0)
+			self.assertEqual(network.nodes[2].in_node_weights_status[1][1], 1.0)

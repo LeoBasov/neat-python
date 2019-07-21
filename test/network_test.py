@@ -74,20 +74,20 @@ class NetworkTest(unittest.TestCase):
 		self.assertEqual(network.nodes[4].value, 0)
 		self.assertEqual(network.nodes[4].id, 4)
 
-		self.assertEqual(len(network.nodes[4].in_nodes_weights), 2)
+		self.assertEqual(len(network.nodes[4].in_node_weights_status), 2)
 
-		self.assertEqual(network.nodes[4].in_nodes_weights[0][0].id, 1)
-		self.assertEqual(network.nodes[4].in_nodes_weights[0][1], 1)
+		self.assertEqual(network.nodes[4].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[4].in_node_weights_status[0][1], 1)
 
-		self.assertEqual(network.nodes[4].in_nodes_weights[1][0].id, 2)
-		self.assertEqual(network.nodes[4].in_nodes_weights[1][1], 3)
+		self.assertEqual(network.nodes[4].in_node_weights_status[1][0].id, 2)
+		self.assertEqual(network.nodes[4].in_node_weights_status[1][1], 3)
 
 		#Output Node test
 		self.assertEqual(network.nodes[3].value, 0)
 		self.assertEqual(network.nodes[3].id, 3)
-		self.assertEqual(len(network.nodes[3].in_nodes_weights), 1)
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][0].id, 4)
-		self.assertEqual(network.nodes[3].in_nodes_weights[0][1], 7)
+		self.assertEqual(len(network.nodes[3].in_node_weights_status), 1)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 4)
+		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], 7)
 
 	def test_network_execution(self):
 		network = XORNetwork()

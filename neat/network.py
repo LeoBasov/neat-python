@@ -61,7 +61,7 @@ class Network:
 	def _connect_gene(self, gene):
 		if gene.out_node != 0:
 			in_node = self.nodes[gene.in_node]
-			self.nodes[gene.out_node].in_nodes_weights.append((in_node, gene.weight, gene.enabled))
+			self.nodes[gene.out_node].in_node_weights_status.append((in_node, gene.weight, gene.enabled))
 
 	def _reset_node_values(self):
 		for node_id, node in self.nodes.items():
@@ -84,30 +84,30 @@ class Network:
 class Node:
 	def __init__(self, node_id):
 		self.id = node_id
-		self.in_nodes_weights = []
+		self.in_node_weights_status = []
 		self.value = 0
 		self.level = 0
 
 	def __str__(self):
 		input_nodes_weights = []
 
-		for node_weight in self.in_nodes_weights:
-			input_nodes_weights.append((node_weight[0].id, node_weight[1]))
+		for node_weight in self.in_node_weights_status:
+			input_nodes_weights.append((node_weight[0].id, node_weight[1], node_weight[2]))
 
 		return "ID: " + str(self.id) + ". Level: " + str(self.level) + ". Input node-weights: " + str(input_nodes_weights) + ". Value: " + str(self.value) + "."
 
 	def reset(self):
-		self.in_nodes_weights = []
+		self.in_node_weights_status = []
 		self.value = 0
 
 	def reset_value(self):
 		self.value = 0
 
 	def reset_connection(self):
-		self.in_nodes_weights = []
+		self.in_node_weights_status = []
 
 	def execute(self):
-		for node, weight, enabled in self.in_nodes_weights:
+		for node, weight, enabled in self.in_node_weights_status:
 			if enabled:
 				self.value += weight*node.execute()
 
@@ -116,7 +116,7 @@ class Node:
 	def _get_level(self):
 		loc_level = 0
 
-		for node, weight, enabled in self.in_nodes_weights:
+		for node, weight, enabled in self.in_node_weights_status:
 			loc_level = max(node._get_level(), loc_level)
 
 		self.level = loc_level + 1
@@ -132,7 +132,7 @@ class OutputNode(Node):
 	def _get_level(self):
 		loc_level = 0
 
-		for node, weight, enabled in self.in_nodes_weights:
+		for node, weight, enabled in self.in_node_weights_status:
 			loc_level = max(node._get_level(), loc_level)
 
 		return loc_level
@@ -160,7 +160,7 @@ class BiasNode(Node):
 		self.value = 1.0
 
 	def reset(self):
-		self.in_nodes_weights = []
+		self.in_node_weights_status = []
 		self.value = 1.0
 
 	def reset_value(self):
