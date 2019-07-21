@@ -177,7 +177,11 @@ class NEATTest(unittest.TestCase):
 		self.assertEqual(len(network.nodes), 4)
 
 		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 3)
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
+		self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 3)
+
+		self.assertEqual(network.nodes[2].in_node_weights_status[0][2], False)
+		self.assertEqual(network.nodes[2].in_node_weights_status[1][2], True)
 
 		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], network.genes[1].weight)
 		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[2].weight)
