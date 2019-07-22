@@ -9,9 +9,13 @@ L_VALUE = 10
 R_VALUE = 10
 DISCRITISATION = 10
 
+NETWORKS = []
+
 def main():
 	print_header()
 	print_set_up()
+
+	set_up_networks()
 
 	print_footer()
 
@@ -34,6 +38,11 @@ def print_footer():
 	print(80*"-")
 	print("Execution finished")
 	print(80*"=")
+
+def set_up_networks():
+	for _ in range(NUMBER_NETWORKS):
+		network = lin(DISCRITISATION)
+		NETWORKS.append(network)
 
 if __name__ == '__main__':
 	main()

@@ -22,11 +22,9 @@ class LinInterpolNetwork(Network):
 		super().__init__()
 		self.__output_ids = discretisation*[0]
 
-		self.set_up()
+		self.set_up(discretisation)
 
 	def set_up(self, discretisation):
-		step = 1.0/discretisation
-
 		self._add_input_node(InputNodeType.L_VALUE.value)
 		self._add_input_node(InputNodeType.R_VALUE.value)
 
