@@ -7,8 +7,8 @@ from loc_module import InputNodeType as input_type
 from loc_module import Mutator as mut
 
 #Simulation parameters
-NUMBER_NETWORKS = 100
-NUMBER_ITTERATIONS = 100
+NUMBER_NETWORKS = 1
+NUMBER_ITTERATIONS = 1
 DISCRITISATION = 7
 
 #result values
@@ -24,6 +24,7 @@ def main():
 
 	main_loop()
 
+	print_best()
 	print_footer()
 
 def print_header():
@@ -44,6 +45,15 @@ def print_footer():
 	print("Execution finished")
 	print(80*"=")
 
+def print_best():
+	print("FITNESS OF BEST NETWORK:", FITNESS_NETWOKR_PAIRS[0][0])
+	print(80*"-")
+
+	fitness_real_calc = evaluate_best_network(FITNESS_NETWOKR_PAIRS[0][1])
+
+	for vals in fitness_real_calc:
+		print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(round(vals[1], 3), round(vals[2], 3), round(vals[0], 3)))
+
 def set_up_networks():
 	for _ in range(NUMBER_NETWORKS):
 		network = lin(DISCRITISATION)
@@ -52,11 +62,14 @@ def set_up_networks():
 def main_loop():
 	for i in range(NUMBER_ITTERATIONS):
 		print("Evaluating network {}/{}".format(i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
-		evaluate_networks()
+		evaluate_networks(FITNESS_NETWOKR_PAIRS)
 		mutate()
 
-def evaluate_networks():
-	FITNESS_NETWOKR_PAIRS = []
+	print("")
+	print(80*"-")
+
+def evaluate_networks(FITNESS_NETWOKR_PAIRS):
+	FITNESS_NETWOKR_PAIRS.clear()
 	l_value = random.random()
 	r_value = random.random()
 	values = get_values(l_value, r_value)
@@ -88,6 +101,23 @@ def evaluate_network(network, l_value, r_value, values):
 		fitness += abs(values[i] - output_values[input_type.MAX_ID.value + i])
 
 	return [fitness/len(values), network]
+
+def evaluate_best_network(network):
+	l_value = random.random()
+	r_value = random.random()
+	values = get_values(l_value, r_value)
+	input_values = ((l_value, input_type.L_VALUE.value), (r_value, input_type.R_VALUE.value))
+	output_values = network.execute(input_values)
+	fitness_real_calc = []
+
+	for i in range(len(values)):
+		real_value = values[i]
+		calc_value = output_values[input_type.MAX_ID.value + i]
+		fitness = abs(real_value - calc_value)
+
+		fitness_real_calc.append((fitness, real_value, calc_value))
+
+	return fitness_real_calc
 
 def mutate():
 	for i in range(len(FITNESS_NETWOKR_PAIRS)):
