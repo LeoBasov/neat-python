@@ -6,7 +6,7 @@ from loc_module import LinInterpolNetwork as lin
 from loc_module import InputNodeType as input_type
 
 #Simulation parameters
-NUMBER_NETWORKS = 1
+NUMBER_NETWORKS = 10
 NUMBER_ITTERATIONS = 1
 DISCRITISATION = 7
 
@@ -54,8 +54,8 @@ def main_loop():
 
 def evaluate_networks():
 	FITNESS_NETWOKR_PAIRS = []
-	l_value = 10.0*random.random()
-	r_value = 10.0*random.random()
+	l_value = random.random()
+	r_value = random.random()
 	values = get_values(l_value, r_value)
 
 	for network in NETWORKS:
