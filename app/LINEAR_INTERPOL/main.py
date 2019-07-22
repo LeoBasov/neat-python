@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
+import random
+
 from loc_module import LinInterpolNetwork as lin
 
 #Simulation parameters
 NUMBER_NETWORKS = 1
 NUMBER_ITTERATIONS = 1
-L_VALUE = 1
-R_VALUE = 10
 DISCRITISATION = 7
 
 #result values
@@ -35,8 +35,6 @@ def print_header():
 def print_set_up():
 	print("NUMBER_NETWORKS", NUMBER_NETWORKS)
 	print("NUMBER_ITTERATIONS", NUMBER_ITTERATIONS)
-	print("L_VALUE", L_VALUE)
-	print("R_VALUE", R_VALUE)
 
 def print_footer():
 	print(80*"-")
@@ -55,7 +53,9 @@ def main_loop():
 
 def evaluate_networks():
 	FITNESS_NETWOKR_PAIRS = []
-	values = get_values()
+	l_value = 10.0*random.random()
+	r_value = 10.0*random.random()
+	values = get_values(l_value, r_value)
 
 	for network in NETWORKS:
 		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network))
@@ -63,13 +63,13 @@ def evaluate_networks():
 	FITNESS_NETWOKR_PAIRS = sorted(FITNESS_NETWOKR_PAIRS, key = lambda x: x[0]) 
 	FITNESS_NETWOKR_PAIRS.reverse()
 
-def get_values():
+def get_values(l_value, r_value):
 	values = []
-	step = (R_VALUE - L_VALUE)/(DISCRITISATION + 1)
+	step = (r_value - l_value)/(DISCRITISATION + 1)
 
 	for i in range(DISCRITISATION):
-		x = L_VALUE + step*(i + 1)
-		value = L_VALUE*(1.0 - (x - L_VALUE)/(R_VALUE - L_VALUE)) + R_VALUE*((x - L_VALUE)/(R_VALUE - L_VALUE))
+		x = l_value + step*(i + 1)
+		value = l_value*(1.0 - (x - l_value)/(r_value - l_value)) + r_value*((x - l_value)/(r_value - l_value))
 
 		values.append(value)
 
