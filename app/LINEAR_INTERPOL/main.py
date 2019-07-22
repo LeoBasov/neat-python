@@ -7,9 +7,10 @@ from loc_module import InputNodeType as input_type
 from loc_module import Mutator as mut
 
 #Simulation parameters
-NUMBER_NETWORKS = 1
-NUMBER_ITTERATIONS = 1
-DISCRITISATION = 7
+NUMBER_NETWORKS = 10
+NUMBER_ITTERATIONS = 10000
+
+DISCRITISATION = 1
 
 #result values
 NETWORKS = []
@@ -98,7 +99,7 @@ def evaluate_network(network, l_value, r_value, values):
 	fitness = 0
 
 	for i in range(len(values)):
-		fitness += abs(values[i] - output_values[input_type.MAX_ID.value + i])
+		fitness += calc_fitness(values[i], output_values[input_type.MAX_ID.value + i])
 
 	return [fitness/len(values), network]
 
@@ -113,11 +114,14 @@ def evaluate_best_network(network):
 	for i in range(len(values)):
 		real_value = values[i]
 		calc_value = output_values[input_type.MAX_ID.value + i]
-		fitness = abs(real_value - calc_value)
+		fitness = calc_fitness(real_value, calc_value)
 
 		fitness_real_calc.append((fitness, real_value, calc_value))
 
 	return fitness_real_calc
+
+def calc_fitness(expected, calculated):
+	return 1.0 - abs(expected - calculated)/max(expected, calculated)
 
 def mutate():
 	for i in range(len(FITNESS_NETWOKR_PAIRS)):
