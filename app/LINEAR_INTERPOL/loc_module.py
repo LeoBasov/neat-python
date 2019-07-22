@@ -23,8 +23,11 @@ class LinInterpolNetwork(Network):
 		self.__output_ids = discretisation*[0]
 
 		self.set_up(discretisation)
+		self.__set_up_genes()
 
 	def set_up(self, discretisation):
+		genes = []
+
 		self._add_input_node(InputNodeType.L_VALUE.value)
 		self._add_input_node(InputNodeType.R_VALUE.value)
 
@@ -33,3 +36,20 @@ class LinInterpolNetwork(Network):
 
 			self._add_output_node(new_id)
 			self.__output_ids.append(new_id)
+
+	def __set_up_genes(self):
+		bias_node_id = 0
+		genes = []
+
+		for out_node_id in self.output_node_ids:
+			for in_node_id in self.input_node_ids:
+				gene = Gene(in_node = in_node_id, out_node = out_node_id, weight = self.__get_random_weight(), enabled = True)
+				genes.append(gene)
+
+			gene = Gene(in_node = bias_node_id, out_node = out_node_id, weight = self.__get_random_weight(), enabled = True)
+			genes.append(gene)
+
+		self.set_genes(genes)
+
+	def __get_random_weight(self):
+		return  10 - 20.0*random.random()
