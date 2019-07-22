@@ -4,15 +4,17 @@ import random
 
 from loc_module import LinInterpolNetwork as lin
 from loc_module import InputNodeType as input_type
+from loc_module import Mutator as mut
 
 #Simulation parameters
-NUMBER_NETWORKS = 10
-NUMBER_ITTERATIONS = 1
+NUMBER_NETWORKS = 100
+NUMBER_ITTERATIONS = 100
 DISCRITISATION = 7
 
 #result values
 NETWORKS = []
 FITNESS_NETWOKR_PAIRS = []
+MUTATOR = mut()
 
 def main():
 	print_header()
@@ -51,6 +53,7 @@ def main_loop():
 	for i in range(NUMBER_ITTERATIONS):
 		print("Evaluating network {}/{}".format(i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
 		evaluate_networks()
+		mutate()
 
 def evaluate_networks():
 	FITNESS_NETWOKR_PAIRS = []
@@ -85,6 +88,13 @@ def evaluate_network(network, l_value, r_value, values):
 		fitness += abs(values[i] - output_values[input_type.MAX_ID.value + i])
 
 	return [fitness/len(values), network]
+
+def mutate():
+	for i in range(len(FITNESS_NETWOKR_PAIRS)):
+		if i < 0.2*len(NETWORKS):
+			NETWORKS[i] = FITNESS_NETWOKR_PAIRS[i][1]
+		else:
+			NETWORKS[i] = MUTATOR.mutate(FITNESS_NETWOKR_PAIRS[i][1])
 
 if __name__ == '__main__':
 	main()

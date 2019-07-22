@@ -53,3 +53,17 @@ class LinInterpolNetwork(Network):
 
 	def __get_random_weight(self):
 		return  10 - 20.0*random.random()
+
+class Mutator(NEAT):
+	def __init__(self):
+		super().__init__()
+
+		self.new_node_prob = 0.01
+		self.new_connection_prob = 0.2
+		self.set_new_weight_prob = 0.31
+		self.new_activation_status_prob = 0.33
+		self.modify_weight_prob = 0.5
+		self.max_network_size = 7
+
+		self.weight_modification_variation = 0.1
+		self.weight_setting_variation = 10.0
