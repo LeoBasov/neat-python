@@ -9,13 +9,17 @@ L_VALUE = 10
 R_VALUE = 10
 DISCRITISATION = 10
 
+#result values
 NETWORKS = []
+FITNESS_NETWOKR_PAIRS = []
 
 def main():
 	print_header()
 	print_set_up()
 
 	set_up_networks()
+
+	main_loop()
 
 	print_footer()
 
@@ -43,6 +47,23 @@ def set_up_networks():
 	for _ in range(NUMBER_NETWORKS):
 		network = lin(DISCRITISATION)
 		NETWORKS.append(network)
+
+def main_loop():
+	for i in range(NUMBER_ITTERATIONS):
+		print("Evaluating network {}/{}".format(i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
+		evaluate_networks()
+
+def evaluate_networks():
+	FITNESS_NETWOKR_PAIRS = []
+
+	for network in NETWORKS:
+		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network))
+
+	FITNESS_NETWOKR_PAIRS = sorted(FITNESS_NETWOKR_PAIRS, key = lambda x: x[0]) 
+	FITNESS_NETWOKR_PAIRS.reverse()
+
+def evaluate_network(network):
+	return [0.0, network]
 
 if __name__ == '__main__':
 	main()
