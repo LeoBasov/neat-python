@@ -3,11 +3,11 @@
 from loc_module import LinInterpolNetwork as lin
 
 #Simulation parameters
-NUMBER_NETWORKS = 10
-NUMBER_ITTERATIONS = 10
-L_VALUE = 10
+NUMBER_NETWORKS = 1
+NUMBER_ITTERATIONS = 1
+L_VALUE = 1
 R_VALUE = 10
-DISCRITISATION = 10
+DISCRITISATION = 7
 
 #result values
 NETWORKS = []
@@ -55,12 +55,25 @@ def main_loop():
 
 def evaluate_networks():
 	FITNESS_NETWOKR_PAIRS = []
+	values = get_values()
 
 	for network in NETWORKS:
 		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network))
 
 	FITNESS_NETWOKR_PAIRS = sorted(FITNESS_NETWOKR_PAIRS, key = lambda x: x[0]) 
 	FITNESS_NETWOKR_PAIRS.reverse()
+
+def get_values():
+	values = []
+	step = (R_VALUE - L_VALUE)/(DISCRITISATION + 1)
+
+	for i in range(DISCRITISATION):
+		x = L_VALUE + step*(i + 1)
+		value = L_VALUE*(1.0 - (x - L_VALUE)/(R_VALUE - L_VALUE)) + R_VALUE*((x - L_VALUE)/(R_VALUE - L_VALUE))
+
+		values.append(value)
+
+	return values
 
 def evaluate_network(network):
 	return [0.0, network]
