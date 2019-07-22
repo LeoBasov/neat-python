@@ -44,6 +44,9 @@ class NEAT:
 		elif rand_nr < self.new_connection_prob:
 			self.__generate_new_connection(new_network)
 
+		elif rand_nr < self.set_new_weight_prob:
+			self.__set_new_random_weight(new_network)
+
 		elif rand_nr < self.new_activation_status_prob:
 			self.__midifiy_connection_status(new_network)
 

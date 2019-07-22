@@ -83,17 +83,8 @@ def mutate(evaluated_networks):
 	for i in range(len(evaluated_networks)):
 		if (i < 0.2*len(evaluated_networks)) and (evaluated_networks[i][0] > 0.75):
 			new_networks[i] = evaluated_networks[i][1]
-		elif i < 0.6*len(evaluated_networks):
-			new_networks[i] = neat.mutate(evaluated_networks[i][1])
 		else:
-			genes = evaluated_networks[i][1].genes
-
-			for gene in evaluated_networks[i][1].genes:
-				gene.weight = 10 - 20.0*random.random()
-
-			evaluated_networks[i][1].set_genes(genes)
-
-			new_networks[i] = evaluated_networks[i][1]
+			new_networks[i] = neat.mutate(evaluated_networks[i][1])
 
 	return new_networks
 
@@ -102,7 +93,7 @@ def sigmoid(x):
 
 def main():
 	number_networks = 100
-	number_itterations = 10000
+	number_itterations = 5000
 	networks = generate_networks(number_networks)
 
 	print("Evaluating networks")
