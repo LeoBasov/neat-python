@@ -3,6 +3,7 @@
 import random
 
 from loc_module import LinInterpolNetwork as lin
+from loc_module import InputNodeType as input_type
 
 #Simulation parameters
 NUMBER_NETWORKS = 1
@@ -58,7 +59,7 @@ def evaluate_networks():
 	values = get_values(l_value, r_value)
 
 	for network in NETWORKS:
-		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network))
+		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network, l_value, r_value, values))
 
 	FITNESS_NETWOKR_PAIRS = sorted(FITNESS_NETWOKR_PAIRS, key = lambda x: x[0]) 
 	FITNESS_NETWOKR_PAIRS.reverse()
@@ -75,8 +76,15 @@ def get_values(l_value, r_value):
 
 	return values
 
-def evaluate_network(network):
-	return [0.0, network]
+def evaluate_network(network, l_value, r_value, values):
+	input_values = ((l_value, input_type.L_VALUE.value), (r_value, input_type.R_VALUE.value))
+	output_values = network.execute(input_values)
+	fitness = 0
+
+	for i in range(len(values)):
+		fitness += abs(values[i] - output_values[input_type.MAX_ID.value + i])
+
+	return [fitness/len(values), network]
 
 if __name__ == '__main__':
 	main()
