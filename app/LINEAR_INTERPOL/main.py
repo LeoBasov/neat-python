@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 import random
+import copy
 
 from loc_module import LinInterpolNetwork as lin
 from loc_module import InputNodeType as input_type
 from loc_module import Mutator as mut
 
 #Simulation parameters
-NUMBER_NETWORKS = 10
-NUMBER_ITTERATIONS = 10000
+NUMBER_NETWORKS = 100
+NUMBER_ITTERATIONS = 5000
 
 DISCRITISATION = 1
 
@@ -55,6 +56,11 @@ def print_best():
 	for vals in fitness_real_calc:
 		print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(round(vals[1], 3), round(vals[2], 3), round(vals[0], 3)))
 
+	print(80*"-")
+
+	for key, node in FITNESS_NETWOKR_PAIRS[0][1].nodes.items():
+		print(node)
+
 def set_up_networks():
 	for _ in range(NUMBER_NETWORKS):
 		network = lin(DISCRITISATION)
@@ -66,6 +72,7 @@ def main_loop():
 		evaluate_networks(FITNESS_NETWOKR_PAIRS)
 		mutate()
 
+	evaluate_networks(FITNESS_NETWOKR_PAIRS)
 	print("")
 	print(80*"-")
 
@@ -125,10 +132,23 @@ def calc_fitness(expected, calculated):
 
 def mutate():
 	for i in range(len(FITNESS_NETWOKR_PAIRS)):
-		if i < 0.2*len(NETWORKS):
+		if i < 0.1*len(NETWORKS):
 			NETWORKS[i] = FITNESS_NETWOKR_PAIRS[i][1]
+
+		elif i < 0.3*len(NETWORKS):
+			loc_network = copy.deepcopy(FITNESS_NETWOKR_PAIRS[i][1])
+			MUTATOR._NEAT__modify_weight(loc_network)
+			NETWORKS[i] = loc_network
+
+		elif i < 0.6*len(NETWORKS):
+			loc_network = copy.deepcopy(FITNESS_NETWOKR_PAIRS[i][1])
+			MUTATOR._NEAT__set_new_random_weight(loc_network)
+			NETWORKS[i] = loc_network
+
 		else:
-			NETWORKS[i] = MUTATOR.mutate(FITNESS_NETWOKR_PAIRS[i][1])
+			loc_network = copy.deepcopy(FITNESS_NETWOKR_PAIRS[i][1])
+			MUTATOR._NEAT__set_new_random_weight_all(loc_network)
+			NETWORKS[i] = loc_network
 
 if __name__ == '__main__':
 	main()
