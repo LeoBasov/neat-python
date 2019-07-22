@@ -1,15 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
-import random
-import math
-
-sys.path.append('../../.')
-
-from neat.neat import Node
-from neat.neat import Gene
-from neat.neat import Network
-from neat.neat import NEAT
+from loc_module import LinInterpolNetwork as lin
 
 #Simulation parameters
 NUMBER_NETWORKS = 10
