@@ -25,7 +25,33 @@ class NodeType(Enum):
 class Genome:
 	def __init__(self):
 		self.nodes = [BiasNode()]
+		self.output_nodes_ids = []
 		self.genes = []
+
+	def add_input_node(self):
+		node_id = len(self.nodes) + 1
+		node = InputNode(node_id)
+
+		self.nodes.append(node)
+
+		return node_id
+
+	def add_output_node(self):
+		node_id = len(self.nodes) + 1
+		node = OutputNode(node_id)
+
+		self.output_nodes_ids.append(node_id)
+		self.nodes.append(node)
+
+		return node_id
+
+	def add_hidden_node(self):
+		node_id = len(self.nodes) + 1
+		node = HiddenNode(node_id)
+
+		self.nodes.append(node)
+
+		return node_id
 
 class Node:
 	def __init__(self, node_id, node_type):
