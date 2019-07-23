@@ -20,9 +20,22 @@ class Genome:
 	pass
 
 class Node:
-	def __init__(self):
-		self.id = 0
+	def __init__(self, node_id, node_type):
+		self.id = None
 		self.type = None
+
+class BiasNode(Node):
+	def __init__(self):
+		super().__init__(node_id = 0, node_type = NodeType.BIAS)
+
+class OtherNode(Node):
+	def __init__(self, node_id, node_type):
+		super().__init__(node_id = node_id, node_type = node_type)
+
+		if node_id == 0:
+			raise Error("OtherNode.___init__", "Node id can not be 0. Reserved for bias node")
+		elif node_id < 0:
+			raise Error("OtherNode.___init__", "Node id can not < 0.")
 
 class Gene:
 	pass
@@ -32,3 +45,19 @@ class NodeType(Enum):
 	INPUT = 1
 	HIDDEN = 2
 	OUTPUT = 3
+
+class Error(Exception):
+	"""Base Exception for this module.
+
+	Attributes
+	----------
+	expression : str
+		input expression in which the error occurred
+	message : str
+		explanation of the error
+
+	"""
+
+	def __init__(self, expression, message):
+		self.expression = "genome." + expression
+		self.message = message

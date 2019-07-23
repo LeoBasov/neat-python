@@ -3,8 +3,22 @@ import sys
 
 sys.path.append('../.')
 
-import neat.genome as gen
+from neat.genome import BiasNode
+from neat.genome import OtherNode
+from neat.genome import NodeType as Type
+from neat.genome import Error
 
-class GenomeTest(unittest.TestCase):
+class NodeTest(unittest.TestCase):
 	def test_init(self):
-		pass
+		bias_node = BiasNode()
+		input_node = OtherNode(1, Type.INPUT)
+		hidden_node = OtherNode(2, Type.HIDDEN)
+		output_node = OtherNode(3, Type.OUTPUT)
+		cought = False
+
+		try:
+			faulty_node = OtherNode(0, Type.INPUT)
+		except Error as e:
+			cought = True
+		else:
+			self.assertTrue(cought)
