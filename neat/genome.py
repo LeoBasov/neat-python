@@ -71,6 +71,11 @@ class Genome:
 
 			self.add_gene(gene)
 
+	def add_new_connection_no_check(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
+		gene = Gene(in_node_id, out_node_id, weight, enabled)
+
+		self.add_gene(gene)
+
 	def connection_possible(self, in_node_id, out_node_id):
 		no_in_output = self.nodes[in_node_id].type != NodeType.OUTPUT
 		no_out_input = self.nodes[out_node_id].type != NodeType.INPUT
