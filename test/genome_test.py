@@ -118,3 +118,29 @@ class GenomeTest(unittest.TestCase):
 
 		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[0], genome.nodes[input_node_id_1])
 		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[1], genome.nodes[input_node_id_2])
+
+	def test_add_gene(self):
+		genome = Genome()
+		genes = []
+
+		input_node_id_1 = genome.add_input_node()
+		input_node_id_2 = genome.add_input_node()
+
+		hidden_node_id_1 = genome.add_hidden_node()
+
+		output_node_id_1 = genome.add_output_node()
+		output_node_id_2 = genome.add_output_node()
+
+		genes.append(Gene(input_node_id_1, hidden_node_id_1))
+		genes.append(Gene(input_node_id_2, hidden_node_id_1))
+
+		genes.append(Gene(hidden_node_id_1, output_node_id_1))
+		genes.append(Gene(hidden_node_id_1, output_node_id_2))
+
+		genome.set_genes((genes))
+
+		gene = Gene(input_node_id_1, output_node_id_1)
+
+		genome.add_gene(gene)
+
+		self.assertEqual(genome.nodes[output_node_id_1].connected_nodes[1], genome.nodes[input_node_id_1])
