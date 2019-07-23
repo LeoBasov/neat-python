@@ -144,3 +144,38 @@ class GenomeTest(unittest.TestCase):
 		genome.add_gene(gene)
 
 		self.assertEqual(genome.nodes[output_node_id_1].connected_nodes[1], genome.nodes[input_node_id_1])
+
+	def test_add_new_connection(self):
+		genome = Genome()
+		genes = []
+
+		input_node_id_1 = genome.add_input_node()
+		input_node_id_2 = genome.add_input_node()
+
+		hidden_node_id_1 = genome.add_hidden_node()
+
+		output_node_id_1 = genome.add_output_node()
+		output_node_id_2 = genome.add_output_node()
+
+		genes.append(Gene(input_node_id_1, hidden_node_id_1))
+		genes.append(Gene(input_node_id_2, hidden_node_id_1))
+
+		genes.append(Gene(hidden_node_id_1, output_node_id_1))
+		genes.append(Gene(hidden_node_id_1, output_node_id_2))
+
+		genome.set_genes((genes))
+
+		connected = genome.add_new_connection(input_node_id_1, output_node_id_1)
+
+		self.assertEqual(genome.nodes[output_node_id_1].connected_nodes[1], genome.nodes[input_node_id_1])
+		self.assertTrue(connected)
+
+		connected1 = genome.add_new_connection(input_node_id_1, input_node_id_2)
+		connected2 = genome.add_new_connection(output_node_id_1, output_node_id_2)
+		connected3 = genome.add_new_connection(output_node_id_2, hidden_node_id_1)
+		connected4 = genome.add_new_connection(output_node_id_2, input_node_id_1)
+
+		self.assertFalse(connected1)
+		self.assertFalse(connected2)
+		self.assertFalse(connected3)
+		self.assertFalse(connected4)

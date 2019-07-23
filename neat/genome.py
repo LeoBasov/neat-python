@@ -68,8 +68,11 @@ class Genome:
 	def add_new_connection(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
 		if self.connection_possible(in_node_id, out_node_id):
 			gene = Gene(in_node_id, out_node_id, weight, enabled)
-
 			self.add_gene(gene)
+
+			return True
+		else:
+			return False
 
 	def add_new_connection_no_check(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
 		gene = Gene(in_node_id, out_node_id, weight, enabled)
