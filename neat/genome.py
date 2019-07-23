@@ -29,7 +29,7 @@ class Genome:
 		self.genes = []
 
 	def add_input_node(self):
-		node_id = len(self.nodes) + 1
+		node_id = len(self.nodes)
 		node = InputNode(node_id)
 
 		self.nodes.append(node)
@@ -37,7 +37,7 @@ class Genome:
 		return node_id
 
 	def add_output_node(self):
-		node_id = len(self.nodes) + 1
+		node_id = len(self.nodes)
 		node = OutputNode(node_id)
 
 		self.output_nodes_ids.append(node_id)
@@ -46,19 +46,57 @@ class Genome:
 		return node_id
 
 	def add_hidden_node(self):
-		node_id = len(self.nodes) + 1
+		node_id = len(self.nodes)
 		node = HiddenNode(node_id)
 
 		self.nodes.append(node)
 
 		return node_id
 
+	def set_genes(self, genes):
+		self.genes = []
+
+		for gene in genes:
+			if gene not in self.genes:
+				self.genes.append(gene)
+				self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
+			else:
+				raise Error("Genome.set_genes", "Gene defined twice")
+
+		self.update_levels()
+
+	def add_gene(self, gene):
+		if gene not in self.genes:
+			self.genes.append(gene)
+			self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
+			self.update_levels()
+
+	def update_levels(self):
+		for node_id in self.output_nodes_ids:
+			self.nodes[node_id].update_level()
+
 class Node:
 	def __init__(self, node_id, node_type):
-		self.id = None
-		self.type = None
+		self.id = node_id
+		self.type = node_type
 		self.level = 0
 		self.connected_nodes = []
+
+	def __str__(self):
+		string = ""
+
+		string += "ID: " + str(self.id) + " "
+		string += "TYPE: " + str(self.type.name) + " "
+		string += "LEVEL: " + str(self.level) + " "
+
+		string += "CONNECTED NODES: ["
+
+		for connected_node in self.connected_nodes:
+			string += str(connected_node.id) + ", "
+
+		string += "]"
+
+		return string
 
 	def update_level(self):
 		loc_level = 0
