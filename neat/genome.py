@@ -95,7 +95,6 @@ class Genome:
 		if gene not in self.genes:
 			self.genes.append(gene)
 			self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
-			self.update_levels()
 
 	def add_new_node(self, gene_id):
 		self.genes[gene_id].enabled = False

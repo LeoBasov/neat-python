@@ -1,5 +1,6 @@
 import unittest
 import sys
+import random
 
 sys.path.append('../.')
 
@@ -119,6 +120,14 @@ class GenomeTest(unittest.TestCase):
 		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[0], genome.nodes[input_node_id_1])
 		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[1], genome.nodes[input_node_id_2])
 
+		self.assertEqual(genome.nodes[input_node_id_1].level, 0)
+		self.assertEqual(genome.nodes[input_node_id_2].level, 0)
+
+		self.assertEqual(genome.nodes[hidden_node_id_1].level, 1)
+
+		self.assertEqual(genome.nodes[output_node_id_1].level, 2)
+		self.assertEqual(genome.nodes[output_node_id_2].level, 2)
+
 	def test_add_gene(self):
 		genome = Genome()
 		genes = []
@@ -179,3 +188,33 @@ class GenomeTest(unittest.TestCase):
 		self.assertFalse(connected2)
 		self.assertFalse(connected3)
 		self.assertFalse(connected4)
+
+	def test_add_new_node(self):
+		genome = Genome()
+		genes = []
+
+		input_node_id_1 = genome.add_input_node()
+		input_node_id_2 = genome.add_input_node()
+
+		hidden_node_id_1 = genome.add_hidden_node()
+
+		output_node_id_1 = genome.add_output_node()
+		output_node_id_2 = genome.add_output_node()
+
+		genes.append(Gene(input_node_id_1, hidden_node_id_1))
+		genes.append(Gene(input_node_id_2, hidden_node_id_1))
+
+		genes.append(Gene(hidden_node_id_1, output_node_id_1))
+		genes.append(Gene(hidden_node_id_1, output_node_id_2))
+
+		genome.set_genes((genes))
+
+		gene_id = 0
+
+		genome.add_new_node(gene_id)
+
+		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[0], genome.nodes[input_node_id_1])
+		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[1], genome.nodes[input_node_id_2])
+		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[2], genome.nodes[6])
+
+		self.assertEqual(genome.nodes[6].connected_nodes[0], genome.nodes[input_node_id_1])
