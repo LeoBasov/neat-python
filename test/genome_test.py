@@ -49,6 +49,7 @@ class GenomeTest(unittest.TestCase):
 		output_node_id_1 = genome.add_output_node()
 		output_node_id_2 = genome.add_output_node()
 
+		#Inserted check
 		self.assertTrue(input_node_id_1 in range(len(genome.nodes)))
 		self.assertTrue(input_node_id_2 in range(len(genome.nodes)))
 
@@ -59,6 +60,7 @@ class GenomeTest(unittest.TestCase):
 		self.assertTrue(output_node_id_1 in range(len(genome.nodes)))
 		self.assertTrue(output_node_id_2 in range(len(genome.nodes)))
 
+		#Added to output ndoes check
 		self.assertFalse(input_node_id_1 in genome.output_nodes_ids)
 		self.assertFalse(input_node_id_2 in genome.output_nodes_ids)
 
@@ -68,3 +70,51 @@ class GenomeTest(unittest.TestCase):
 
 		self.assertTrue(output_node_id_1 in genome.output_nodes_ids)
 		self.assertTrue(output_node_id_2 in genome.output_nodes_ids)
+
+		#Type set check
+		self.assertEqual(genome.nodes[input_node_id_1].type, Type.INPUT)
+		self.assertEqual(genome.nodes[input_node_id_2].type, Type.INPUT)
+
+		self.assertEqual(genome.nodes[hidden_node_id_1].type, Type.HIDDEN)
+		self.assertEqual(genome.nodes[hidden_node_id_2].type, Type.HIDDEN)
+		self.assertEqual(genome.nodes[hidden_node_id_3].type, Type.HIDDEN)
+
+		self.assertEqual(genome.nodes[output_node_id_1].type, Type.OUTPUT)
+		self.assertEqual(genome.nodes[output_node_id_2].type, Type.OUTPUT)
+
+		#ID set check
+		self.assertEqual(genome.nodes[input_node_id_1].id, input_node_id_1)
+		self.assertEqual(genome.nodes[input_node_id_2].id, input_node_id_2)
+
+		self.assertEqual(genome.nodes[hidden_node_id_1].id, hidden_node_id_1)
+		self.assertEqual(genome.nodes[hidden_node_id_2].id, hidden_node_id_2)
+		self.assertEqual(genome.nodes[hidden_node_id_3].id, hidden_node_id_3)
+
+		self.assertEqual(genome.nodes[output_node_id_1].id, output_node_id_1)
+		self.assertEqual(genome.nodes[output_node_id_2].id, output_node_id_2)
+
+	def test_set_genes(self):
+		genome = Genome()
+		genes = []
+
+		input_node_id_1 = genome.add_input_node()
+		input_node_id_2 = genome.add_input_node()
+
+		hidden_node_id_1 = genome.add_hidden_node()
+
+		output_node_id_1 = genome.add_output_node()
+		output_node_id_2 = genome.add_output_node()
+
+		genes.append(Gene(input_node_id_1, hidden_node_id_1))
+		genes.append(Gene(input_node_id_2, hidden_node_id_1))
+
+		genes.append(Gene(hidden_node_id_1, output_node_id_1))
+		genes.append(Gene(hidden_node_id_1, output_node_id_2))
+
+		genome.set_genes((genes))
+
+		self.assertEqual(genome.nodes[output_node_id_1].connected_nodes[0], genome.nodes[hidden_node_id_1])
+		self.assertEqual(genome.nodes[output_node_id_2].connected_nodes[0], genome.nodes[hidden_node_id_1])
+
+		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[0], genome.nodes[input_node_id_1])
+		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[1], genome.nodes[input_node_id_2])
