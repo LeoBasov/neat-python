@@ -8,10 +8,10 @@ from loc_module import InputNodeType as input_type
 from loc_module import Mutator as mut
 
 #Simulation parameters
-NUMBER_NETWORKS = 100
-NUMBER_ITTERATIONS = 1000
+NUMBER_NETWORKS = 1000
+NUMBER_ITTERATIONS = 5000
 
-DISCRITISATION = 1
+DISCRITISATION = 2
 
 #result values
 NETWORKS = []
@@ -41,6 +41,8 @@ def print_header():
 def print_set_up():
 	print("NUMBER_NETWORKS", NUMBER_NETWORKS)
 	print("NUMBER_ITTERATIONS", NUMBER_ITTERATIONS)
+	print("NUMBER_EVALUATED_POINTS", DISCRITISATION)
+	print(80*"-")
 
 def print_footer():
 	print(80*"-")
