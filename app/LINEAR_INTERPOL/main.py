@@ -9,7 +9,7 @@ from loc_module import Mutator as mut
 
 #Simulation parameters
 NUMBER_NETWORKS = 100
-NUMBER_ITTERATIONS = 5000
+NUMBER_ITTERATIONS = 1000
 
 DISCRITISATION = 1
 
@@ -69,14 +69,14 @@ def set_up_networks():
 def main_loop():
 	for i in range(NUMBER_ITTERATIONS):
 		print("Evaluating network {}/{}".format(i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
-		evaluate_networks(FITNESS_NETWOKR_PAIRS)
+		evaluate_networks()
 		mutate()
 
-	evaluate_networks(FITNESS_NETWOKR_PAIRS)
+	evaluate_networks()
 	print("")
 	print(80*"-")
 
-def evaluate_networks(FITNESS_NETWOKR_PAIRS):
+def evaluate_networks():
 	FITNESS_NETWOKR_PAIRS.clear()
 	l_value = random.random()
 	r_value = random.random()
@@ -85,7 +85,7 @@ def evaluate_networks(FITNESS_NETWOKR_PAIRS):
 	for network in NETWORKS:
 		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network, l_value, r_value, values))
 
-	FITNESS_NETWOKR_PAIRS = sorted(FITNESS_NETWOKR_PAIRS, key = lambda x: x[0]) 
+	FITNESS_NETWOKR_PAIRS.sort()
 	FITNESS_NETWOKR_PAIRS.reverse()
 
 def get_values(l_value, r_value):
