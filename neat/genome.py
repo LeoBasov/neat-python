@@ -17,7 +17,9 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 from enum import Enum
 
 class Genome:
-	pass
+	def __init__(self):
+		self.nodes = [BiasNode()]
+		self.genes = []
 
 class Node:
 	def __init__(self, node_id, node_type):
@@ -38,7 +40,17 @@ class OtherNode(Node):
 			raise Error("OtherNode.___init__", "Node id can not < 0.")
 
 class Gene:
-	pass
+	def __init__(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
+		self.in_node_id = in_node_id
+		self.out_node_id = out_node_id
+		self.weight = weight
+		self.enabled = enabled
+
+	def connection_exists(self, in_node_id, out_node_id):
+		forward_connection = (self.in_node_id == in_node_id) and (self.out_node_id == out_node_id)
+		backward_connection = (self.in_node_id == out_node_id) and (self.out_node_id == in_node_id)
+
+		return forward_connection or backward_connection
 
 class NodeType(Enum):
 	BIAS = 0
