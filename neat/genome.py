@@ -65,6 +65,25 @@ class Genome:
 
 		self.update_levels()
 
+	def add_new_connection(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
+		if self.connection_possible(in_node_id, out_node_id):
+			gene = Gene(in_node_id, out_node_id, weight, enabled)
+
+			self.add_gene(gene)
+
+	def connection_possible(self, in_node_id, out_node_id):
+		no_in_output = self.nodes[in_node_id].type != NodeType.OUTPUT
+		no_out_input = self.nodes[out_node_id].type != NodeType.INPUT
+		no_level_conflict = self.nodes[in_node_id].level < self.nodes[out_node_id].level
+		no_existence = True
+
+		for gene in self.genes:
+			if gene.connection_exists(in_node_id, out_node_id):
+				no_existence = False
+				break
+
+		return no_in_output and no_out_input and no_level_conflict and no_existence
+
 	def add_gene(self, gene):
 		if gene not in self.genes:
 			self.genes.append(gene)
