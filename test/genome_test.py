@@ -201,7 +201,7 @@ class GenomeTest(unittest.TestCase):
 		output_node_id_1 = genome.add_output_node()
 		output_node_id_2 = genome.add_output_node()
 
-		genes.append(Gene(input_node_id_1, hidden_node_id_1))
+		genes.append(Gene(input_node_id_1, hidden_node_id_1, weight = 10.0))
 		genes.append(Gene(input_node_id_2, hidden_node_id_1))
 
 		genes.append(Gene(hidden_node_id_1, output_node_id_1))
@@ -218,3 +218,6 @@ class GenomeTest(unittest.TestCase):
 		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[2], genome.nodes[6])
 
 		self.assertEqual(genome.nodes[6].connected_nodes[0], genome.nodes[input_node_id_1])
+
+		self.assertEqual(genome.genes[-1].weight, 10.0)
+		self.assertEqual(genome.genes[-2].weight, 1.0)
