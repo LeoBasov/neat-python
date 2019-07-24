@@ -93,7 +93,7 @@ class InputNode(Node):
 class BiasNode(Node):
 	def __init__(self):
 		super().__init__(node_id = 0)
-		self.type = NodeType.BIAS_NODE
+		self.type = NodeType.BIAS
 		self.value = 1.0
 
 	def reset(self):
