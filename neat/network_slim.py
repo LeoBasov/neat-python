@@ -27,6 +27,8 @@ class Network:
 		self.genome = None
 
 	def set_up(self, genome):
+		self.nodes = []
+		self.output_node_ids = []
 		self.genome = genome
 
 		self.__add_nodes()
@@ -50,6 +52,7 @@ class Network:
 				loc_node = OutputNode(node.id)
 				loc_node.level = node.level
 
+				self.output_node_ids.append(node.id)
 				self.nodes.append(loc_node)
 
 	def __connect_nodes(self):
