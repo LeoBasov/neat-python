@@ -16,11 +16,9 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 import copy
 import random
+from enum import Enum
 
-from .network_slime import Node
-from .network_slime import Network
-from .network_slime import Gene
-from .network_slime import Genenome
+from .network_slim import Network
 
 
 class NEAT:
@@ -35,7 +33,7 @@ class NEAT:
 		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.3))
 
 	def mutate(self, network):
-		genome = copy.deepcopy(Node.genome)
+		genome = copy.deepcopy(network.genome)
 		rand_num = random.random()
 
 		for probability in self.probabilities:
