@@ -11,25 +11,33 @@ from neat.network_slim import OutputNode
 from neat.network_slim import Network
 from neat.network_slim import Connection
 
+from neat.genome import Genome
+from neat.genome import Gene
+
 class TestNetwork(Network):
 	def __init__(self):
 		super().__init__()
 
-		self.nodes.append(BiasNode())
+		genome = Genome()
+		genes = []
 
-		self.nodes.append(InputNode(1))
-		self.nodes.append(InputNode(2))
+		self.input_node_id_1 = genome.add_input_node()
+		self.input_node_id_2 = genome.add_input_node()
 
-		self.nodes.append(HiddenNode(3))
+		self.hidden_node_id_1 = genome.add_hidden_node()
 
-		self.nodes.append(OutputNode(4))
-		self.nodes.append(OutputNode(5))
+		self.output_node_id_1 = genome.add_output_node()
+		self.output_node_id_2 = genome.add_output_node()
 
-		self.nodes[4].connections.append(Connection(self.nodes[3]))
-		self.nodes[5].connections.append(Connection(self.nodes[3]))
+		genes.append(Gene(self.input_node_id_1, self.hidden_node_id_1))
+		genes.append(Gene(self.input_node_id_2, self.hidden_node_id_1))
 
-		self.nodes[3].connections.append(Connection(self.nodes[1]))
-		self.nodes[3].connections.append(Connection(self.nodes[2]))
+		genes.append(Gene(self.hidden_node_id_1, self.output_node_id_1))
+		genes.append(Gene(self.hidden_node_id_1, self.output_node_id_2))
+
+		genome.set_genes(genes)
+
+		self.set_up(genome)
 
 class NetworkSlimTest(unittest.TestCase):
 	def test_network_initialization(self):

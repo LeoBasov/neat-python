@@ -18,11 +18,44 @@ import math
 from enum import Enum
 
 from . import utility
+from . import genome as gen
 
 class Network:
 	def __init__(self):
 		self.nodes = []
 		self.output_node_ids = []
+		self.genome = None
+
+	def set_up(self, genome):
+		self.genome = genome
+
+		self.__add_nodes()
+		self.__connect_nodes()
+
+	def __add_nodes(self):
+		for node in self.genome.nodes:
+			if node.type == gen.NodeType.BIAS:
+				self.nodes.append(BiasNode())
+
+			elif node.type == gen.NodeType.INPUT:
+				self.nodes.append(InputNode(node.id))
+
+			elif node.type == gen.NodeType.HIDDEN:
+				loc_node = HiddenNode(node.id)
+				loc_node.level = node.level
+
+				self.nodes.append(loc_node)
+
+			elif node.type == gen.NodeType.OUTPUT:
+				loc_node = OutputNode(node.id)
+				loc_node.level = node.level
+
+				self.nodes.append(loc_node)
+
+	def __connect_nodes(self):
+		for gene in self.genome.genes:
+			connection = Connection(self.nodes[gene.in_node_id], gene.weight, gene.enabled)
+			self.nodes[gene.out_node_id].connections.append(connection)
 
 	def execute(self, input_values_node_ids):
 		ret_vals = {}
@@ -58,7 +91,11 @@ class Node:
 		string += "CONNECTED NODES: ["
 
 		for connection in self.connections:
+			string += "("
 			string += str(connection.node.id) + ", "
+			string += str(connection.weight) + ", "
+			string += str(connection.enabled)
+			string += "), "
 
 		string += "]"
 
