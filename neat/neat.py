@@ -17,10 +17,10 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 import copy
 import random
 
-from .network import Node
-from .network import Gene
-from .network import Network
-from .network import NodeType
+from .network_large import Node
+from .network_large import Gene
+from .network_large import Network
+from .network_large import NodeType
 
 class NEAT:
 	def __init__(self):

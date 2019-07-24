@@ -4,9 +4,9 @@ import random
 
 sys.path.append('../.')
 
-from neat.network import Node
-from neat.network import Gene
-from neat.network import Network
+from neat.network_large import Node
+from neat.network_large import Gene
+from neat.network_large import Network
 import neat.utility as utility
 
 class TestNetwork(Network):
