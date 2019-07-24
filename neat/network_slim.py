@@ -19,6 +19,27 @@ from enum import Enum
 
 from . import utility
 
+class Network:
+	def __init__(self):
+		self.nodes = [BiasNode()] #Bias node has always the id = 0
+		self.output_node_ids = []
+
+	def execute(self, input_values_node_ids):
+		ret_vals = {}
+		self.__reset_node_values()
+
+		for value, node_id in input_values_node_ids:
+			self.nodes[node_id].value = value
+
+		for node_id in self.output_node_ids:
+			ret_vals[node_id] = self.nodes[node_id].execute()
+
+		return ret_vals
+
+	def __reset_node_values(self):
+		for node in self.nodes:
+			node.reset_value()
+
 class Node:
 	def __init__(self, node_id):
 		self.id = node_id

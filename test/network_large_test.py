@@ -54,7 +54,7 @@ class XORNetwork(Network):
 
 		self.set_genes([gene1, gene2, gene3, gene4, gene5, gene6, gene7, gene8, gene9])
 
-class NetworkTest(unittest.TestCase):
+class NetworkLargeTest(unittest.TestCase):
 	def test_network_initialization(self):
 		network = TestNetwork()
 		test_inuput_values_node_ids = ((2, 1), (3, 2))
