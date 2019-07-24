@@ -25,7 +25,7 @@ from .network_slime import Genenome
 
 class NEAT:
 	def __init__(self):
-		self.new_weight_variance = 10.0
+		self.new_weight_range = 10.0
 		self.weight_variation = 0.1
 
 	def mutate(self, network):
@@ -38,7 +38,7 @@ class NEAT:
 	def add_new_connection(self, genome):
 		node1 = random.choice(genome.nodes)
 		node2 = random.choice(genome.nodes)
-		weight = self.weight_variance - 2.0*self.weight_variance*random.random()
+		weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
 
 		genome.add_new_connection(node1.id, node2.id, weight)
 
@@ -56,3 +56,9 @@ class NEAT:
 		gene = random.choice(genome.genes)
 
 		gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
+
+class Probabilities:
+	def __init__(self):
+		self.new_connection = 0.1
+		self.new_node = 0.1
+		self.modify_weight = 0.1
