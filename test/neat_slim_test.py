@@ -87,3 +87,20 @@ class NEATTest(unittest.TestCase):
 		new_network = Network(new_genome)
 
 		self.assertFalse(new_network.genome.genes[0].enabled)
+
+	def test_mutate(self):
+		neat = NEAT()
+		genome = TestGenome2()
+		network = Network(genome)
+
+		neat.probabilities[1].value = 1.0
+
+		new_network = neat.mutate(network)
+
+		self.assertEqual(network.genome.genes[0].weight, new_network.genome.genes[-1].weight)
+		self.assertEqual(new_network.genome.genes[-2].weight, 1.0)
+
+		self.assertEqual(network.genome.genes[0].in_node_id, new_network.genome.genes[-2].in_node_id)
+		self.assertEqual(network.genome.genes[0].out_node_id, new_network.genome.genes[-1].out_node_id)
+
+		self.assertFalse(new_network.genome.genes[0].enabled)

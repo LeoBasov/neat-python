@@ -38,11 +38,11 @@ class NEAT:
 
 		for probability in self.probabilities:
 			if probability.value > rand_num:
-				if probability.type.MutationType.NEW_CONNECTION:
+				if probability.type == MutationType.NEW_CONNECTION:
 					self.add_new_connection(genome)
-				elif probability.type.MutationType.NEW_NODE:
+				elif probability.type == MutationType.NEW_NODE:
 					self.add_new_node(genome)
-				elif probability.type.MutationType.MODIFY_WEIGHT:
+				elif probability.type == MutationType.MODIFY_WEIGHT:
 					self.modify_connection_weight(genome)
 
 		return Network(genome)
