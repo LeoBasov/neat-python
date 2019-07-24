@@ -21,10 +21,13 @@ from . import utility
 from . import genome as gen
 
 class Network:
-	def __init__(self):
+	def __init__(self, genome = None):
 		self.nodes = []
 		self.output_node_ids = []
 		self.genome = None
+
+		if genome:
+			self.set_up(genome)
 
 	def set_up(self, genome):
 		self.nodes = []
