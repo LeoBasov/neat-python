@@ -39,4 +39,9 @@ class NEAT:
 		node2 = random.choice(genome.nodes)
 		weight = self.weight_variance - 2.0*self.weight_variance*random.random()
 
-		genome.add_new_connection(node1.id, node2.id, weight) 
+		genome.add_new_connection(node1.id, node2.id, weight)
+
+	def add_new_node(self, genome):
+		gene_id = random.choice(range(len(genome.genes)))
+
+		genome.add_new_node(gene_id)
