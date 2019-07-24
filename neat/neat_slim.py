@@ -20,7 +20,6 @@ from enum import Enum
 
 from .network_slim import Network
 
-
 class NEAT:
 	def __init__(self):
 		self.new_weight_range = 10.0
