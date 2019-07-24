@@ -97,19 +97,20 @@ class Genome:
 			self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
 
 	def add_new_node(self, gene_id):
-		self.genes[gene_id].enabled = False
-		in_node_id = self.genes[gene_id].in_node_id
-		out_node_id = self.genes[gene_id].out_node_id
-		new_node_id = self.add_hidden_node()
-		weight = self.genes[gene_id].weight
+		if self.genes[gene_id].enabled:
+			self.genes[gene_id].enabled = False
+			in_node_id = self.genes[gene_id].in_node_id
+			out_node_id = self.genes[gene_id].out_node_id
+			new_node_id = self.add_hidden_node()
+			weight = self.genes[gene_id].weight
 
-		gene1 = Gene(in_node_id, new_node_id)
-		gene2 = Gene(new_node_id, out_node_id, weight)
+			gene1 = Gene(in_node_id, new_node_id)
+			gene2 = Gene(new_node_id, out_node_id, weight)
 
-		self.add_gene(gene1)
-		self.add_gene(gene2)
+			self.add_gene(gene1)
+			self.add_gene(gene2)
 
-		self.update_levels()
+			self.update_levels()
 
 	def update_levels(self):
 		for node_id in self.output_nodes_ids:
