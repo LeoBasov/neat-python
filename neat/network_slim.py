@@ -22,31 +22,31 @@ from . import utility
 class Node:
 	def __init__(self, node_id):
 		self.id = node_id
-		self.in_node_weights_status = []
+		self.connections = []
 		self.value = 0
 
 	def __str__(self):
 		input_nodes_weights = []
 
-		for node_weight in self.in_node_weights_status:
-			input_nodes_weights.append((node_weight[0].id, node_weight[1], node_weight[2]))
+		for connection in self.connections:
+			input_nodes_weights.append((connection.node.id, connection.weight, connection.enabled))
 
 		return "ID: " + str(self.id) + ". Level: " + str(self.level) + ". Input node-weights: " + str(input_nodes_weights) + ". Value: " + str(self.value) + "."
 
 	def reset(self):
-		self.in_node_weights_status = []
+		self.connections = []
 		self.value = 0
 
 	def reset_value(self):
 		self.value = 0
 
 	def reset_connection(self):
-		self.in_node_weights_status = []
+		self.connections = []
 
 	def execute(self):
-		for node, weight, enabled in self.in_node_weights_status:
-			if enabled:
-				self.value += weight*node.execute()
+		for connection in self.connections:
+			if connection.enabled:
+				self.value += connection.weight*connection.node.execute()
 
 		return utility.sigmoid(self.value)
 
@@ -76,7 +76,7 @@ class BiasNode(Node):
 		self.value = 1.0
 
 	def reset(self):
-		self.in_node_weights_status = []
+		self.connections = []
 		self.value = 1.0
 
 	def reset_value(self):
