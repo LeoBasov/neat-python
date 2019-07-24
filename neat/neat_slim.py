@@ -29,8 +29,10 @@ class NEAT:
 		self.probabilities = []
 
 		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.1))
-		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.2))
+		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.02))
 		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.3))
+
+		self.probabilities.sort()
 
 	def mutate(self, network):
 		genome = copy.deepcopy(network.genome)
@@ -78,3 +80,6 @@ class Probability:
 	def __init__(self, prob_type, value):
 		self.type = prob_type
 		self.value = value
+
+	def __lt__(self, other):
+		return self.value < other.value
