@@ -28,6 +28,12 @@ class NEAT:
 		self.new_weight_range = 10.0
 		self.weight_variation = 0.1
 
+		self.probabilities = []
+
+		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.1))
+		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.1))
+		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.1))
+
 	def mutate(self, network):
 		genome = copy.deepcopy(Node.genome)
 
@@ -57,8 +63,12 @@ class NEAT:
 
 		gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
 
-class Probabilities:
-	def __init__(self):
-		self.new_connection = 0.1
-		self.new_node = 0.1
-		self.modify_weight = 0.1
+class MutationType(Enum):
+	NEW_CONNECTION = 0
+	NEW_NODE = 1
+	MODIFY_WEIGHT = 2
+
+class Probability:
+	def __init__(self, prob_type, value):
+		self.type = prob_type
+		self.value = value
