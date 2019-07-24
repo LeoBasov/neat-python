@@ -25,12 +25,15 @@ class NEAT:
 	def __init__(self):
 		self.new_weight_range = 10.0
 		self.weight_variation = 0.1
+		self.max_network_size = 5
 
 		self.probabilities = []
 
-		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.1))
-		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.02))
-		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.3))
+		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.2))
+		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.01))
+		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.5))
+		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.33))
+		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.31))
 
 		self.probabilities.sort()
 
@@ -42,10 +45,14 @@ class NEAT:
 			if probability.value > rand_num:
 				if probability.type == MutationType.NEW_CONNECTION:
 					self.add_new_connection(genome)
-				elif probability.type == MutationType.NEW_NODE:
+				elif probability.type == MutationType.NEW_NODE and len(genome.nodes) < self.max_network_size:
 					self.add_new_node(genome)
 				elif probability.type == MutationType.MODIFY_WEIGHT:
 					self.modify_connection_weight(genome)
+				elif probability.type == MutationType.CHANGE_CONNECTION_STATUS:
+					self.change_connection_status(genome)
+				elif probability.type == MutationType.NEW_WEIGHT:
+					self.set_new_connection_weight(genome)
 
 		return Network(genome)
 
@@ -71,10 +78,17 @@ class NEAT:
 
 		gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
 
+	def set_new_connection_weight(self, genome):
+		gene = random.choice(genome.genes)
+
+		gene.weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
+
 class MutationType(Enum):
 	NEW_CONNECTION = 0
 	NEW_NODE = 1
 	MODIFY_WEIGHT = 2
+	NEW_WEIGHT = 3
+	CHANGE_CONNECTION_STATUS = 4
 
 class Probability:
 	def __init__(self, prob_type, value):
