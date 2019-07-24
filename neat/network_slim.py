@@ -21,7 +21,7 @@ from . import utility
 
 class Network:
 	def __init__(self):
-		self.nodes = [BiasNode()] #Bias node has always the id = 0
+		self.nodes = []
 		self.output_node_ids = []
 
 	def execute(self, input_values_node_ids):
@@ -45,14 +45,24 @@ class Node:
 		self.id = node_id
 		self.connections = []
 		self.value = 0
+		self.type = None
+		self.level = 0
 
 	def __str__(self):
-		input_nodes_weights = []
+		string = ""
+
+		string += "ID: " + str(self.id) + " "
+		string += "TYPE: " + str(self.type.name) + " "
+		string += "LEVEL: " + str(self.level) + " "
+
+		string += "CONNECTED NODES: ["
 
 		for connection in self.connections:
-			input_nodes_weights.append((connection.node.id, connection.weight, connection.enabled))
+			string += str(connection.node.id) + ", "
 
-		return "ID: " + str(self.id) + ". Level: " + str(self.level) + ". Input node-weights: " + str(input_nodes_weights) + ". Value: " + str(self.value) + "."
+		string += "]"
+
+		return string
 
 	def reset(self):
 		self.connections = []
@@ -75,7 +85,7 @@ class OutputNode(Node):
 	def __init__(self, node_id):
 		super().__init__(node_id)
 		self.type = NodeType.OUTPUT
-		self.level = None
+		self.level = 1
 
 class HiddenNode(Node):
 	def __init__(self, node_id):
@@ -116,7 +126,7 @@ class NodeType(Enum):
 	OUTPUT = 3
 
 class Connection:
-	def __init__(self):
-		self.node = None
-		self.weight = 1.0
-		self.enabled = True
+	def __init__(self, node, weight = 1.0, enabled = True):
+		self.node = node
+		self.weight = weight
+		self.enabled = enabled
