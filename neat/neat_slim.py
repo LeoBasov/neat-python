@@ -45,3 +45,8 @@ class NEAT:
 		gene_id = random.choice(range(len(genome.genes)))
 
 		genome.add_new_node(gene_id)
+
+	def change_connection_status(self, genome):
+		gene = random.choice(genome.genes)
+
+		gene.enabled = not gene.enabled
