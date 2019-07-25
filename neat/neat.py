@@ -25,17 +25,17 @@ class NEAT:
 		pass
 
 class Species:
-	def __init__(self, genome):
+	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 1.0):
 		self.genome = genome
 
-		self.c1 = 1.0
-		self.c2 = 1.0
-		self.c3 = 1.0
+		self.c1 = c1
+		self.c2 = c2
+		self.c3 = c3
 
 	def compare(self, genome):
 		N = max(len(self.genome.genes), len(genome.genes))
 		max_innovation = self.find_max(genome)
-		lists = self.set_up_lists(genome)
+		lists = self.set_up_lists(genome, max_innovation)
 		distance = self.calc_distance(lists, N)
 
 		return distance
@@ -51,7 +51,7 @@ class Species:
 			if gene.innovation > max_innovation:
 				max_innovation = gene.innovation
 
-		return max_innovation
+		return max_innovation + 1
 
 	def set_up_lists(self, genome, max_innovation):
 		lists = max_innovation*[None]
