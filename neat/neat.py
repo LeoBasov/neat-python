@@ -53,12 +53,13 @@ class Species:
 			if gene.innovation > max_innovation:
 				max_innovation = gene.innovation
 
-		return max_innovation + 1
+		return max_innovation
 
 	def set_up_lists(self, genome, max_innovation):
-		lists = max_innovation*[None]
-		list_self = max_innovation*[None]
-		list_other = max_innovation*[None]
+		list_length = max_innovation + 1
+		lists = list_length*[None]
+		list_self = list_length*[None]
+		list_other = list_length*[None]
 
 		for gene in self.genome.genes:
 			list_self[gene.innovation] = gene
@@ -66,7 +67,7 @@ class Species:
 		for gene in genome.genes:
 			list_other[gene.innovation] = gene
 
-		for i in range(max_innovation):
+		for i in range(list_length):
 			lists[i] = (list_self[i], list_other[i])
 
 		return lists
@@ -107,6 +108,9 @@ class Mutator:
 		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.08))
 
 		self.probabilities.sort()
+
+	def mate(self, network1, network2):
+		pass
 
 	def mutate(self, network):
 		genome = copy.deepcopy(network.genome)

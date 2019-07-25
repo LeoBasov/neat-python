@@ -119,7 +119,5 @@ class SpeciesTest(unittest.TestCase):
 		distance1 = species.compare(genome1)
 		distance2 = species.compare(genome2)
 
-		print("distance2", distance2)
-
 		self.assertEqual(distance1, 0.0)
 		self.assertEqual(distance2, 2.0/3.0)
