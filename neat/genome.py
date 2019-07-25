@@ -196,7 +196,7 @@ class Gene:
 		self.out_node_id = out_node_id
 		self.weight = weight
 		self.enabled = enabled
-		self.innovation = 1
+		self.innovation = 0
 
 	def __str__(self):
 		string = ""
