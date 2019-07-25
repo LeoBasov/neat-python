@@ -23,6 +23,9 @@ class NodeType(Enum):
 	OUTPUT = 3
 
 class Genome:
+	INNOVATION = 1
+	LAST_GENES = []
+
 	def __init__(self):
 		self.nodes = [BiasNode()]
 		self.output_nodes_ids = []
@@ -93,6 +96,7 @@ class Genome:
 
 	def add_gene(self, gene):
 		if gene not in self.genes:
+			self.check_gene(gene)
 			self.genes.append(gene)
 			self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
 
@@ -115,6 +119,16 @@ class Genome:
 	def update_levels(self):
 		for node_id in self.output_nodes_ids:
 			self.nodes[node_id].update_level()
+
+	def check_gene(self, gene):
+		for old_gene in Genome.LAST_GENES:
+			if old_gene.connection_exists(gene.in_node_id, gene.out_node_id):
+				return
+
+		Genome.INNOVATION += 1
+		Genome.LAST_GENES.append(gene)
+
+		gene.innovation = Genome.INNOVATION
 
 class Node:
 	def __init__(self, node_id, node_type):
@@ -182,6 +196,7 @@ class Gene:
 		self.out_node_id = out_node_id
 		self.weight = weight
 		self.enabled = enabled
+		self.innovation = 1
 
 	def __str__(self):
 		string = ""
@@ -190,7 +205,7 @@ class Gene:
 		string += "OUT: " + str(self.out_node_id) + " "
 		string += "WEIGHT: " + str(round(self.weight, 3)) + " "
 		string += "ENABLED: " + str(self.enabled) + " "
-		string += "INNOVATION: " + str(0)
+		string += "INNOVATION: " + str(self.innovation)
 
 		return string
 

@@ -9,6 +9,7 @@ sys.path.append('../../.')
 from loc_module import LinInterpolGenome as gen
 from loc_module import Mutator as mut
 from neat.network_slim import Network
+from neat.genome import Genome
 
 #Simulation parameters
 NUMBER_NETWORKS = 100
@@ -77,6 +78,7 @@ def set_up_networks():
 def main_loop():
 	for i in range(NUMBER_ITTERATIONS):
 		mean_fitness = 0
+		Genome.LAST_ITTERATION = []
 
 		for pair in FITNESS_NETWOKR_PAIRS:
 			mean_fitness += pair[0]
