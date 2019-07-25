@@ -183,6 +183,17 @@ class Gene:
 		self.weight = weight
 		self.enabled = enabled
 
+	def __str__(self):
+		string = ""
+
+		string += "IN: " + str(self.in_node_id) + " "
+		string += "OUT: " + str(self.out_node_id) + " "
+		string += "WEIGHT: " + str(round(self.weight, 3)) + " "
+		string += "ENABLED: " + str(self.enabled) + " "
+		string += "INNOVATION: " + str(0)
+
+		return string
+
 	def connection_exists(self, in_node_id, out_node_id):
 		forward_connection = (self.in_node_id == in_node_id) and (self.out_node_id == out_node_id)
 		backward_connection = (self.in_node_id == out_node_id) and (self.out_node_id == in_node_id)
