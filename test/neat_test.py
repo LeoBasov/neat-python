@@ -5,6 +5,7 @@ import copy
 sys.path.append('../.')
 
 from neat.neat import Mutator
+from neat.neat import Species
 from neat.network import Network
 from neat.genome import Genome
 from neat.genome import Gene
@@ -104,3 +105,21 @@ class MutatorTest(unittest.TestCase):
 		self.assertEqual(network.genome.genes[0].out_node_id, new_network.genome.genes[-1].out_node_id)
 
 		self.assertFalse(new_network.genome.genes[0].enabled)"""
+
+class SpeciesTest(unittest.TestCase):
+	def test_distance(self):
+		Genome.reset()
+
+		genome1 = TestGenome2()
+		genome2 = TestGenome2()
+		species = Species(genome1)
+
+		genome2.add_new_node(0)
+
+		distance1 = species.compare(genome1)
+		distance2 = species.compare(genome2)
+
+		print("distance2", distance2)
+
+		self.assertEqual(distance1, 0.0)
+		self.assertEqual(distance2, 2.0/3.0)
