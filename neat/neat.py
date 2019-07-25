@@ -25,12 +25,14 @@ class NEAT:
 		self.species_distance_max = 3.0
 
 class Species:
-	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4):
+	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
 		self.genome = genome
 
 		self.c1 = c1
 		self.c2 = c2
 		self.c3 = c3
+
+		self.unimproved_life_time = unimproved_life_time
 
 	def compare(self, genome):
 		N = max(len(self.genome.genes), len(genome.genes))
