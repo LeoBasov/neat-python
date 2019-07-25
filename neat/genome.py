@@ -23,7 +23,7 @@ class NodeType(Enum):
 	OUTPUT = 3
 
 class Genome:
-	INNOVATION = 1
+	INNOVATION = 0
 	LAST_GENES = []
 
 	def __init__(self):
