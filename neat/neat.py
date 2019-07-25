@@ -22,10 +22,10 @@ from .network import Network
 
 class NEAT:
 	def __init__(self):
-		pass
+		self.species_distance_max = 3.0
 
 class Species:
-	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 1.0):
+	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4):
 		self.genome = genome
 
 		self.c1 = c1
@@ -98,11 +98,11 @@ class Mutator:
 
 		self.probabilities = []
 
-		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.2))
-		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.01))
-		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.5))
-		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.33))
-		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.31))
+		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.05))
+		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.03))
+		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.72))
+		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.0))
+		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.08))
 
 		self.probabilities.sort()
 
