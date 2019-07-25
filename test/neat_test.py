@@ -4,7 +4,7 @@ import copy
 
 sys.path.append('../.')
 
-from neat.neat import NEAT
+from neat.neat import Mutator
 from neat.network import Network
 from neat.genome import Genome
 from neat.genome import Gene
@@ -35,9 +35,9 @@ class TestGenome2(Genome):
 
 		self.set_genes(genes)
 
-class NEATTest(unittest.TestCase):
+class MutatorTest(unittest.TestCase):
 	def test_add_new_connection(self):
-		neat = NEAT()
+		neat = Mutator()
 		genome = TestGenome1()
 		new_genome = TestGenome1()
 		network = Network(genome)
@@ -47,7 +47,7 @@ class NEATTest(unittest.TestCase):
 		new_network = Network(new_genome)
 
 	def test_add_new_node(self):
-		neat = NEAT()
+		neat = Mutator()
 		genome = TestGenome2()
 		new_genome = copy.deepcopy(genome)
 		network = Network(genome)
@@ -65,7 +65,7 @@ class NEATTest(unittest.TestCase):
 		self.assertFalse(new_network.genome.genes[0].enabled)
 
 	def test_modify_connection_weight(self):
-		neat = NEAT()
+		neat = Mutator()
 		genome = TestGenome2()
 		new_genome = TestGenome2()
 		network = Network(genome)
@@ -77,7 +77,7 @@ class NEATTest(unittest.TestCase):
 		self.assertTrue(network.genome.genes[0].weight != new_network.genome.genes[0].weight)
 
 	def test_change_connection_status(self):
-		neat = NEAT()
+		neat = Mutator()
 		genome = TestGenome2()
 		new_genome = TestGenome2()
 		network = Network(genome)
@@ -89,7 +89,7 @@ class NEATTest(unittest.TestCase):
 		self.assertFalse(new_network.genome.genes[0].enabled)
 
 	def test_mutate(self):
-		neat = NEAT()
+		neat = Mutator()
 		genome = TestGenome2()
 		network = Network(genome)
 

@@ -9,7 +9,7 @@ sys.path.append('../../.')
 from neat.genome import Genome
 from neat.genome import Gene
 from neat.network import Network
-from neat.neat import NEAT
+from neat.neat import Mutator
 
 class XORGenome(Genome):
 	def __init__(self):
@@ -75,7 +75,7 @@ def execute(val1, val2, network):
 	return val
 
 def mutate(evaluated_networks):
-	neat = NEAT()
+	neat = Mutator()
 	new_networks = len(evaluated_networks)*[None]
 
 	for i in range(len(evaluated_networks)):

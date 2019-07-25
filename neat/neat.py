@@ -20,7 +20,7 @@ from enum import Enum
 
 from .network import Network
 
-class NEAT:
+class Mutator:
 	def __init__(self):
 		self.new_weight_range = 10.0
 		self.weight_variation = 0.1

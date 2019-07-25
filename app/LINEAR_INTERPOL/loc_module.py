@@ -7,7 +7,7 @@ sys.path.append('../../.')
 
 from neat.genome import Genome
 from neat.genome import Gene
-from neat.neat import NEAT
+from neat.neat import Mutator
 from neat.neat import MutationType
 from neat.neat import Probability
 
@@ -44,7 +44,7 @@ class LinInterpolGenome(Genome):
 	def __get_random_weight(self):
 		return  10 - 20.0*random.random()
 
-class Mutator(NEAT):
+class Mutator(Mutator):
 	def __init__(self):
 		super().__init__()
 
