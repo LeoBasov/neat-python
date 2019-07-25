@@ -15,6 +15,7 @@ class LinInterpolGenome(Genome):
 	def __init__(self, discretisation):
 		super().__init__()
 		genes = []
+		hidden_nodes = []
 
 		self.bias_node_id = 0
 		
@@ -22,12 +23,21 @@ class LinInterpolGenome(Genome):
 		self.input_node_id2 = self.add_input_node()
 
 		for i in range(discretisation):
+			hidden_nodes.append(self.add_hidden_node())
+
+		for i in range(discretisation):
 			self.add_output_node()
 
-		for node_id in self.output_nodes_ids:
+		for node_id in hidden_nodes:
 			genes.append(Gene(self.bias_node_id, node_id, weight = self.__get_random_weight()))
 			genes.append(Gene(self.input_node_id1, node_id, weight = self.__get_random_weight()))
 			genes.append(Gene(self.input_node_id2, node_id, weight = self.__get_random_weight()))
+
+		for output_node_id in self.output_nodes_ids:
+			genes.append(Gene(self.bias_node_id, output_node_id, weight = self.__get_random_weight()))
+
+			for hidden_node_id in hidden_nodes:
+				genes.append(Gene(hidden_node_id, output_node_id, weight = self.__get_random_weight()))
 
 		self.set_genes(genes)
 
@@ -40,14 +50,14 @@ class Mutator(NEAT):
 
 		self.new_weight_range = 10.0
 		self.weight_variation = 0.1
-		self.max_network_size = 7
+		self.max_network_size = 4
 
 		self.probabilities = []
 
-		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.2))
-		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.01))
-		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.5))
-		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.33))
-		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.31))
+		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.0))
+		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.00))
+		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.1))
+		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.0))
+		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.01))
 
 		self.probabilities.sort()

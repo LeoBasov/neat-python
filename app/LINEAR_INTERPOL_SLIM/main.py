@@ -12,9 +12,10 @@ from neat.network_slim import Network
 
 #Simulation parameters
 NUMBER_NETWORKS = 100
-NUMBER_ITTERATIONS = 10000
+NUMBER_ITTERATIONS = 100
+NUMBER_SUB_CYCLES = 100
 
-DISCRITISATION = 2
+DISCRITISATION = 5
 
 #result values
 NETWORKS = []
@@ -44,6 +45,7 @@ def print_header():
 def print_set_up():
 	print("NUMBER_NETWORKS", NUMBER_NETWORKS)
 	print("NUMBER_ITTERATIONS", NUMBER_ITTERATIONS)
+	print("NUMBER_SUB_CYCLES", NUMBER_SUB_CYCLES)
 	print("NUMBER_EVALUATED_POINTS", DISCRITISATION)
 	print(80*"-")
 
@@ -74,7 +76,15 @@ def set_up_networks():
 
 def main_loop():
 	for i in range(NUMBER_ITTERATIONS):
-		print("Evaluating network {}/{}".format(i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
+		mean_fitness = 0
+
+		for pair in FITNESS_NETWOKR_PAIRS:
+			mean_fitness += pair[0]
+
+		if len(FITNESS_NETWOKR_PAIRS):
+			mean_fitness /= len(FITNESS_NETWOKR_PAIRS)
+
+		print("MEAN FITNESS: %0.3f EVALUATED NETWORKS %0.0d/%0.0d" % (round(mean_fitness,3), i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
 		evaluate_networks()
 		mutate()
 
@@ -89,7 +99,13 @@ def evaluate_networks():
 	values = get_values(l_value, r_value)
 
 	for network in NETWORKS:
-		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network, l_value, r_value, values))
+		fitness_values = []
+
+		for i in range(NUMBER_SUB_CYCLES):
+			fitness_values.append(evaluate_network(network, l_value, r_value, values))
+
+
+		FITNESS_NETWOKR_PAIRS.append((sum(fitness_values)/NUMBER_SUB_CYCLES, network))
 
 	FITNESS_NETWOKR_PAIRS.sort(key = lambda x: x[0])
 	FITNESS_NETWOKR_PAIRS.reverse()
@@ -112,9 +128,9 @@ def evaluate_network(network, l_value, r_value, values):
 	fitness = 0
 
 	for i in range(len(values)):
-		fitness += calc_fitness(values[i], output_values[3 + i])
+		fitness += calc_fitness(values[i], output_values[3 + DISCRITISATION + i])
 
-	return [fitness/len(values), network]
+	return fitness/len(values)
 
 def evaluate_best_network(network):
 	l_value = random.random()
@@ -126,7 +142,7 @@ def evaluate_best_network(network):
 
 	for i in range(len(values)):
 		real_value = values[i]
-		calc_value = output_values[3 + i]
+		calc_value = output_values[3 + DISCRITISATION + i]
 		fitness = calc_fitness(real_value, calc_value)
 
 		fitness_real_calc.append((fitness, real_value, calc_value))
