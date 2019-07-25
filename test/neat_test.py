@@ -1,204 +1,106 @@
 import unittest
 import sys
+import copy
 
 sys.path.append('../.')
 
-from neat.neat import Node
-from neat.neat import Gene
-from neat.neat import Network
 from neat.neat import NEAT
+from neat.network import Network
+from neat.genome import Genome
+from neat.genome import Gene
 
-class TestNetwork(Network):
+class TestGenome1(Genome):
 	def __init__(self):
 		super().__init__()
+		genes = []
 
-		self._add_input_node(1)
-		self._add_output_node(2)
-		self._set_up_genes()
+		self.input_node_id1 = self.add_input_node()
+		self.input_node_id2 = self.add_input_node()
 
-	def _set_up_genes(self):
-		gene1 = Gene(in_node = 1, out_node = 2, weight = 1.0, enabled = True)
+		self.output_node_id1 = self.add_output_node()
 
-		self.set_genes([gene1])
+		self.set_genes(genes)
+
+class TestGenome2(Genome):
+	def __init__(self):
+		super().__init__()
+		genes = []
+
+		self.input_node_id1 = self.add_input_node()
+		self.input_node_id2 = self.add_input_node()
+
+		self.output_node_id1 = self.add_output_node()
+
+		genes.append(Gene(self.input_node_id1, self.output_node_id1, weight = 5.0))
+
+		self.set_genes(genes)
 
 class NEATTest(unittest.TestCase):
-	def test__midifiy_connection_status(self):
+	def test_add_new_connection(self):
 		neat = NEAT()
-		network = TestNetwork()
+		genome = TestGenome1()
+		new_genome = TestGenome1()
+		network = Network(genome)
 
-		self.assertTrue(network.genes[0].enabled)
+		neat.add_new_connection(new_genome)
 
-		neat._NEAT__midifiy_connection_status(network)
+		new_network = Network(new_genome)
 
-		self.assertFalse(network.genes[0].enabled)
-
-		neat._NEAT__midifiy_connection_status(network)
-
-		self.assertTrue(network.genes[0].enabled)
-
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], 1.0)
-
-	def test__modify_weights(self):
+	def test_add_new_node(self):
 		neat = NEAT()
-		network = TestNetwork()
+		genome = TestGenome2()
+		new_genome = copy.deepcopy(genome)
+		network = Network(genome)
 
-		self.assertEqual(network.genes[0].weight, 1.0)
+		neat.add_new_node(new_genome)
 
-		neat._NEAT__modify_weight(network)
+		new_network = Network(new_genome)
 
-		self.assertTrue(network.genes[0].weight != 1.0)
+		self.assertEqual(network.genome.genes[0].weight, new_network.genome.genes[-1].weight)
+		self.assertEqual(new_network.genome.genes[-2].weight, 1.0)
 
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
+		self.assertEqual(network.genome.genes[0].in_node_id, new_network.genome.genes[-2].in_node_id)
+		self.assertEqual(network.genome.genes[0].out_node_id, new_network.genome.genes[-1].out_node_id)
 
-	def test__set_new_random_weight(self):
+		self.assertFalse(new_network.genome.genes[0].enabled)
+
+	def test_modify_connection_weight(self):
 		neat = NEAT()
-		network = TestNetwork()
+		genome = TestGenome2()
+		new_genome = TestGenome2()
+		network = Network(genome)
 
-		self.assertEqual(network.genes[0].weight, 1.0)
+		neat.modify_connection_weight(new_genome)
 
-		neat._NEAT__set_new_random_weight(network)
+		new_network = Network(new_genome)
 
-		self.assertTrue(network.genes[0].weight != 1.0)
+		self.assertTrue(network.genome.genes[0].weight != new_network.genome.genes[0].weight)
 
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
-
-	def test__set_new_random_weight_all(self):
+	def test_change_connection_status(self):
 		neat = NEAT()
-		network = TestNetwork()
-		genes = network.genes
+		genome = TestGenome2()
+		new_genome = TestGenome2()
+		network = Network(genome)
 
-		gene1 = Gene(in_node = 1, out_node = 3, weight = 1.0, enabled = True)
-		gene2 = Gene(in_node = 1, out_node = 4, weight = 1.0, enabled = True)
-		gene3 = Gene(in_node = 1, out_node = 5, weight = 1.0, enabled = True)
+		neat.change_connection_status(new_genome)
 
-		gene4 = Gene(in_node = 3, out_node = 2, weight = 1.0, enabled = True)
-		gene5 = Gene(in_node = 4, out_node = 2, weight = 1.0, enabled = True)
-		gene6 = Gene(in_node = 5, out_node = 2, weight = 1.0, enabled = True)
+		new_network = Network(new_genome)
 
-		genes.append(gene1)
-		genes.append(gene2)
-		genes.append(gene3)
-		genes.append(gene4)
-		genes.append(gene5)
-		genes.append(gene6)
+		self.assertFalse(new_network.genome.genes[0].enabled)
 
-		network.set_genes(genes)
-
-		for gene in network.genes:
-			self.assertEqual(gene.weight, 1.0)
-
-		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[4].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[5].in_node_weights_status[0][0].id, 1)
-
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 3)
-		self.assertEqual(network.nodes[2].in_node_weights_status[2][0].id, 4)
-		self.assertEqual(network.nodes[2].in_node_weights_status[3][0].id, 5)
-
-		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], network.genes[1].weight)
-		self.assertEqual(network.nodes[4].in_node_weights_status[0][1], network.genes[2].weight)
-		self.assertEqual(network.nodes[5].in_node_weights_status[0][1], network.genes[3].weight)
-
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
-		self.assertEqual(network.nodes[2].in_node_weights_status[1][1], network.genes[4].weight)
-		self.assertEqual(network.nodes[2].in_node_weights_status[2][1], network.genes[5].weight)
-		self.assertEqual(network.nodes[2].in_node_weights_status[3][1], network.genes[6].weight)
-
-		neat._NEAT__set_new_random_weight_all(network)
-
-		for gene in network.genes:
-			self.assertTrue(gene.weight != 1.0)
-
-		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[4].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[5].in_node_weights_status[0][0].id, 1)
-
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 3)
-		self.assertEqual(network.nodes[2].in_node_weights_status[2][0].id, 4)
-		self.assertEqual(network.nodes[2].in_node_weights_status[3][0].id, 5)
-
-		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], network.genes[1].weight)
-		self.assertEqual(network.nodes[4].in_node_weights_status[0][1], network.genes[2].weight)
-		self.assertEqual(network.nodes[5].in_node_weights_status[0][1], network.genes[3].weight)
-
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[0].weight)
-		self.assertEqual(network.nodes[2].in_node_weights_status[1][1], network.genes[4].weight)
-		self.assertEqual(network.nodes[2].in_node_weights_status[2][1], network.genes[5].weight)
-		self.assertEqual(network.nodes[2].in_node_weights_status[3][1], network.genes[6].weight)
-
-		self.assertTrue(network.nodes[3].in_node_weights_status[0][1] != 1.0)
-		self.assertTrue(network.nodes[4].in_node_weights_status[0][1] != 1.0)
-		self.assertTrue(network.nodes[5].in_node_weights_status[0][1] != 1.0)
-
-		self.assertTrue(network.nodes[2].in_node_weights_status[0][1] != 1.0)
-		self.assertTrue(network.nodes[2].in_node_weights_status[1][1] != 1.0)
-		self.assertTrue(network.nodes[2].in_node_weights_status[2][1] != 1.0)
-		self.assertTrue(network.nodes[2].in_node_weights_status[3][1] != 1.0)
-
-	def test__get_net_network_node_id(self):
+	def test_mutate(self):
 		neat = NEAT()
-		network = TestNetwork()
-		genes = network.genes
+		genome = TestGenome2()
+		network = Network(genome)
 
-		gene1 = Gene(in_node = 1, out_node = 3, weight = 1.0, enabled = True)
-		gene2 = Gene(in_node = 1, out_node = 4, weight = 1.0, enabled = True)
-		gene3 = Gene(in_node = 1, out_node = 5, weight = 1.0, enabled = True)
+		neat.probabilities[1].value = 1.0
 
-		gene4 = Gene(in_node = 3, out_node = 2, weight = 1.0, enabled = True)
-		gene5 = Gene(in_node = 4, out_node = 2, weight = 1.0, enabled = True)
-		gene6 = Gene(in_node = 5, out_node = 2, weight = 1.0, enabled = True)
+		new_network = neat.mutate(network)
 
-		genes.append(gene1)
-		genes.append(gene2)
-		genes.append(gene3)
-		genes.append(gene4)
-		genes.append(gene5)
-		genes.append(gene6)
+		self.assertEqual(network.genome.genes[0].weight, new_network.genome.genes[-1].weight)
+		self.assertEqual(new_network.genome.genes[-2].weight, 1.0)
 
-		network.set_genes(genes)
+		self.assertEqual(network.genome.genes[0].in_node_id, new_network.genome.genes[-2].in_node_id)
+		self.assertEqual(network.genome.genes[0].out_node_id, new_network.genome.genes[-1].out_node_id)
 
-		new_id = neat._NEAT__get_net_network_node_id(network)
-
-		self.assertEqual(new_id, 6)
-
-	def test__generate_new_node(self):
-		neat = NEAT()
-		network = TestNetwork()
-
-		self.assertEqual(len(network.nodes), 3)
-
-		neat._NEAT__generate_new_node(network)
-
-		self.assertEqual(len(network.nodes), 4)
-
-		self.assertEqual(network.nodes[3].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
-		self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 3)
-
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][2], False)
-		self.assertEqual(network.nodes[2].in_node_weights_status[1][2], True)
-
-		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], network.genes[1].weight)
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], network.genes[2].weight)
-
-		self.assertEqual(network.nodes[3].in_node_weights_status[0][1], 1.0)
-		self.assertEqual(network.nodes[2].in_node_weights_status[0][1], 1.0)
-
-	def test__generate_new_connection(self):
-		neat = NEAT()
-
-		for _ in range(10):
-			network = TestNetwork()
-
-			neat._NEAT__generate_new_connection(network)
-
-			self.assertEqual(network.nodes[2].in_node_weights_status[0][0].id, 1)
-			self.assertEqual(network.nodes[2].in_node_weights_status[1][0].id, 0)
-
-			self.assertEqual(network.nodes[2].in_node_weights_status[0][1], 1.0)
-			self.assertEqual(network.nodes[2].in_node_weights_status[1][1], 1.0)
+		self.assertFalse(new_network.genome.genes[0].enabled)

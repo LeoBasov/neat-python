@@ -2,16 +2,21 @@
 
 import random
 import copy
+import sys
 
-from loc_module import LinInterpolNetwork as lin
-from loc_module import InputNodeType as input_type
+sys.path.append('../../.')
+
+from loc_module import LinInterpolGenome as gen
 from loc_module import Mutator as mut
+from neat.network import Network
+from neat.genome import Genome
 
 #Simulation parameters
-NUMBER_NETWORKS = 1000
-NUMBER_ITTERATIONS = 5000
+NUMBER_NETWORKS = 100
+NUMBER_ITTERATIONS = 100
+NUMBER_SUB_CYCLES = 100
 
-DISCRITISATION = 2
+DISCRITISATION = 5
 
 #result values
 NETWORKS = []
@@ -41,6 +46,7 @@ def print_header():
 def print_set_up():
 	print("NUMBER_NETWORKS", NUMBER_NETWORKS)
 	print("NUMBER_ITTERATIONS", NUMBER_ITTERATIONS)
+	print("NUMBER_SUB_CYCLES", NUMBER_SUB_CYCLES)
 	print("NUMBER_EVALUATED_POINTS", DISCRITISATION)
 	print(80*"-")
 
@@ -60,17 +66,27 @@ def print_best():
 
 	print(80*"-")
 
-	for key, node in FITNESS_NETWOKR_PAIRS[0][1].nodes.items():
+	for node in FITNESS_NETWOKR_PAIRS[0][1].nodes:
 		print(node)
 
 def set_up_networks():
 	for _ in range(NUMBER_NETWORKS):
-		network = lin(DISCRITISATION)
+		genome = gen(DISCRITISATION)
+		network = Network(genome)
 		NETWORKS.append(network)
 
 def main_loop():
 	for i in range(NUMBER_ITTERATIONS):
-		print("Evaluating network {}/{}".format(i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
+		mean_fitness = 0
+		Genome.LAST_ITTERATION = []
+
+		for pair in FITNESS_NETWOKR_PAIRS:
+			mean_fitness += pair[0]
+
+		if len(FITNESS_NETWOKR_PAIRS):
+			mean_fitness /= len(FITNESS_NETWOKR_PAIRS)
+
+		print("MEAN FITNESS: %0.3f EVALUATED NETWORKS %0.0d/%0.0d" % (round(mean_fitness,3), i + 1, NUMBER_ITTERATIONS), end="\r", flush=True)
 		evaluate_networks()
 		mutate()
 
@@ -85,9 +101,15 @@ def evaluate_networks():
 	values = get_values(l_value, r_value)
 
 	for network in NETWORKS:
-		FITNESS_NETWOKR_PAIRS.append(evaluate_network(network, l_value, r_value, values))
+		fitness_values = []
 
-	FITNESS_NETWOKR_PAIRS.sort()
+		for i in range(NUMBER_SUB_CYCLES):
+			fitness_values.append(evaluate_network(network, l_value, r_value, values))
+
+
+		FITNESS_NETWOKR_PAIRS.append((sum(fitness_values)/NUMBER_SUB_CYCLES, network))
+
+	FITNESS_NETWOKR_PAIRS.sort(key = lambda x: x[0])
 	FITNESS_NETWOKR_PAIRS.reverse()
 
 def get_values(l_value, r_value):
@@ -103,26 +125,26 @@ def get_values(l_value, r_value):
 	return values
 
 def evaluate_network(network, l_value, r_value, values):
-	input_values = ((l_value, input_type.L_VALUE.value), (r_value, input_type.R_VALUE.value))
+	input_values = ((l_value, 1), (r_value, 2))
 	output_values = network.execute(input_values)
 	fitness = 0
 
 	for i in range(len(values)):
-		fitness += calc_fitness(values[i], output_values[input_type.MAX_ID.value + i])
+		fitness += calc_fitness(values[i], output_values[3 + DISCRITISATION + i])
 
-	return [fitness/len(values), network]
+	return fitness/len(values)
 
 def evaluate_best_network(network):
 	l_value = random.random()
 	r_value = random.random()
 	values = get_values(l_value, r_value)
-	input_values = ((l_value, input_type.L_VALUE.value), (r_value, input_type.R_VALUE.value))
+	input_values = ((l_value, 1), (r_value, 2))
 	output_values = network.execute(input_values)
 	fitness_real_calc = []
 
 	for i in range(len(values)):
 		real_value = values[i]
-		calc_value = output_values[input_type.MAX_ID.value + i]
+		calc_value = output_values[3 + DISCRITISATION + i]
 		fitness = calc_fitness(real_value, calc_value)
 
 		fitness_real_calc.append((fitness, real_value, calc_value))
@@ -134,23 +156,10 @@ def calc_fitness(expected, calculated):
 
 def mutate():
 	for i in range(len(FITNESS_NETWOKR_PAIRS)):
-		if i < 0.1*len(NETWORKS):
+		if (i < 0.2*len(FITNESS_NETWOKR_PAIRS)) and (FITNESS_NETWOKR_PAIRS[i][0] > 0.75):
 			NETWORKS[i] = FITNESS_NETWOKR_PAIRS[i][1]
-
-		elif i < 0.3*len(NETWORKS):
-			loc_network = copy.deepcopy(FITNESS_NETWOKR_PAIRS[i][1])
-			MUTATOR._NEAT__modify_weight(loc_network)
-			NETWORKS[i] = loc_network
-
-		elif i < 0.6*len(NETWORKS):
-			loc_network = copy.deepcopy(FITNESS_NETWOKR_PAIRS[i][1])
-			MUTATOR._NEAT__set_new_random_weight(loc_network)
-			NETWORKS[i] = loc_network
-
 		else:
-			loc_network = copy.deepcopy(FITNESS_NETWOKR_PAIRS[i][1])
-			MUTATOR._NEAT__set_new_random_weight_all(loc_network)
-			NETWORKS[i] = loc_network
+			NETWORKS[i] = MUTATOR.mutate(FITNESS_NETWOKR_PAIRS[i][1])
 
 if __name__ == '__main__':
 	main()

@@ -3,13 +3,13 @@ import sys
 
 sys.path.append('../.')
 
-from neat.network_slim import Node
-from neat.network_slim import BiasNode
-from neat.network_slim import InputNode
-from neat.network_slim import HiddenNode
-from neat.network_slim import OutputNode
-from neat.network_slim import Network
-from neat.network_slim import Connection
+from neat.network import Node
+from neat.network import BiasNode
+from neat.network import InputNode
+from neat.network import HiddenNode
+from neat.network import OutputNode
+from neat.network import Network
+from neat.network import Connection
 
 from neat.genome import Genome
 from neat.genome import Gene

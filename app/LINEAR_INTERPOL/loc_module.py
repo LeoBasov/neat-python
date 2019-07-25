@@ -5,49 +5,39 @@ import enum
 
 sys.path.append('../../.')
 
-from neat.neat import Node
-from neat.neat import Gene
-from neat.neat import Network
+from neat.genome import Genome
+from neat.genome import Gene
 from neat.neat import NEAT
+from neat.neat import MutationType
+from neat.neat import Probability
 
-class InputNodeType(enum.Enum):
-	#Imput node type
-	L_VALUE = 1
-	R_VALUE = 2
-
-	MAX_ID = 3
-
-class LinInterpolNetwork(Network):
+class LinInterpolGenome(Genome):
 	def __init__(self, discretisation):
 		super().__init__()
-		self.__output_ids = discretisation*[0]
-
-		self.set_up(discretisation)
-		self.__set_up_genes()
-
-	def set_up(self, discretisation):
 		genes = []
+		hidden_nodes = []
 
-		self._add_input_node(InputNodeType.L_VALUE.value)
-		self._add_input_node(InputNodeType.R_VALUE.value)
+		self.bias_node_id = 0
+		
+		self.input_node_id1 = self.add_input_node()
+		self.input_node_id2 = self.add_input_node()
 
 		for i in range(discretisation):
-			new_id = InputNodeType.MAX_ID.value + i
+			hidden_nodes.append(self.add_hidden_node())
 
-			self._add_output_node(new_id)
-			self.__output_ids.append(new_id)
+		for i in range(discretisation):
+			self.add_output_node()
 
-	def __set_up_genes(self):
-		bias_node_id = 0
-		genes = []
+		for node_id in hidden_nodes:
+			genes.append(Gene(self.bias_node_id, node_id, weight = self.__get_random_weight()))
+			genes.append(Gene(self.input_node_id1, node_id, weight = self.__get_random_weight()))
+			genes.append(Gene(self.input_node_id2, node_id, weight = self.__get_random_weight()))
 
-		for out_node_id in self.output_node_ids:
-			for in_node_id in self.input_node_ids:
-				gene = Gene(in_node = in_node_id, out_node = out_node_id, weight = self.__get_random_weight(), enabled = True)
-				genes.append(gene)
+		for output_node_id in self.output_nodes_ids:
+			genes.append(Gene(self.bias_node_id, output_node_id, weight = self.__get_random_weight()))
 
-			gene = Gene(in_node = bias_node_id, out_node = out_node_id, weight = self.__get_random_weight(), enabled = True)
-			genes.append(gene)
+			for hidden_node_id in hidden_nodes:
+				genes.append(Gene(hidden_node_id, output_node_id, weight = self.__get_random_weight()))
 
 		self.set_genes(genes)
 
@@ -58,12 +48,16 @@ class Mutator(NEAT):
 	def __init__(self):
 		super().__init__()
 
-		self.new_node_prob = 0.00
-		self.new_connection_prob = 0.0
-		self.set_new_weight_prob = 0.1
-		self.new_activation_status_prob = 0.0
-		self.modify_weight_prob = 0.3
-		self.max_network_size = 30
+		self.new_weight_range = 10.0
+		self.weight_variation = 0.1
+		self.max_network_size = 4
 
-		self.weight_modification_variation = 0.1
-		self.weight_setting_variation = 10.0
+		self.probabilities = []
+
+		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.0))
+		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.00))
+		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.1))
+		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.0))
+		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.01))
+
+		self.probabilities.sort()

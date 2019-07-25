@@ -6,34 +6,32 @@ import math
 
 sys.path.append('../../.')
 
-from neat.neat import Node
-from neat.neat import Gene
-from neat.neat import Network
+from neat.genome import Genome
+from neat.genome import Gene
+from neat.network import Network
 from neat.neat import NEAT
 
-class XORNetwork(Network):
+class XORGenome(Genome):
 	def __init__(self):
 		super().__init__()
+		genes= []
 
-		self._add_input_node(1)
-		self._add_input_node(2)
+		self.input_node_id1 = self.add_input_node()
+		self.input_node_id2 = self.add_input_node()
 
-		self._add_output_node(3)
+		self.output_node_id1 = self.add_output_node()
 
-		self._set_up_genes()
+		genes.append(Gene(0,                   self.output_node_id1, weight = 10 - 20.0*random.random()))
+		genes.append(Gene(self.input_node_id1, self.output_node_id1, weight = 10 - 20.0*random.random()))
+		genes.append(Gene(self.input_node_id2, self.output_node_id1, weight = 10 - 20.0*random.random()))
 
-	def _set_up_genes(self):
-		gene1 = Gene(in_node = 0, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
-		gene2 = Gene(in_node = 1, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
-		gene3 = Gene(in_node = 2, out_node = 3, weight = 10 - 20.0*random.random(), enabled = True)
-
-		self.set_genes([gene1, gene2, gene3])
+		self.set_genes(genes)
 
 def generate_networks(number):
 	networks = []
 
 	for i in range(number):
-		network = XORNetwork()
+		network = Network(XORGenome())
 		networks.append(network)
 
 	return networks
@@ -110,12 +108,16 @@ def main():
 	print_best(lis)
 	print(80*"-")
 	test_best(lis[0][1])
+
+	for fitness, node in lis:
+		print(fitness)
+
 	print("done")
 
 def print_best(lis):
 	print("Best fitness:", lis[0][0])
 
-	for key, node in lis[0][1].nodes.items():
+	for node in lis[0][1].nodes:
 		print(node)
 
 	"""print(80*"-")

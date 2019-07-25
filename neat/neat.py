@@ -1,4 +1,4 @@
-"""live_sim a evolution simulation
+"""NEAT
 Copyright (C) 2019  Leo Basov
 
 This program is free software: you can redistribute it and/or modify
@@ -16,134 +16,85 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 import copy
 import random
+from enum import Enum
 
-from .network_large import Node
-from .network_large import Gene
-from .network_large import Network
-from .network_large import NodeType
+from .network import Network
 
 class NEAT:
 	def __init__(self):
-		self.new_node_prob = 0.01
-		self.new_connection_prob = 0.2
-		self.set_new_weight_prob = 0.31
-		self.new_activation_status_prob = 0.33
-		self.modify_weight_prob = 0.5
-		self.max_network_size = 7
+		self.new_weight_range = 10.0
+		self.weight_variation = 0.1
+		self.max_network_size = 5
 
-		self.weight_modification_variation = 0.1
-		self.weight_setting_variation = 10.0
+		self.probabilities = []
+
+		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.2))
+		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.01))
+		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.5))
+		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.33))
+		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.31))
+
+		self.probabilities.sort()
 
 	def mutate(self, network):
-		new_network = copy.deepcopy(network)
-		rand_nr = random.random()
+		genome = copy.deepcopy(network.genome)
+		rand_num = random.random()
 
-		if rand_nr < self.new_node_prob and len(new_network.nodes) < self.max_network_size :
-			self.__generate_new_node(new_network)
+		for probability in self.probabilities:
+			if probability.value > rand_num:
+				if probability.type == MutationType.NEW_CONNECTION:
+					self.add_new_connection(genome)
+				elif probability.type == MutationType.NEW_NODE and len(genome.nodes) < self.max_network_size:
+					self.add_new_node(genome)
+				elif probability.type == MutationType.MODIFY_WEIGHT:
+					self.modify_connection_weight(genome)
+				elif probability.type == MutationType.CHANGE_CONNECTION_STATUS:
+					self.change_connection_status(genome)
+				elif probability.type == MutationType.NEW_WEIGHT:
+					self.set_new_connection_weight(genome)
 
-		elif rand_nr < self.new_connection_prob:
-			self.__generate_new_connection(new_network)
+				break
 
-		elif rand_nr < self.set_new_weight_prob:
-			self.__set_new_random_weight(new_network)
+		return Network(genome)
 
-		elif rand_nr < self.new_activation_status_prob:
-			self.__midifiy_connection_status(new_network)
+	def add_new_connection(self, genome):
+		node1 = random.choice(genome.nodes)
+		node2 = random.choice(genome.nodes)
+		weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
 
-		elif rand_nr < self.modify_weight_prob:
-			self.__modify_weight(new_network)
+		genome.add_new_connection(node1.id, node2.id, weight)
 
-		return new_network
+	def add_new_node(self, genome):
+		gene_id = random.choice(range(len(genome.genes)))
 
-	def __modify_weight(self, network):
-		genes = network.genes
-		gene = random.choice(genes)
-		gene.weight *= 1.0 + self.weight_modification_variation*(1.0 - 2.0*random.random())
+		genome.add_new_node(gene_id)
 
-		network.set_genes(genes)
+	def change_connection_status(self, genome):
+		gene = random.choice(genome.genes)
 
-	def __set_new_random_weight(self, network):
-		genes = network.genes
-		gene = random.choice(genes)
-		gene.weight = 1.0 + self.weight_setting_variation*(1.0 - 2.0*random.random())
-
-		network.set_genes(genes)
-
-	def __set_new_random_weight_all(self, network):
-		genes = network.genes
-		
-		for gene in genes:
-			gene.weight = 1.0 + self.weight_setting_variation*(1.0 - 2.0*random.random())
-
-		network.set_genes(genes)
-
-	def __generate_new_node(self, network):
-		new_node_id = self.__get_net_network_node_id(network)
-		genes = network.genes
-		gene = random.choice(genes)
-		gene.enabled = False
-		gene1 = Gene(in_node = gene.in_node, out_node = new_node_id, weight = 1.0, enabled = True)
-		gene2 = Gene(in_node = new_node_id, out_node = gene.out_node, weight = 1.0, enabled = True)		
-
-		genes.append(gene1)
-		genes.append(gene2)
-
-		network.set_genes(genes)
-
-	def __get_net_network_node_id(self, network):
-		new_node_id = 0
-
-		for key, node in network.nodes.items():
-			if node.id > new_node_id:
-				new_node_id = node.id
-
-		return new_node_id + 1
-
-	def __generate_new_connection(self, network):
-		node_ids = list(network.nodes.keys())
-		random.shuffle(node_ids)
-		genes = network.genes
-		found_possible_connection = False
-		node_in = None
-		node_out = None
-
-		for node_in_id in node_ids:
-			for node_out_id in node_ids:
-				node_in = network.nodes[node_in_id]
-				node_out = network.nodes[node_out_id]
-
-				if self.__check_connection_creteia(node_in, node_out, genes):
-					found_possible_connection = True
-					break
-
-			else:
-				continue
-			break
-
-		if found_possible_connection:
-			gene = Gene(in_node = node_in.id, out_node = node_out.id, weight = 1.0, enabled = True)
-			genes.append(gene)
-			network.set_genes(genes)
-
-	def __check_connection_creteia(self, node_in, node_out, genes):
-		#Input output node criteria
-		if (node_in.type == NodeType.OUTPUT_NODE) or (node_out.type == NodeType.INPUT_NODE) or (node_out.type == NodeType.BIAS_NODE):
-			return False
-
-		#existence criteria
-		for gene in genes:
-			if (node_in.id == gene.in_node and node_out.id == gene.out_node) or (node_in.id == gene.out_node and node_out.id == gene.in_node):
-				return False
-
-		#no circular dependecy criteria
-		if (node_out.type != NodeType.OUTPUT_NODE) and (node_in.level >= node_out.level):
-			return False
-
-		return True
-
-	def __midifiy_connection_status(self, network):
-		genes = network.genes
-		gene = random.choice(genes)
 		gene.enabled = not gene.enabled
 
-		network.set_genes(genes)
+	def modify_connection_weight(self, genome):
+		gene = random.choice(genome.genes)
+
+		gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
+
+	def set_new_connection_weight(self, genome):
+		gene = random.choice(genome.genes)
+
+		gene.weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
+
+class MutationType(Enum):
+	NEW_CONNECTION = 0
+	NEW_NODE = 1
+	MODIFY_WEIGHT = 2
+	NEW_WEIGHT = 3
+	CHANGE_CONNECTION_STATUS = 4
+
+class Probability:
+	def __init__(self, prob_type, value):
+		self.type = prob_type
+		self.value = value
+
+	def __lt__(self, other):
+		return self.value < other.value
