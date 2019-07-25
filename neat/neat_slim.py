@@ -53,6 +53,8 @@ class NEAT:
 				elif probability.type == MutationType.NEW_WEIGHT:
 					self.set_new_connection_weight(genome)
 
+				break
+
 		return Network(genome)
 
 	def add_new_connection(self, genome):
