@@ -26,6 +26,10 @@ class Genome:
 	INNOVATION = 0
 	LAST_GENES = []
 
+	def reset():
+		Genome.INNOVATION = 0
+		Genome.LAST_GENES = []
+
 	def __init__(self):
 		self.nodes = [BiasNode()]
 		self.output_nodes_ids = []

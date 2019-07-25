@@ -73,13 +73,13 @@ class Species:
 		number_of_excesses = 0
 		number_of_disjoints = 0
 		number_of_matching = 0
-		average_weight_matching = 0.0
+		average_weight_differnece = 0.0
 		excess = True
 
 		for element in reversed(lists):
 			if element[0] and element[1]:
 				excess = False
-				average_weight_matching += 0.5*(element[0].weight + element[1].weight)
+				average_weight_differnece += abs(element[0].weight - element[1].weight)
 				number_of_matching += 1
 
 			elif (element[0] and not element[1]) or (not element[0] and element[1]) and excess:
@@ -88,7 +88,7 @@ class Species:
 			elif (element[0] and not element[1]) or (not element[0] and element[1]):
 				number_of_disjoints += 1
 
-		return self.c1*(number_of_excesses/N) + self.c2*(number_of_disjoints/N) + self.c3*(average_weight_matching/number_of_matching)
+		return self.c1*(number_of_excesses/N) + self.c2*(number_of_disjoints/N) + self.c3*(average_weight_differnece/number_of_matching)
 
 class Mutator:
 	def __init__(self):
