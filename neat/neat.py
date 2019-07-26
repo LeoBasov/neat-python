@@ -19,6 +19,7 @@ import random
 from enum import Enum
 
 from .network import Network
+from .genome import Genome
 
 class NEAT:
 	def __init__(self):
@@ -36,41 +37,10 @@ class Species:
 
 	def compare(self, genome):
 		N = max(len(self.genome.genes), len(genome.genes))
-		max_innovation = self.find_max_innovation(genome)
-		lists = self.set_up_lists(genome, max_innovation)
+		lists = Genome.set_up_lists(self.genome, genome)
 		distance = self.calc_distance(lists, N)
 
 		return distance
-
-	def find_max_innovation(self, genome):
-		max_innovation = 0
-
-		for gene in self.genome.genes:
-			if gene.innovation > max_innovation:
-				max_innovation = gene.innovation
-
-		for gene in genome.genes:
-			if gene.innovation > max_innovation:
-				max_innovation = gene.innovation
-
-		return max_innovation
-
-	def set_up_lists(self, genome, max_innovation):
-		list_length = max_innovation + 1
-		lists = list_length*[None]
-		list_self = list_length*[None]
-		list_other = list_length*[None]
-
-		for gene in self.genome.genes:
-			list_self[gene.innovation] = gene
-
-		for gene in genome.genes:
-			list_other[gene.innovation] = gene
-
-		for i in range(list_length):
-			lists[i] = (list_self[i], list_other[i])
-
-		return lists
 
 	def calc_distance(self, lists, N):
 		number_of_excesses = 0
