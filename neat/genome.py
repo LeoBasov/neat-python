@@ -47,9 +47,11 @@ class Genome:
 	def set_up_base_lists(genom1, genom2):
 		base_list = []
 
-		for i in range(len(genom1.genes)):
+		for i in range(min(len(genom1.genes), len(genom2.genes))):
 			if genom1.genes[i].innovation == 0:
 				base_list.append((genom1.genes[i], genom2.genes[i]))
+			else:
+				break
 
 		return base_list
 
