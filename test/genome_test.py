@@ -281,3 +281,55 @@ class GenomeTest(unittest.TestCase):
 
 		self.assertEqual(total_list[:-1], base_lists[:])
 		self.assertEqual(total_list[-1], innovative_lists[0])
+
+	def test_mate(self):
+		Genome.reset()
+
+		genome1 = Genome()
+		genome2 = Genome()
+		genes1 = []
+		genes2 = []
+
+		#genome 1
+		input_node_id_11 = genome1.add_input_node()
+		input_node_id_21 = genome1.add_input_node()
+
+		hidden_node_id_11 = genome1.add_hidden_node()
+
+		output_node_id_11 = genome1.add_output_node()
+		output_node_id_21 = genome1.add_output_node()
+
+		genes1.append(Gene(input_node_id_11, hidden_node_id_11, weight = 10.0))
+		genes1.append(Gene(input_node_id_21, hidden_node_id_11))
+
+		genes1.append(Gene(hidden_node_id_11, output_node_id_11))
+		genes1.append(Gene(hidden_node_id_11, output_node_id_21))
+
+		genome1.set_genes((genes1))
+
+		#genome 2
+		input_node_id_12 = genome2.add_input_node()
+		input_node_id_22 = genome2.add_input_node()
+
+		hidden_node_id_12 = genome2.add_hidden_node()
+
+		output_node_id_12 = genome2.add_output_node()
+		output_node_id_22 = genome2.add_output_node()
+
+		genes2.append(Gene(input_node_id_12, hidden_node_id_12, weight = 20.0))
+		genes2.append(Gene(input_node_id_22, hidden_node_id_12))
+
+		genes2.append(Gene(hidden_node_id_12, output_node_id_12))
+		genes2.append(Gene(hidden_node_id_12, output_node_id_22, enabled = False))
+
+		genome2.set_genes((genes2))
+
+		genome2.add_new_connection(input_node_id_12, output_node_id_12)
+
+		#new genome
+		total_list = Genome.set_up_lists(genome1, genome2)
+		new_genome = Genome.mate(total_list, genome2.nodes)
+
+		self.assertEqual(new_genome.genes[0].weight, 15.0)
+		self.assertEqual(len(new_genome.genes), 5)
+		self.assertFalse(new_genome.genes[3].enabled)

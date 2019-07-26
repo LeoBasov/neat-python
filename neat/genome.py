@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 from enum import Enum
+import copy
 
 class NodeType(Enum):
 	BIAS = 0
@@ -77,6 +78,28 @@ class Genome:
 
 		return base_lists + innovative_lists
 
+	def mate(lists, nodes):
+		genome = Genome()
+		genes = []
+
+		for elem in lists:
+			matches = [x for x in elem if x]
+
+			if len(matches) == 2:
+				in_node_id = matches[0].in_node_id
+				out_node_id = matches[0].out_node_id
+				weigth = 0.5*(matches[0].weight + matches[1].weight)
+				enabled = matches[0].enabled and matches[1].enabled
+
+				genes.append(Gene(in_node_id, out_node_id, weigth, enabled))
+			elif len(matches) == 1:
+				genes.append(matches[0])
+
+		genome.set_nodes(nodes)
+		genome.set_genes(genes)
+
+		return genome
+
 	def __init__(self):
 		self.nodes = [BiasNode()]
 		self.output_nodes_ids = []
@@ -106,6 +129,13 @@ class Genome:
 		self.nodes.append(node)
 
 		return node_id
+
+	def set_nodes(self, nodes):
+		for node in nodes:
+			if node.type == NodeType.OUTPUT:
+				self.output_nodes_ids.append(node.id)
+
+			self.nodes.append(node)
 
 	def set_genes(self, genes):
 		self.genes = []
