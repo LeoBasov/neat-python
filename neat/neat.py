@@ -34,8 +34,18 @@ class NEAT:
 		self.test_case_name = "PLACE HOLDER"
 		self.test_case_specifics = ["PLACE HOLDER"]
 
+	#--------------------------------------------------------------
+	#To be implemented
 	def initiatlize(self, **kwargs):
 		pass
+
+	def evaluate_network(self, network):
+		return 0
+
+	def evaluate_best_network(self, network):
+		return [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
+
+	#--------------------------------------------------------------
 
 	def evaluate_networks(self):
 		self.fitness_network_pairs = []
@@ -46,15 +56,7 @@ class NEAT:
 			for _ in range(self.number_sub_cycles):
 				mean_fitness = evaluate_network(network)
 
-
 			self.fitness_network_pairs.push_back((mean_fitness/self.number_sub_cycles, network))
-
-
-	def evaluate_network(self, network):
-		return 0
-
-	def evaluate_best_network(self, network):
-		return [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
 	def mutate(self):
 		rest = int(0.5*len(self.fitness_network_pairs))
