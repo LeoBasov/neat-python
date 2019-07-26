@@ -79,7 +79,3 @@ class XOR_NEAT(NEAT):
 		genome.set_genes(genes)
 
 		return Network(genome)
-
-	def mutate(self):
-		pass
-
