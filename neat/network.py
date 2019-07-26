@@ -25,9 +25,13 @@ class Network:
 		self.nodes = []
 		self.output_node_ids = []
 		self.genome = None
+		self.fitness = 0
 
 		if genome:
 			self.set_up(genome)
+
+	def __lt__(self, other):
+		return self.fitness < other.fitness
 
 	def set_up(self, genome):
 		self.nodes = []
