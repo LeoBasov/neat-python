@@ -276,12 +276,13 @@ class OutputNode(HiddenNode):
 		super().__init__(node_id, NodeType.OUTPUT)
 
 class Gene:
-	def __init__(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
+	def __init__(self, in_node_id = None, out_node_id = None, weight = 1.0, enabled = True):
 		self.in_node_id = in_node_id
 		self.out_node_id = out_node_id
 		self.weight = weight
-		self.enabled = enabled
+		self.enabled = enabled and (in_node_id != None) and (out_node_id != None)
 		self.innovation = 0
+		self.used = (in_node_id != None) and (out_node_id != None)
 
 	def __str__(self):
 		string = ""
@@ -290,7 +291,8 @@ class Gene:
 		string += "OUT: " + str(self.out_node_id) + " "
 		string += "WEIGHT: " + str(round(self.weight, 3)) + " "
 		string += "ENABLED: " + str(self.enabled) + " "
-		string += "INNOVATION: " + str(self.innovation)
+		string += "INNOVATION: " + str(self.innovation) + " "
+		string += "USED: " + str(self.used)
 
 		return string
 
