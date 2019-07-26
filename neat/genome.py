@@ -134,6 +134,8 @@ class Genome:
 		for node in nodes:
 			if node.type == NodeType.OUTPUT:
 				self.output_nodes_ids.append(node.id)
+			elif node.type == NodeType.BIAS:
+				continue
 
 			self.nodes.append(node)
 
