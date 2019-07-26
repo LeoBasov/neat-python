@@ -4,11 +4,10 @@ import random
 sys.path.append('../../.')
 
 from neat.neat import NEAT
-
 from neat.genome import Gene
 from neat.genome import Genome
-
 from neat.network import Network
+from neat.utility import sigmoid
 
 class XOR_NEAT(NEAT):
 	def __init__(self):
@@ -29,10 +28,36 @@ class XOR_NEAT(NEAT):
 		self.__initialze_networks(kwargs["number_networks"])
 
 	def evaluate_network(self, network):
-		return 0
+		val1 = (0, 0)
+		val2 = (0, 1)
+		val3 = (1, 0)
+		val4 = (1, 1)
+
+		turple1 = self.exceute_network(val1[0], val1[1], network)
+		turple2 = self.exceute_network(val2[0], val2[1], network)
+		turple3 = self.exceute_network(val3[0], val3[1], network)
+		turple4 = self.exceute_network(val4[0], val4[1], network)
+
+		return (turple1[2] + turple2[2] + turple3[2] + turple4[2])/4.0
 
 	def evaluate_best_network(self, network):
-		return [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
+		val1 = (0, 0)
+		val2 = (0, 1)
+		val3 = (1, 0)
+		val4 = (1, 1)
+
+		turple1 = self.exceute_network(val1[0], val1[1], network)
+		turple2 = self.exceute_network(val2[0], val2[1], network)
+		turple3 = self.exceute_network(val3[0], val3[1], network)
+		turple4 = self.exceute_network(val4[0], val4[1], network)
+
+		return (turple1, turple2, turple3, turple4)
+
+	def exceute_network(self, val1, val2, network):
+		input_vals = ((val1, self.input_node1), (val2, self.input_node2))
+		output_vals = network.execute(input_vals)
+
+		return (float(val1 != val2), (output_vals[self.output_node]) ,(1.0 - abs(float(val1 != val2) - output_vals[self.output_node])))
 
 	def __initialze_networks(self, number_networks):
 		for _ in range(number_networks):

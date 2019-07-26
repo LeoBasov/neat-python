@@ -58,6 +58,9 @@ class NEAT:
 
 			self.fitness_network_pairs.append((mean_fitness/self.number_sub_cycles, network))
 
+		self.fitness_network_pairs.sort()
+		self.fitness_network_pairs.reverse()
+
 	def mutate(self):
 		rest = int(0.5*len(self.fitness_network_pairs))
 		new_networks = len(self.fitness_network_pairs)*[None]
@@ -118,7 +121,7 @@ class NEAT:
 		fitness_real_calc = self.evaluate_best_network(best_network)
 
 		for vals in fitness_real_calc:
-			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(round(vals[1], 3), round(vals[2], 3), round(vals[0], 3)))
+			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(round(vals[0], 3), round(vals[1], 3), round(vals[2], 3)))
 
 		print(80*"-")
 
