@@ -270,6 +270,7 @@ class GenomeTest(unittest.TestCase):
 
 		base_lists = genome1.set_up_base_lists(genome2)
 		innovative_lists = genome1.set_up_innovative_lists(genome2, max_innovation)
+		total_list = genome1.set_up_lists(genome2)
 
 		self.assertEqual(max_innovation, 1)
 		self.assertEqual(len(base_lists[0]), len(base_lists[1]))
@@ -277,3 +278,6 @@ class GenomeTest(unittest.TestCase):
 
 		self.assertEqual(innovative_lists[0][0], None)
 		self.assertEqual(innovative_lists[0][1], genome2.genes[-1])
+
+		self.assertEqual(total_list[:-1], base_lists[:])
+		self.assertEqual(total_list[-1], innovative_lists[0])

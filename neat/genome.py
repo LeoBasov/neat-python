@@ -44,15 +44,13 @@ class Genome:
 		return max_innovation
 
 	def set_up_base_lists(genom1, genom2):
-		list1 = []
-		list2 = []
+		base_list = []
 
 		for i in range(len(genom1.genes)):
 			if genom1.genes[i].innovation == 0:
-				list1.append(genom1.genes[i])
-				list2.append(genom2.genes[i])
+				base_list.append((genom1.genes[i], genom2.genes[i]))
 
-		return (list1, list2)
+		return base_list
 
 	def set_up_innovative_lists(genom1, genom2, max_innovation):
 		lists = max_innovation*[None]
@@ -71,6 +69,13 @@ class Genome:
 			lists[i] = (list1[i], list2[i])
 
 		return lists
+
+	def set_up_lists(genom1, genom2):
+		max_innovation = Genome.find_max_innovation(genom1, genom2)
+		base_lists = Genome.set_up_base_lists(genom1, genom2)
+		innovative_lists = Genome.set_up_innovative_lists(genom1, genom2, max_innovation)
+
+		return base_lists + innovative_lists
 
 	def __init__(self):
 		self.nodes = [BiasNode()]
