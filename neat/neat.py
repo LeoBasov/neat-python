@@ -54,9 +54,9 @@ class NEAT:
 			mean_fitness = 0.0
 
 			for _ in range(self.number_sub_cycles):
-				mean_fitness = evaluate_network(network)
+				mean_fitness = self.evaluate_network(network)
 
-			self.fitness_network_pairs.push_back((mean_fitness/self.number_sub_cycles, network))
+			self.fitness_network_pairs.append((mean_fitness/self.number_sub_cycles, network))
 
 	def mutate(self):
 		rest = int(0.5*len(self.fitness_network_pairs))
@@ -138,7 +138,7 @@ class NEAT:
 			if len(self.fitness_network_pairs):
 				mean_fitness /= len(self.fitness_network_pairs)
 
-			print("MEAN FITNESS: %0.3f EVALUATED NETWORKS %0.0d/%0.0d" % (round(mean_fitness,3), i + 1, self.number_itterations), end="\r", flush=True)
+			print("MEAN FITNESS: %0.3f PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), i + 1, self.number_itterations), end="\r", flush=True)
 			self.evaluate_networks()
 			self.mutate()
 
