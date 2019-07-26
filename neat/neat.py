@@ -29,6 +29,7 @@ class NEAT:
 		self.networks = []
 		self.fitness_network_pairs = []
 		self.species = []
+		self.mutator = Mutator()
 
 		self.test_case_name = "PLACE HOLDER"
 		self.test_case_specifics = ["PLACE HOLDER"]
@@ -37,13 +38,44 @@ class NEAT:
 		pass
 
 	def evaluate_networks(self):
-		pass
+		self.fitness_network_pairs = []
+
+		for network in self.networks:
+			mean_fitness = 0.0
+
+			for _ in range(self.number_sub_cycles):
+				mean_fitness = evaluate_network(network)
+
+
+			self.fitness_network_pairs.push_back((mean_fitness/self.number_sub_cycles, network))
+
 
 	def evaluate_network(self, network):
-		return []
+		return 0
+
+	def evaluate_best_network(self, network):
+		return [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
 	def mutate(self):
-		pass
+		rest = int(0.5*len(self.fitness_network_pairs))
+		new_networks = len(self.fitness_network_pairs)*[None]
+
+		for i in range(len(self.fitness_network_pairs)):
+			mate1 = random.choice(self.fitness_network_pairs[:rest])[1]
+			mate2 = random.choice(self.fitness_network_pairs[:rest])[1]
+
+			while mate1 == mate2:
+				mate1 = random.choice(self.fitness_network_pairs[:rest])[1]
+				mate2 = random.choice(self.fitness_network_pairs[:rest])[1]
+
+			total_list = Genome.set_up_lists(mate1.genome, mate2.genome)
+			nodes = mate1.genome.nodes if len(mate1.genome.nodes) > len(mate2.genome.nodes) else mate2.genome.nodes
+			genome = Genome.mate(total_list, nodes)
+			network = Network(genome)
+
+			new_networks[i] = self.mutator.mutate(network)
+
+		self.networks = new_networks
 
 	def start(self, **kwargs):
 		self.initiatlize(**kwargs)
@@ -81,7 +113,7 @@ class NEAT:
 		print("FITNESS OF BEST NETWORK:", best_fintess)
 		print(80*"-")
 
-		fitness_real_calc = self.evaluate_network(best_network)
+		fitness_real_calc = self.evaluate_best_network(best_network)
 
 		for vals in fitness_real_calc:
 			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(round(vals[1], 3), round(vals[2], 3), round(vals[0], 3)))
