@@ -30,6 +30,48 @@ class Genome:
 		Genome.INNOVATION = 0
 		Genome.LAST_GENES = []
 
+	def find_max_innovation(genom1, genom2):
+		max_innovation = 0
+
+		for gene in genom1.genes:
+			if gene.innovation > max_innovation:
+				max_innovation = gene.innovation
+
+		for gene in genom2.genes:
+			if gene.innovation > max_innovation:
+				max_innovation = gene.innovation
+
+		return max_innovation
+
+	def set_up_base_lists(genom1, genom2):
+		list1 = []
+		list2 = []
+
+		for i in range(len(genom1.genes)):
+			if genom1.genes[i].innovation == 0:
+				list1.append(genom1.genes[i])
+				list2.append(genom2.genes[i])
+
+		return (list1, list2)
+
+	def set_up_innovative_lists(genom1, genom2, max_innovation):
+		lists = max_innovation*[None]
+		list1 = max_innovation*[None]
+		list2 = max_innovation*[None]
+
+		for gene in genom1.genes:
+			if gene.innovation > 0:
+				list1[gene.innovation - 1] = gene
+
+		for gene in genom2.genes:
+			if gene.innovation > 0:
+				list2[gene.innovation - 1] = gene
+
+		for i in range(max_innovation):
+			lists[i] = (list1[i], list2[i])
+
+		return lists
+
 	def __init__(self):
 		self.nodes = [BiasNode()]
 		self.output_nodes_ids = []
@@ -133,48 +175,6 @@ class Genome:
 		Genome.LAST_GENES.append(gene)
 
 		gene.innovation = Genome.INNOVATION
-
-	def find_max_innovation(self, other):
-		max_innovation = 0
-
-		for gene in self.genes:
-			if gene.innovation > max_innovation:
-				max_innovation = gene.innovation
-
-		for gene in other.genes:
-			if gene.innovation > max_innovation:
-				max_innovation = gene.innovation
-
-		return max_innovation
-
-	def set_up_base_lists(self, other):
-		list_self = []
-		list_other = []
-
-		for i in range(len(self.genes)):
-			if self.genes[i].innovation == 0:
-				list_self.append(self.genes[i])
-				list_other.append(other.genes[i])
-
-		return (list_self, list_other)
-
-	def set_up_innovative_lists(self, other, max_innovation):
-		lists = max_innovation*[None]
-		list_self = max_innovation*[None]
-		list_other = max_innovation*[None]
-
-		for gene in self.genes:
-			if gene.innovation > 0:
-				list_self[gene.innovation - 1] = gene
-
-		for gene in other.genes:
-			if gene.innovation > 0:
-				list_other[gene.innovation - 1] = gene
-
-		for i in range(max_innovation):
-			lists[i] = (list_self[i], list_other[i])
-
-		return lists
 
 class Node:
 	def __init__(self, node_id, node_type):
