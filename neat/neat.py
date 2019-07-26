@@ -59,24 +59,34 @@ class NEAT:
 		self.networks.sort()
 		self.networks.reverse()
 
-	def mutate(self):
-		if not len(self.species):
-			return
+	def evaluate_species(self):
+		for species in self.species:
+			species.counter += 1
 
-		self.networks.clear()
+			for network in species.networks:
+				if network.fitness > species.max_fitness:
+					species.max_fitness = network.fitness
+					species.counter = 0
+
+	def mutate(self):
+		if len(self.species):
+			self.networks.clear()
+
+		rest_species = []
 
 		for species in self.species:
-			loc_network = len(species.networks)*[None]
-			rest = int(max(0.5*len(species.networks), 1))
+			if species.counter < species.unimproved_life_time:
+				rest_species.append(species)
+				rest = int(max(0.5*len(species.networks), 1))
+				rest_network = species.networks[:rest]
 
-			for i in range(len(species.networks)):
-				loc_network[i] = self.mutator.mutate(random.choice(species.networks[:rest]))
+				for i in range(len(species.networks)):
+					species.networks[i] = self.mutator.mutate(random.choice(rest_network))
 
-			species.networks.clear()
+			self.networks += species.networks
 
-			for network in loc_network:
-				species.networks.append(network)
-				self.networks.append(network)
+		self.species = rest_species
+
 
 	def start(self, **kwargs):
 		self.initiatlize(**kwargs)
@@ -132,6 +142,7 @@ class NEAT:
 			Genome.LAST_GENES = []
 
 			self.evaluate_networks()
+			self.evaluate_species()
 
 			for network in self.networks:
 				mean_fitness += network.fitness
@@ -174,6 +185,8 @@ class Species:
 	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
 		self.genome = genome
 		self.unimproved_life_time = unimproved_life_time
+		self.counter = 0
+		self.max_fitness = 0.0
 
 		self.c1 = c1
 		self.c2 = c2
