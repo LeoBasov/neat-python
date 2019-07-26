@@ -23,7 +23,94 @@ from .genome import Genome
 
 class NEAT:
 	def __init__(self):
+		self.number_itterations = 1
+		self.number_sub_cycles = 1
 		self.species_distance_max = 3.0
+		self.networks = []
+		self.fitness_network_pairs = []
+		self.species = []
+
+		self.test_case_name = "PLACE HOLDER"
+		self.test_case_specifics = ["PLACE HOLDER"]
+
+	def initiatlize(self, **kwargs):
+		pass
+
+	def evaluate_networks(self):
+		pass
+
+	def evaluate_network(self, network):
+		return []
+
+	def mutate(self):
+		pass
+
+	def start(self, **kwargs):
+		self.initiatlize(**kwargs)
+
+		self.print_header()
+		self.print_set_up()
+
+		self.main_loop()
+
+		self.print_best()
+		self.print_footer()
+
+	def print_header(self):
+		print(80*"=")
+		print("NEAT - NeuroEvolution of Augmenting Topologies")
+		print("(c) 2019, Leo Basov")
+		print(80*"-")
+		print(self.test_case_name)
+
+		for specific in self.test_case_specifics:
+			print(specific)
+
+		print(80*"-")
+
+	def print_set_up(self):
+		print("NUMBER_NETWORKS", len(self.networks))
+		print("NUMBER_ITTERATIONS", self.number_itterations)
+		print("NUMBER_SUB_CYCLES", self.number_sub_cycles)
+		print(80*"-")
+
+	def print_best(self):
+		best_fintess = self.fitness_network_pairs[0][0] if len(self.fitness_network_pairs) > 0 else 0
+		best_network = self.fitness_network_pairs[0][1] if len(self.fitness_network_pairs) > 0 else 0
+
+		print("FITNESS OF BEST NETWORK:", best_fintess)
+		print(80*"-")
+
+		fitness_real_calc = self.evaluate_network(best_network)
+
+		for vals in fitness_real_calc:
+			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(round(vals[1], 3), round(vals[2], 3), round(vals[0], 3)))
+
+		print(80*"-")
+
+	def print_footer(self):
+		print(80*"-")
+		print("Execution finished")
+		print(80*"=")
+
+	def main_loop(self):
+		for i in range(self.number_itterations):
+			mean_fitness = 0
+			Genome.reset()
+
+			for pair in self.fitness_network_pairs:
+				mean_fitness += pair[0]
+
+			if len(self.fitness_network_pairs):
+				mean_fitness /= len(self.fitness_network_pairs)
+
+			print("MEAN FITNESS: %0.3f EVALUATED NETWORKS %0.0d/%0.0d" % (round(mean_fitness,3), i + 1, self.number_itterations), end="\r", flush=True)
+			self.evaluate_networks()
+			self.mutate()
+
+		self.evaluate_networks()
+		print("")
+		print(80*"-")
 
 class Species:
 	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
