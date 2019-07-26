@@ -98,13 +98,13 @@ class MutatorTest(unittest.TestCase):
 
 		new_network = neat.mutate(network)
 
-		"""self.assertEqual(network.genome.genes[0].weight, new_network.genome.genes[-1].weight)
+		self.assertEqual(network.genome.genes[0].weight, new_network.genome.genes[-1].weight)
 		self.assertEqual(new_network.genome.genes[-2].weight, 1.0)
 
 		self.assertEqual(network.genome.genes[0].in_node_id, new_network.genome.genes[-2].in_node_id)
 		self.assertEqual(network.genome.genes[0].out_node_id, new_network.genome.genes[-1].out_node_id)
 
-		self.assertFalse(new_network.genome.genes[0].enabled)"""
+		self.assertFalse(new_network.genome.genes[0].enabled)
 
 class SpeciesTest(unittest.TestCase):
 	def test_distance(self):

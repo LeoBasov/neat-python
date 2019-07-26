@@ -134,6 +134,48 @@ class Genome:
 
 		gene.innovation = Genome.INNOVATION
 
+	def find_max_innovation(self, other):
+		max_innovation = 0
+
+		for gene in self.genes:
+			if gene.innovation > max_innovation:
+				max_innovation = gene.innovation
+
+		for gene in other.genes:
+			if gene.innovation > max_innovation:
+				max_innovation = gene.innovation
+
+		return max_innovation
+
+	def set_up_base_lists(self, other):
+		list_self = []
+		list_other = []
+
+		for i in range(len(self.genes)):
+			if self.genes[i].innovation == 0:
+				list_self.append(self.genes[i])
+				list_other.append(other.genes[i])
+
+		return (list_self, list_other)
+
+	def set_up_innovative_lists(self, other, max_innovation):
+		lists = max_innovation*[None]
+		list_self = max_innovation*[None]
+		list_other = max_innovation*[None]
+
+		for gene in self.genes:
+			if gene.innovation > 0:
+				list_self[gene.innovation - 1] = gene
+
+		for gene in other.genes:
+			if gene.innovation > 0:
+				list_other[gene.innovation - 1] = gene
+
+		for i in range(max_innovation):
+			lists[i] = (list_self[i], list_other[i])
+
+		return lists
+
 class Node:
 	def __init__(self, node_id, node_type):
 		self.id = node_id

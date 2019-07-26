@@ -36,13 +36,13 @@ class Species:
 
 	def compare(self, genome):
 		N = max(len(self.genome.genes), len(genome.genes))
-		max_innovation = self.find_max(genome)
+		max_innovation = self.find_max_innovation(genome)
 		lists = self.set_up_lists(genome, max_innovation)
 		distance = self.calc_distance(lists, N)
 
 		return distance
 
-	def find_max(self, genome):
+	def find_max_innovation(self, genome):
 		max_innovation = 0
 
 		for gene in self.genome.genes:

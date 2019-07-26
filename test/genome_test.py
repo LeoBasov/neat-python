@@ -221,3 +221,52 @@ class GenomeTest(unittest.TestCase):
 
 		self.assertEqual(genome.genes[-1].weight, 10.0)
 		self.assertEqual(genome.genes[-2].weight, 1.0)
+
+	def test_find_max_innovation(self):
+		Genome.reset()
+
+		genome1 = Genome()
+		genome2 = Genome()
+		genes1 = []
+		genes2 = []
+
+		#genome 1
+		input_node_id_11 = genome1.add_input_node()
+		input_node_id_21 = genome1.add_input_node()
+
+		hidden_node_id_11 = genome1.add_hidden_node()
+
+		output_node_id_11 = genome1.add_output_node()
+		output_node_id_21 = genome1.add_output_node()
+
+		genes1.append(Gene(input_node_id_11, hidden_node_id_11, weight = 10.0))
+		genes1.append(Gene(input_node_id_21, hidden_node_id_11))
+
+		genes1.append(Gene(hidden_node_id_11, output_node_id_11))
+		genes1.append(Gene(hidden_node_id_11, output_node_id_21))
+
+		genome1.set_genes((genes1))
+
+		#genome 2
+		input_node_id_12 = genome2.add_input_node()
+		input_node_id_22 = genome2.add_input_node()
+
+		hidden_node_id_12 = genome2.add_hidden_node()
+
+		output_node_id_12 = genome2.add_output_node()
+		output_node_id_22 = genome2.add_output_node()
+
+		genes2.append(Gene(input_node_id_12, hidden_node_id_12, weight = 10.0))
+		genes2.append(Gene(input_node_id_22, hidden_node_id_12))
+
+		genes2.append(Gene(hidden_node_id_12, output_node_id_12))
+		genes2.append(Gene(hidden_node_id_12, output_node_id_22))
+
+		genome2.set_genes((genes1))
+
+		genome2.add_new_connection(input_node_id_12, output_node_id_12)
+
+		max_innovation = genome1.find_max_innovation(genome2)
+
+		base_lists = genome1.set_up_base_lists(genome2)
+		innovative_lists = genome1.set_up_innovative_lists(genome2, max_innovation)
