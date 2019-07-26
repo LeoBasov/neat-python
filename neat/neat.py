@@ -60,25 +60,23 @@ class NEAT:
 		self.networks.reverse()
 
 	def mutate(self):
-		rest = int(0.5*len(self.networks))
-		new_networks = len(self.networks)*[None]
+		if not len(self.species):
+			return
 
-		for i in range(len(self.networks)):
-			mate1 = random.choice(self.networks[:rest])[1]
-			mate2 = random.choice(self.networks[:rest])[1]
+		self.networks.clear()
 
-			while mate1 == mate2:
-				mate1 = random.choice(self.networks[:rest])[1]
-				mate2 = random.choice(self.networks[:rest])[1]
+		for species in self.species:
+			loc_network = len(species.networks)*[None]
+			rest = int(max(0.5*len(species.networks), 1))
 
-			total_list = Genome.set_up_lists(mate1.genome, mate2.genome)
-			nodes = mate1.genome.nodes if len(mate1.genome.nodes) > len(mate2.genome.nodes) else mate2.genome.nodes
-			genome = Genome.mate(total_list, nodes)
-			network = Network(genome)
+			for i in range(len(species.networks)):
+				loc_network[i] = self.mutator.mutate(random.choice(species.networks[:rest]))
 
-			new_networks[i] = self.mutator.mutate(network)
+			species.networks.clear()
 
-		self.networks = new_networks
+			for network in loc_network:
+				species.networks.append(network)
+				self.networks.append(network)
 
 	def start(self, **kwargs):
 		self.initiatlize(**kwargs)
@@ -119,7 +117,7 @@ class NEAT:
 		fitness_real_calc = self.evaluate_best_network(best_network)
 
 		for vals in fitness_real_calc:
-			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(round(vals[0], 3), round(vals[1], 3), round(vals[2], 3)))
+			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(int(vals[0]), int(round(vals[1], 0)), round(vals[2], 3)))
 
 		print(80*"-")
 
@@ -131,13 +129,17 @@ class NEAT:
 	def main_loop(self):
 		for i in range(self.number_itterations):
 			mean_fitness = 0
-			Genome.reset()
+			Genome.LAST_GENES = []
+
+			self.evaluate_networks()
 
 			for network in self.networks:
-				mean_fitness += network.fitness/len(self.networks)
+				mean_fitness += network.fitness
+
+			mean_fitness /= len(self.networks)
 
 			print("MEAN FITNESS: %0.3f SPECIES NUMBER : %3.0d PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), len(self.species), i + 1, self.number_itterations), end="\r", flush=True)
-			self.evaluate_networks()
+			
 			self.mutate()
 			self.sort_in_species()
 
@@ -147,8 +149,8 @@ class NEAT:
 
 	def sort_in_species(self):
 		for species in self.species:
-				species.networks = []
-
+				species.networks.clear()
+				
 		for network in self.networks:
 			min_distance_species = [sys.float_info.max, None]
 
