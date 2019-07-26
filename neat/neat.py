@@ -146,6 +146,9 @@ class NEAT:
 		print(80*"-")
 
 	def sort_in_species(self):
+		for species in self.species:
+				species.networks = []
+
 		for network in self.networks:
 			min_distance_species = [sys.float_info.max, None]
 
@@ -161,6 +164,9 @@ class NEAT:
 				species.networks.append(network)
 
 				self.species.append(species)
+			else:
+				min_distance_species[1].networks.append(network)
+
 
 class Species:
 	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
