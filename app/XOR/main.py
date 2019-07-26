@@ -76,13 +76,23 @@ def execute(val1, val2, network):
 
 def mutate(evaluated_networks):
 	neat = Mutator()
+	rest = int(0.5*len(evaluated_networks))
 	new_networks = len(evaluated_networks)*[None]
 
 	for i in range(len(evaluated_networks)):
-		if (i < 0.2*len(evaluated_networks)) and (evaluated_networks[i][0] > 0.75):
-			new_networks[i] = evaluated_networks[i][1]
-		else:
-			new_networks[i] = neat.mutate(evaluated_networks[i][1])
+		mate1 = random.choice(evaluated_networks[:rest])[1]
+		mate2 = random.choice(evaluated_networks[:rest])[1]
+
+		while mate1 == mate2:
+			mate1 = random.choice(evaluated_networks[:rest])[1]
+			mate2 = random.choice(evaluated_networks[:rest])[1]
+
+		total_list = Genome.set_up_lists(mate1.genome, mate2.genome)
+		nodes = mate1.genome.nodes if len(mate1.genome.nodes) > len(mate2.genome.nodes) else mate2.genome.nodes
+		genome = Genome.mate(total_list, nodes)
+		network = Network(genome)
+
+		new_networks[i] = neat.mutate(network)
 
 	return new_networks
 
@@ -90,8 +100,8 @@ def sigmoid(x):
 	return 1 / (1 + math.exp(-x))
 
 def main():
-	number_networks = 100
-	number_itterations = 5000
+	number_networks = 150
+	number_itterations = 50
 	networks = generate_networks(number_networks)
 
 	print("Evaluating networks")
@@ -109,8 +119,8 @@ def main():
 	print(80*"-")
 	test_best(lis[0][1])
 
-	for fitness, node in lis:
-		print(fitness)
+	for fitness, network in lis:
+		print("FITNESS: {} | NODE NUMBER: {} | GENE NUMBER: {}".format(fitness, len(network.nodes), len(network.genome.genes)))
 
 	print("done")
 
