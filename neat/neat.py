@@ -28,7 +28,6 @@ class NEAT:
 		self.number_sub_cycles = 1
 		self.species_distance_max = 3.0
 		self.networks = []
-		self.fitness_network_pairs = []
 		self.species = []
 		self.mutator = Mutator()
 
@@ -49,30 +48,28 @@ class NEAT:
 	#--------------------------------------------------------------
 
 	def evaluate_networks(self):
-		self.fitness_network_pairs = []
-
 		for network in self.networks:
 			mean_fitness = 0.0
 
 			for _ in range(self.number_sub_cycles):
-				mean_fitness = self.evaluate_network(network)
+				mean_fitness += self.evaluate_network(network)
 
-			self.fitness_network_pairs.append((mean_fitness/self.number_sub_cycles, network))
+			network.fitness = mean_fitness/self.number_sub_cycles
 
-		self.fitness_network_pairs.sort()
-		self.fitness_network_pairs.reverse()
+		self.networks.sort()
+		self.networks.reverse()
 
 	def mutate(self):
-		rest = int(0.5*len(self.fitness_network_pairs))
-		new_networks = len(self.fitness_network_pairs)*[None]
+		rest = int(0.5*len(self.networks))
+		new_networks = len(self.networks)*[None]
 
-		for i in range(len(self.fitness_network_pairs)):
-			mate1 = random.choice(self.fitness_network_pairs[:rest])[1]
-			mate2 = random.choice(self.fitness_network_pairs[:rest])[1]
+		for i in range(len(self.networks)):
+			mate1 = random.choice(self.networks[:rest])[1]
+			mate2 = random.choice(self.networks[:rest])[1]
 
 			while mate1 == mate2:
-				mate1 = random.choice(self.fitness_network_pairs[:rest])[1]
-				mate2 = random.choice(self.fitness_network_pairs[:rest])[1]
+				mate1 = random.choice(self.networks[:rest])[1]
+				mate2 = random.choice(self.networks[:rest])[1]
 
 			total_list = Genome.set_up_lists(mate1.genome, mate2.genome)
 			nodes = mate1.genome.nodes if len(mate1.genome.nodes) > len(mate2.genome.nodes) else mate2.genome.nodes
@@ -113,8 +110,8 @@ class NEAT:
 		print(80*"-")
 
 	def print_best(self):
-		best_fintess = self.fitness_network_pairs[0][0] if len(self.fitness_network_pairs) > 0 else 0
-		best_network = self.fitness_network_pairs[0][1] if len(self.fitness_network_pairs) > 0 else 0
+		best_fintess = self.networks[0].fitness if len(self.networks) > 0 else 0
+		best_network = self.networks[0] if len(self.networks) > 0 else 0
 
 		print("FITNESS OF BEST NETWORK:", best_fintess)
 		print(80*"-")
@@ -136,11 +133,8 @@ class NEAT:
 			mean_fitness = 0
 			Genome.reset()
 
-			for pair in self.fitness_network_pairs:
-				mean_fitness += pair[0]
-
-			if len(self.fitness_network_pairs):
-				mean_fitness /= len(self.fitness_network_pairs)
+			for network in self.networks:
+				mean_fitness += network.fitness/len(self.networks)
 
 			print("MEAN FITNESS: %0.3f SPECIES NUMBER : %3.0d PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), len(self.species), i + 1, self.number_itterations), end="\r", flush=True)
 			self.evaluate_networks()
