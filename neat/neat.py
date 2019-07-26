@@ -17,6 +17,7 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 import copy
 import random
 from enum import Enum
+import sys
 
 from .network import Network
 from .genome import Genome
@@ -141,24 +142,43 @@ class NEAT:
 			if len(self.fitness_network_pairs):
 				mean_fitness /= len(self.fitness_network_pairs)
 
-			print("MEAN FITNESS: %0.3f PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), i + 1, self.number_itterations), end="\r", flush=True)
+			print("MEAN FITNESS: %0.3f SPECIES NUMBER : %3.0d PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), len(self.species), i + 1, self.number_itterations), end="\r", flush=True)
 			self.evaluate_networks()
 			self.mutate()
+			self.sort_in_species()
 
 		self.evaluate_networks()
 		print("")
 		print(80*"-")
 
+	def sort_in_species(self):
+		for network in self.networks:
+			min_distance_species = [sys.float_info.max, None]
+
+			for species in self.species:
+				distance = species.compare(network.genome)
+
+				if min_distance_species[0] > distance:
+					min_distance_species[0] = distance
+					min_distance_species[1] = species
+
+			if min_distance_species[0] > self.species_distance_max:
+				species  = Species(network.genome)
+				species.networks.append(network)
+
+				self.species.append(species)
+
 class Species:
 	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
 		self.genome = genome
+		self.unimproved_life_time = unimproved_life_time
 
 		self.c1 = c1
 		self.c2 = c2
 		self.c3 = c3
 
-		self.unimproved_life_time = unimproved_life_time
-
+		self.networks = []
+		
 	def compare(self, genome):
 		N = max(len(self.genome.genes), len(genome.genes))
 		lists = Genome.set_up_lists(self.genome, genome)
