@@ -105,6 +105,7 @@ class Genome:
 	def __init__(self):
 		self.nodes = [BiasNode()]
 		self.output_nodes_ids = []
+		self.unused_nodes_ids = []
 		self.genes = []
 
 	def add_input_node(self):
