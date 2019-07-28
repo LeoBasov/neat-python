@@ -186,10 +186,19 @@ class Genome:
 				raise Error("Genome.set_genes", "Gene defined twice")
 
 		self.update_levels()
+		self.unused_nodes_gene_index = len(self.genes)
 
 	def add_new_connection(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
 		if self.connection_possible(in_node_id, out_node_id):
-			gene = Gene(in_node_id, out_node_id, weight, enabled)
+			gene = self.genes[self.unused_nodes_gene_index]
+
+			gene.in_node_id = in_node_id
+			gene.out_node_id = out_node_id
+			gene.weight = weight
+			gene.enabled = enabled
+			gene.used = True
+
+			self.unused_nodes_gene_index += 1
 			self.add_gene(gene)
 
 			return True
@@ -197,7 +206,15 @@ class Genome:
 			return False
 
 	def add_new_connection_no_check(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
-		gene = Gene(in_node_id, out_node_id, weight, enabled)
+		gene = self.genes[self.unused_nodes_gene_index]
+
+		gene.in_node_id = in_node_id
+		gene.out_node_id = out_node_id
+		gene.weight = weight
+		gene.enabled = enabled
+		gene.used = True
+
+		self.unused_nodes_gene_index += 1
 		self.add_gene(gene)
 
 	def connection_possible(self, in_node_id, out_node_id):
@@ -215,10 +232,8 @@ class Genome:
 		return used_nodes and no_in_output and no_out_input and no_level_conflict and no_existence
 
 	def add_gene(self, gene):
-		if gene not in self.genes:
-			self.check_gene(gene)
-			self.genes.append(gene)
-			self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
+		self.check_gene(gene)
+		self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
 
 	def add_new_node(self, gene_id):
 		if self.genes[gene_id].enabled:
@@ -228,9 +243,26 @@ class Genome:
 			new_node_id = self.add_hidden_node()
 			weight = self.genes[gene_id].weight
 
-			gene1 = Gene(in_node_id, new_node_id)
-			gene2 = Gene(new_node_id, out_node_id, weight)
+			gene1 = self.genes[self.unused_nodes_gene_index]
+			gene2 = self.genes[self.unused_nodes_gene_index + 1]
 
+			gene1.in_node_id = in_node_id
+			gene2.in_node_id = new_node_id
+
+			gene1.out_node_id = new_node_id
+			gene2.out_node_id = out_node_id
+
+			gene1.weight = 1.0
+			gene2.weight = weight
+
+			gene1.enabled = True
+			gene2.enabled = True
+
+			gene1.used = True
+			gene2.used = True
+
+			self.unused_nodes_gene_index += 2
+			
 			self.add_gene(gene1)
 			self.add_gene(gene2)
 

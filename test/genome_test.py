@@ -189,6 +189,7 @@ class GenomeTest(unittest.TestCase):
 		genes.append(Gene(hidden_node_id_1, output_node_id_2))
 
 		genome.set_genes((genes))
+		genome.allocate_genes(1)
 
 		connected = genome.add_new_connection(input_node_id_1, output_node_id_1)
 
@@ -227,7 +228,8 @@ class GenomeTest(unittest.TestCase):
 		genes.append(Gene(hidden_node_id_1, output_node_id_1))
 		genes.append(Gene(hidden_node_id_1, output_node_id_2))
 
-		genome.set_genes((genes))
+		genome.set_genes(genes)
+		genome.allocate_genes(2)
 
 		gene_id = 0
 
@@ -268,7 +270,7 @@ class GenomeTest(unittest.TestCase):
 		genes1.append(Gene(hidden_node_id_11, output_node_id_11))
 		genes1.append(Gene(hidden_node_id_11, output_node_id_21))
 
-		genome1.set_genes((genes1))
+		genome1.set_genes(genes1)
 
 		#genome 2
 		input_node_id_12 = genome2.add_input_node()
@@ -285,7 +287,8 @@ class GenomeTest(unittest.TestCase):
 		genes2.append(Gene(hidden_node_id_12, output_node_id_12))
 		genes2.append(Gene(hidden_node_id_12, output_node_id_22))
 
-		genome2.set_genes((genes1))
+		genome2.set_genes(genes2)
+		genome2.allocate_genes(1)
 
 		genome2.add_new_connection(input_node_id_12, output_node_id_12)
 
@@ -349,6 +352,7 @@ class GenomeTest(unittest.TestCase):
 		genes2.append(Gene(hidden_node_id_12, output_node_id_22, enabled = False))
 
 		genome2.set_genes((genes2))
+		genome2.allocate_genes(1)
 
 		genome2.add_new_connection(input_node_id_12, output_node_id_12)
 
