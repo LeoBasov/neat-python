@@ -118,7 +118,7 @@ class Genome:
 			self.nodes.append(node)
 			self.unused_nodes_ids.append(node_id)
 
-	def allocate_genes_(self, number):
+	def allocate_genes(self, number):
 		"""Function to allocate genes for later use in mutation
 
 		This function allocates genes that will be later used and activated during the mutation process.
