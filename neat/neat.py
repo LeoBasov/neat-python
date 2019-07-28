@@ -238,9 +238,6 @@ class Mutator:
 
 		self.probabilities.sort()
 
-	def mate(self, network1, network2):
-		pass
-
 	def mutate(self, network):
 		genome = copy.deepcopy(network.genome)
 		rand_num = random.random()
