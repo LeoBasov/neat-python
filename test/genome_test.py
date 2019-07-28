@@ -333,3 +333,17 @@ class GenomeTest(unittest.TestCase):
 		self.assertEqual(new_genome.genes[0].weight, 15.0)
 		self.assertEqual(len(new_genome.genes), 5)
 		self.assertFalse(new_genome.genes[3].enabled)
+
+	def test_allocate_hidden_nodes(self):
+		Genome.reset()
+
+		genome = Genome()
+		number_allocated_hidden_nodes = 5
+
+		genome.allocate_hidden_nodes(number_allocated_hidden_nodes)
+
+		print("")
+
+		for node in genome.nodes:
+			print(node)
+
