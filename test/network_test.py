@@ -39,40 +39,39 @@ class TestNetwork(Network):
 
 		self.set_up(genome)
 
-class XORGenome(Genome):
-	def __init__(self):
-		super().__init__()
-
-		genes = []
-
-		self.add_input_node()
-		self.add_input_node()
-
-		self.add_hidden_node()
-		self.add_hidden_node()
-
-		self.add_output_node()
-
-		genes.append(Gene(in_node_id = 0, out_node_id = 3, weight = -2.32161229))
-		genes.append(Gene(in_node_id = 0, out_node_id = 4, weight = -5.2368337))
-		genes.append(Gene(in_node_id = 0, out_node_id = 5, weight = -3.13762134))
-
-		genes.append(Gene(in_node_id = 1, out_node_id = 3, weight = 5.70223616))
-		genes.append(Gene(in_node_id = 1, out_node_id = 4, weight = 3.42762429))
-
-		genes.append(Gene(in_node_id = 2, out_node_id = 3, weight = 5.73141813))
-		genes.append(Gene(in_node_id = 2, out_node_id = 4, weight = 3.4327536))
-
-		genes.append(Gene(in_node_id = 3, out_node_id = 5, weight = 7.05553511))
-		genes.append(Gene(in_node_id = 4, out_node_id = 5, weight = -7.68450564))
-
-		self.set_genes(genes)
-
 class XORNetwork(Network):
 	def __init__(self):
 		super().__init__()
 
-		genome = XORGenome()
+		genome = Genome()
+		genes = []
+
+		genome.allocate_hidden_nodes(2)
+
+		self.bias_node_id = 0
+
+		self.input_node_id_1 = genome.add_input_node()
+		self.input_node_id_2 = genome.add_input_node()
+
+		self.hidden_node_id_1 = genome.add_hidden_node()
+		self.hidden_node_id_2 = genome.add_hidden_node()
+
+		self.output_node_id = genome.add_output_node()
+
+		genes.append(Gene(in_node_id = self.bias_node_id, out_node_id = self.hidden_node_id_1, weight = -2.32161229))
+		genes.append(Gene(in_node_id = self.bias_node_id, out_node_id = self.hidden_node_id_2, weight = -5.2368337))
+		genes.append(Gene(in_node_id = self.bias_node_id, out_node_id = self.output_node_id, weight = -3.13762134))
+
+		genes.append(Gene(in_node_id = self.input_node_id_1, out_node_id = self.hidden_node_id_1, weight = 5.70223616))
+		genes.append(Gene(in_node_id = self.input_node_id_1, out_node_id = self.hidden_node_id_2, weight = 3.42762429))
+
+		genes.append(Gene(in_node_id = self.input_node_id_2, out_node_id = self.hidden_node_id_1, weight = 5.73141813))
+		genes.append(Gene(in_node_id = self.input_node_id_2, out_node_id = self.hidden_node_id_2, weight = 3.4327536))
+
+		genes.append(Gene(in_node_id = self.hidden_node_id_1, out_node_id = self.output_node_id, weight = 7.05553511))
+		genes.append(Gene(in_node_id = self.hidden_node_id_2, out_node_id = self.output_node_id, weight = -7.68450564))
+
+		genome.set_genes(genes)
 
 		self.set_up(genome)
 
@@ -96,10 +95,10 @@ class NetworkSlimTest(unittest.TestCase):
 		value_41 = 1
 		value_42 = 1
 
-		input_values_node_ids1 = [(value_11, 1), (value_12, 2)]
-		input_values_node_ids2 = [(value_21, 1), (value_22, 2)]
-		input_values_node_ids3 = [(value_31, 1), (value_32, 2)]
-		input_values_node_ids4 = [(value_41, 1), (value_42, 2)]
+		input_values_node_ids1 = [(value_11, network.input_node_id_1), (value_12, network.input_node_id_2)]
+		input_values_node_ids2 = [(value_21, network.input_node_id_1), (value_22, network.input_node_id_2)]
+		input_values_node_ids3 = [(value_31, network.input_node_id_1), (value_32, network.input_node_id_2)]
+		input_values_node_ids4 = [(value_41, network.input_node_id_1), (value_42, network.input_node_id_2)]
 
 		results1 = network.execute(input_values_node_ids1)
 		results2 = network.execute(input_values_node_ids2)

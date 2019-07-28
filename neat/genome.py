@@ -106,12 +106,13 @@ class Genome:
 		self.nodes = [BiasNode()]
 		self.output_nodes_ids = []
 		self.unused_nodes_ids = []
+		self.unused_nodes_current_id = 0
 		self.genes = []
 
 	def allocate_hidden_nodes(self, number):
 		for _ in range(number):
 			node_id = len(self.nodes)
-			node = HiddenNode(node_id, used = False)
+			node = HiddenNode(node_id)
 
 			self.nodes.append(node)
 			self.unused_nodes_ids.append(node_id)
@@ -134,10 +135,9 @@ class Genome:
 		return node_id
 
 	def add_hidden_node(self):
-		node_id = len(self.nodes)
-		node = HiddenNode(node_id)
-
-		self.nodes.append(node)
+		node_id = self.unused_nodes_ids[self.unused_nodes_current_id]
+		
+		self.unused_nodes_current_id += 1
 
 		return node_id
 
@@ -230,7 +230,6 @@ class Node:
 		self.type = node_type
 		self.level = 0
 		self.connected_nodes = []
-		self.used = used
 
 	def __str__(self):
 		string = ""
@@ -238,7 +237,6 @@ class Node:
 		string += "ID: " + str(self.id) + " "
 		string += "TYPE: " + str(self.type.name) + " "
 		string += "LEVEL: " + str(self.level) + " "
-		string += "USED: " + str(self.used) + " "
 
 		string += "CONNECTED NODES: ["
 
@@ -267,8 +265,8 @@ class BiasNode(Node):
 		return 0
 
 class HiddenNode(Node):
-	def __init__(self, node_id, node_type = NodeType.HIDDEN, used = True):
-		super().__init__(node_id, node_type, used)
+	def __init__(self, node_id, node_type = NodeType.HIDDEN):
+		super().__init__(node_id, node_type)
 
 		if node_id == 0:
 			raise Error("HiddenNode.___init__", "Node id can not be 0. Reserved for bias node")

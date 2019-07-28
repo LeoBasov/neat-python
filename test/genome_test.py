@@ -38,7 +38,11 @@ class GeneTest(unittest.TestCase):
 
 class GenomeTest(unittest.TestCase):
 	def test_add_node(self):
+		Genome.reset()
+
 		genome = Genome()
+
+		genome.allocate_hidden_nodes(3)
 
 		input_node_id_1 = genome.add_input_node()
 		input_node_id_2 = genome.add_input_node()
@@ -98,6 +102,10 @@ class GenomeTest(unittest.TestCase):
 		genome = Genome()
 		genes = []
 
+		Genome.reset()
+
+		genome.allocate_hidden_nodes(1)
+
 		input_node_id_1 = genome.add_input_node()
 		input_node_id_2 = genome.add_input_node()
 
@@ -129,8 +137,12 @@ class GenomeTest(unittest.TestCase):
 		self.assertEqual(genome.nodes[output_node_id_2].level, 2)
 
 	def test_add_gene(self):
+		Genome.reset()
+
 		genome = Genome()
 		genes = []
+
+		genome.allocate_hidden_nodes(1)
 
 		input_node_id_1 = genome.add_input_node()
 		input_node_id_2 = genome.add_input_node()
@@ -155,8 +167,12 @@ class GenomeTest(unittest.TestCase):
 		self.assertEqual(genome.nodes[output_node_id_1].connected_nodes[1], genome.nodes[input_node_id_1])
 
 	def test_add_new_connection(self):
+		Genome.reset()
+
 		genome = Genome()
 		genes = []
+
+		genome.allocate_hidden_nodes(1)
 
 		input_node_id_1 = genome.add_input_node()
 		input_node_id_2 = genome.add_input_node()
@@ -190,8 +206,12 @@ class GenomeTest(unittest.TestCase):
 		self.assertFalse(connected4)
 
 	def test_add_new_node(self):
+		Genome.reset()
+
 		genome = Genome()
 		genes = []
+
+		genome.allocate_hidden_nodes(2)
 
 		input_node_id_1 = genome.add_input_node()
 		input_node_id_2 = genome.add_input_node()
@@ -215,9 +235,9 @@ class GenomeTest(unittest.TestCase):
 
 		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[0], genome.nodes[input_node_id_1])
 		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[1], genome.nodes[input_node_id_2])
-		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[2], genome.nodes[6])
+		self.assertEqual(genome.nodes[hidden_node_id_1].connected_nodes[2], genome.nodes[2])
 
-		self.assertEqual(genome.nodes[6].connected_nodes[0], genome.nodes[input_node_id_1])
+		self.assertEqual(genome.nodes[2].connected_nodes[0], genome.nodes[input_node_id_1])
 
 		self.assertEqual(genome.genes[-1].weight, 10.0)
 		self.assertEqual(genome.genes[-2].weight, 1.0)
@@ -229,6 +249,9 @@ class GenomeTest(unittest.TestCase):
 		genome2 = Genome()
 		genes1 = []
 		genes2 = []
+
+		genome1.allocate_hidden_nodes(1)
+		genome2.allocate_hidden_nodes(1)
 
 		#genome 1
 		input_node_id_11 = genome1.add_input_node()
@@ -290,6 +313,9 @@ class GenomeTest(unittest.TestCase):
 		genes1 = []
 		genes2 = []
 
+		genome1.allocate_hidden_nodes(1)
+		genome2.allocate_hidden_nodes(1)
+
 		#genome 1
 		input_node_id_11 = genome1.add_input_node()
 		input_node_id_21 = genome1.add_input_node()
@@ -333,17 +359,3 @@ class GenomeTest(unittest.TestCase):
 		self.assertEqual(new_genome.genes[0].weight, 15.0)
 		self.assertEqual(len(new_genome.genes), 5)
 		self.assertFalse(new_genome.genes[3].enabled)
-
-	def test_allocate_hidden_nodes(self):
-		Genome.reset()
-
-		genome = Genome()
-		number_allocated_hidden_nodes = 5
-
-		genome.allocate_hidden_nodes(number_allocated_hidden_nodes)
-
-		print("")
-
-		for node in genome.nodes:
-			print(node)
-
