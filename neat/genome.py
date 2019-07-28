@@ -108,6 +108,7 @@ class Genome:
 		self.unused_nodes_ids = []
 		self.unused_nodes_current_id = 0
 		self.genes = []
+		self.unused_nodes_gene_index = 0
 
 	def allocate_hidden_nodes(self, number):
 		for _ in range(number):
@@ -116,6 +117,30 @@ class Genome:
 
 			self.nodes.append(node)
 			self.unused_nodes_ids.append(node_id)
+
+	def allocate_genes_(self, number):
+		"""Function to allocate genes for later use in mutation
+
+		This function allocates genes that will be later used and activated during the mutation process.
+		This function muss be called after the set_genes function.
+
+		Parameters
+		----------
+		number : int
+			number of allocated genes
+
+		Returns
+		-------
+		None
+
+		"""
+
+		self.unused_nodes_gene_index = len(self.genes)
+
+		for _ in range(number):
+			gene = Gene()
+
+			self.genes.append(gene)
 
 	def add_input_node(self):
 		node_id = len(self.nodes)
