@@ -281,17 +281,20 @@ class Mutator:
 	def change_connection_status(self, genome):
 		gene = random.choice(genome.genes)
 
-		gene.enabled = not gene.enabled
+		if gene.used:
+			gene.enabled = not gene.enabled
 
 	def modify_connection_weight(self, genome):
 		gene = random.choice(genome.genes)
 
-		gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
+		if gene.used:
+			gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
 
 	def set_new_connection_weight(self, genome):
 		gene = random.choice(genome.genes)
 
-		gene.weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
+		if gene.used:
+			gene.weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
 
 class MutationType(Enum):
 	NEW_CONNECTION = 0
