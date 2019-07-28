@@ -64,8 +64,9 @@ class Network:
 
 	def __connect_nodes(self):
 		for gene in self.genome.genes:
-			connection = Connection(self.nodes[gene.in_node_id], gene.weight, gene.enabled)
-			self.nodes[gene.out_node_id].connections.append(connection)
+			if gene.used:
+				connection = Connection(self.nodes[gene.in_node_id], gene.weight, gene.enabled)
+				self.nodes[gene.out_node_id].connections.append(connection)
 
 	def execute(self, input_values_node_ids):
 		ret_vals = {}
