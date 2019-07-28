@@ -103,7 +103,7 @@ class Node:
 		for connection in self.connections:
 			string += "("
 			string += str(connection.node.id) + ", "
-			string += str(connection.weight) + ", "
+			string += str(round(connection.weight, 3)) + ", "
 			string += str(connection.enabled)
 			string += "), "
 

@@ -131,6 +131,14 @@ class NEAT:
 
 		print(80*"-")
 
+		for node in best_network.nodes:
+			print(node)
+
+		print(80*"-")
+
+		for gene in best_network.genome.genes:
+			print(gene)
+
 	def print_footer(self):
 		print(80*"-")
 		print("Execution finished")
