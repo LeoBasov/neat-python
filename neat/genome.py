@@ -176,6 +176,7 @@ class Genome:
 		self.add_gene(gene)
 
 	def connection_possible(self, in_node_id, out_node_id):
+		used_nodes = (in_node_id not in self.unused_nodes_ids[self.unused_nodes_current_id:]) and (out_node_id not in self.unused_nodes_ids[self.unused_nodes_current_id:])
 		no_in_output = self.nodes[in_node_id].type != NodeType.OUTPUT
 		no_out_input = self.nodes[out_node_id].type != NodeType.INPUT
 		no_level_conflict = self.nodes[in_node_id].level < self.nodes[out_node_id].level
@@ -186,7 +187,7 @@ class Genome:
 				no_existence = False
 				break
 
-		return no_in_output and no_out_input and no_level_conflict and no_existence
+		return used_nodes and no_in_output and no_out_input and no_level_conflict and no_existence
 
 	def add_gene(self, gene):
 		if gene not in self.genes:

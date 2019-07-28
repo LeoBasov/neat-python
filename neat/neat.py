@@ -226,7 +226,6 @@ class Mutator:
 	def __init__(self):
 		self.new_weight_range = 10.0
 		self.weight_variation = 0.1
-		self.max_network_size = 5
 
 		self.probabilities = []
 
