@@ -249,7 +249,7 @@ class Mutator:
 			if probability.value > rand_num:
 				if probability.type == MutationType.NEW_CONNECTION:
 					self.add_new_connection(genome)
-				elif probability.type == MutationType.NEW_NODE and len(genome.nodes) < self.max_network_size:
+				elif probability.type == MutationType.NEW_NODE and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
 					self.add_new_node(genome)
 				elif probability.type == MutationType.MODIFY_WEIGHT:
 					self.modify_connection_weight(genome)

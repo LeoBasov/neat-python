@@ -27,6 +27,8 @@ class TestGenome2(Genome):
 		super().__init__()
 		genes = []
 
+		self.allocate_hidden_nodes(1)
+
 		self.input_node_id1 = self.add_input_node()
 		self.input_node_id2 = self.add_input_node()
 
