@@ -236,7 +236,7 @@ class Genome:
 		self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
 
 	def add_new_node(self, gene_id):
-		if self.genes[gene_id].enabled:
+		if self.genes[gene_id].enabled and self.genes[gene_id].used:
 			self.genes[gene_id].enabled = False
 			in_node_id = self.genes[gene_id].in_node_id
 			out_node_id = self.genes[gene_id].out_node_id
