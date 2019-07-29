@@ -80,4 +80,6 @@ class XOR_NEAT(NEAT):
 
 		genome.set_genes(genes)
 
+		genome.allocate_genes(number_genes)
+
 		return Network(genome)
