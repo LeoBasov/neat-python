@@ -58,13 +58,11 @@ class TestGenome3(Genome):
 class MutatorTest(unittest.TestCase):
 	def test_add_new_connection(self):
 		neat = Mutator()
-		genome = TestGenome1()
-		new_genome = TestGenome1()
+		genome = TestGenome2()
+
+		neat.add_new_connection(genome)
+
 		network = Network(genome)
-
-		neat.add_new_connection(new_genome)
-
-		new_network = Network(new_genome)
 
 	def test_add_new_node(self):
 		neat = Mutator()
