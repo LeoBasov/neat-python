@@ -8,7 +8,7 @@ def main():
 
 	parameters["number_networks"] = 150
 	parameters["number_itterations"] = 100
-	parameters["number_sub_cycles"] = 10
+	parameters["number_sub_cycles"] = 1
 
 	parameters["test_case_name"] = "XOR NETWORK EVOLUTION"
 	parameters["test_case_specifics"] = ["Evolution of XOR network starting with minimal configuration", "Two input and one output node"]
