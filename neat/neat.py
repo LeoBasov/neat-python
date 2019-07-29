@@ -68,24 +68,20 @@ class NEAT:
 					species.max_fitness = network.fitness
 					species.counter = 0
 
-	def mutate(self):
-		if len(self.species):
-			self.networks.clear()
-
 		rest_species = []
 
 		for species in self.species:
 			if species.counter < species.unimproved_life_time:
 				rest_species.append(species)
-				rest = int(max(0.5*len(species.networks), 1))
-				rest_network = species.networks[:rest]
-
-				for i in range(len(species.networks)):
-					species.networks[i] = self.mutator.mutate(random.choice(rest_network))
-
-			self.networks += species.networks
 
 		self.species = rest_species
+
+	def mutate(self):
+		for species in self.species:
+			if species.counter < species.unimproved_life_time:
+				for i in range(len(species.networks)):
+					if i > 0.1*len(species.networks):
+						self.mutator.mutate(species.networks[i])
 
 
 	def start(self, **kwargs):
@@ -93,6 +89,8 @@ class NEAT:
 
 		self.print_header()
 		self.print_set_up()
+
+		self.print_best()
 
 		self.main_loop()
 
@@ -138,6 +136,8 @@ class NEAT:
 
 		for gene in best_network.genome.genes:
 			print(gene)
+
+		print(80*"-")
 
 	def print_footer(self):
 		print(80*"-")
@@ -246,55 +246,80 @@ class Mutator:
 		self.probabilities.sort()
 
 	def mutate(self, network):
-		genome = copy.deepcopy(network.genome)
+		genome = network.genome
 		rand_num = random.random()
 
 		for probability in self.probabilities:
 			if probability.value > rand_num:
 				if probability.type == MutationType.NEW_CONNECTION:
 					self.add_new_connection(genome)
+					network.set_up(genome)
+					break
+
 				elif probability.type == MutationType.NEW_NODE and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
 					self.add_new_node(genome)
+					network.set_up(genome)
+					break
+
 				elif probability.type == MutationType.MODIFY_WEIGHT:
 					self.modify_connection_weight(genome)
+					network.set_up(genome)
+					break
+
 				elif probability.type == MutationType.CHANGE_CONNECTION_STATUS:
 					self.change_connection_status(genome)
+					network.set_up(genome)
+					break
+
 				elif probability.type == MutationType.NEW_WEIGHT:
 					self.set_new_connection_weight(genome)
-
-				break
-
-		return Network(genome)
+					network.set_up(genome)
+					break
 
 	def add_new_connection(self, genome):
 		node1 = random.choice(genome.nodes)
 		node2 = random.choice(genome.nodes)
 		weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
 
+		while node1.id in genome.unused_nodes_ids:
+			node1 = random.choice(genome.nodes)
+
+		while node2.id in genome.unused_nodes_ids:
+			node2 = random.choice(genome.nodes)
+
 		genome.add_new_connection(node1.id, node2.id, weight)
 
 	def add_new_node(self, genome):
 		gene_id = random.choice(range(len(genome.genes)))
+
+		while not genome.genes[gene_id].used:
+			gene_id = random.choice(range(len(genome.genes)))
 
 		genome.add_new_node(gene_id)
 
 	def change_connection_status(self, genome):
 		gene = random.choice(genome.genes)
 
-		if gene.used:
-			gene.enabled = not gene.enabled
+		while not gene.used:
+			gene = random.choice(genome.genes)
+
+		gene.enabled = not gene.enabled
 
 	def modify_connection_weight(self, genome):
 		gene = random.choice(genome.genes)
 
-		if gene.used:
-			gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
+		while not gene.used:
+			gene = random.choice(genome.genes)
+
+		gene.weight *= 1.0 + self.weight_variation*(1.0 - 2.0*random.random())
 
 	def set_new_connection_weight(self, genome):
 		gene = random.choice(genome.genes)
 
-		if gene.used:
-			gene.weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
+		while not gene.used:
+			gene = random.choice(genome.genes)
+
+		gene.weight = self.new_weight_range - 2.0*self.new_weight_range*random.random()
 
 class MutationType(Enum):
 	NEW_CONNECTION = 0
