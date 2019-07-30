@@ -80,7 +80,7 @@ class NEAT:
 		for species in self.species:
 			if species.counter < species.unimproved_life_time:
 				for i in range(len(species.networks)):
-					if i > 0.1*len(species.networks):
+					if species.networks[i].fitness < 0.75 or i > 0.3*len(species.networks):
 						self.mutator.mutate(species.networks[i])
 
 
@@ -89,8 +89,6 @@ class NEAT:
 
 		self.print_header()
 		self.print_set_up()
-
-		self.print_best()
 
 		self.main_loop()
 
