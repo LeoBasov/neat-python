@@ -127,7 +127,7 @@ class Node:
 			if connection.enabled:
 				self.value += connection.weight*connection.node.execute()
 
-		return utility.sigmoid(self.value)
+		return utility.modified_sigmoid(self.value)
 
 class OutputNode(Node):
 	def __init__(self, node_id):

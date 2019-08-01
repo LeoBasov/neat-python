@@ -16,9 +16,9 @@ long with this program. If not, see <https://www.gnu.org/licenses/>."""
 
 import math
 
-def sigmoid(value):
+def modified_sigmoid(value):
 	try:
-		return 1.0/(1.0 + math.exp(-value))
+		return 1.0/(1.0 + math.exp(-4.9*value))
 	except OverflowError:
 		if value > 0:
 			return 1.0
