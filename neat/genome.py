@@ -167,6 +167,8 @@ class Genome:
 		return node_id
 
 	def set_nodes(self, nodes):
+		self.nodes = [BiasNode()]
+		
 		for node in nodes:
 			if node.type == NodeType.OUTPUT:
 				self.output_nodes_ids.append(node.id)
