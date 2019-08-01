@@ -18,27 +18,24 @@ class XOR_Mutator(Mutator):
 		genome = network.genome
 		rand_num = random.random()
 
-		try:
-			if rand_num < 0.03 :
-				self.add_new_node(genome)
+		if rand_num < 0.03 and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
+			self.add_new_node(genome)
+			network.set_up(genome)
+
+		elif rand_num < 0.05:
+			self.add_new_connection(genome)
+			network.set_up(genome)
+
+		if rand_num < 0.8:
+			rand_num = random.random()
+
+			if rand_num < 0.1:
+				self.set_new_connection_weight(genome)
 				network.set_up(genome)
 
-			elif rand_num < 0.05:
-				self.add_new_connection(genome)
+			else:
+				self.modify_connection_weight(genome)
 				network.set_up(genome)
-
-			if rand_num < 0.8:
-				rand_num = random.random()
-
-				if rand_num < 0.1:
-					self.set_new_connection_weight(genome)
-					network.set_up(genome)
-
-				else:
-					self.modify_connection_weight(genome)
-					network.set_up(genome)
-		except:
-			pass
 
 class XOR_NEAT(NEAT):
 	def __init__(self):
