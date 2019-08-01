@@ -313,11 +313,13 @@ class GenomeTest(unittest.TestCase):
 
 		genome1 = Genome()
 		genome2 = Genome()
+		new_genome = Genome()
 		genes1 = []
 		genes2 = []
 
 		genome1.allocate_hidden_nodes(1)
 		genome2.allocate_hidden_nodes(1)
+		new_genome.allocate_hidden_nodes(1)
 
 		#genome 1
 		input_node_id_11 = genome1.add_input_node()
@@ -357,8 +359,7 @@ class GenomeTest(unittest.TestCase):
 		genome2.add_new_connection(input_node_id_12, output_node_id_12)
 
 		#new genome
-		total_list = Genome.set_up_lists(genome1, genome2)
-		new_genome = Genome.mate(total_list, genome2.nodes)
+		Genome.mate(genome1, genome2, new_genome)
 
 		self.assertEqual(new_genome.genes[0].weight, 15.0)
 		self.assertEqual(len(new_genome.genes), 5)

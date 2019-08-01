@@ -80,8 +80,9 @@ class Genome:
 
 		return base_lists + innovative_lists
 
-	def mate(lists, nodes):
-		genome = Genome()
+	def mate(genome_parent_1, genome_parent_2, genome_child):
+		lists = Genome.set_up_lists(genome_parent_1, genome_parent_2)
+		nodes = genome_parent_1.nodes if len(genome_parent_1.nodes) > len(genome_parent_2.nodes) else genome_parent_2.nodes
 		genes = []
 
 		for elem in lists:
@@ -97,10 +98,8 @@ class Genome:
 			elif len(matches) == 1:
 				genes.append(matches[0])
 
-		genome.set_nodes(nodes)
-		genome.set_genes(genes)
-
-		return genome
+		genome_child.set_nodes(nodes)
+		genome_child.set_genes(genes)
 
 	def __init__(self):
 		self.nodes = [BiasNode()]
@@ -168,7 +167,7 @@ class Genome:
 
 	def set_nodes(self, nodes):
 		self.nodes = [BiasNode()]
-		
+
 		for node in nodes:
 			if node.type == NodeType.OUTPUT:
 				self.output_nodes_ids.append(node.id)
