@@ -307,9 +307,9 @@ class Node:
 	def __str__(self):
 		string = ""
 
-		string += "ID: " + str(self.id) + " "
-		string += "TYPE: " + str(self.type.name) + " "
-		string += "LEVEL: " + str(self.level) + " "
+		string += "ID: {:3d} ".format(self.id)
+		string += "TYPE: {:6s} ".format(self.type.name)
+		string += "LEVEL: {:3d} ".format(self.level)
 
 		string += "CONNECTED NODES: ["
 
