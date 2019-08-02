@@ -24,12 +24,10 @@ class NodeType(Enum):
 	OUTPUT = 3
 
 class Genome:
-	INNOVATION = 0
-	LAST_GENES = []
+	GENE_INNOVATION_PAIRS = []
 
 	def reset():
-		Genome.INNOVATION = 0
-		Genome.LAST_GENES = []
+		GENE_INNOVATION_PAIRS = []
 
 	def find_max_innovation(genom1, genom2):
 		max_innovation = 0
@@ -210,8 +208,14 @@ class Genome:
 			else:
 				raise Error("Genome.set_genes", "Gene defined twice")
 
+		self.update_gene_innovation_pairs()
 		self.update_levels()
 		self.update_unused_nodes_gene_index()
+
+	def update_gene_innovation_pairs(self):
+		if len(Genome.GENE_INNOVATION_PAIRS) == 0:
+			for gene in self.genes:
+				Genome.GENE_INNOVATION_PAIRS.append((gene, 0))
 
 	def update_unused_nodes_gene_index(self):
 		self.unused_gene_index = 0
@@ -307,15 +311,13 @@ class Genome:
 			self.nodes[node_id].update_level()
 
 	def check_gene(self, gene):
-		for old_gene in Genome.LAST_GENES:
-			if old_gene.connection_exists(gene.in_node_id, gene.out_node_id):
-				gene.innovation = Genome.INNOVATION
+		for pair in Genome.GENE_INNOVATION_PAIRS:
+			if pair[0].connection_exists(gene.in_node_id, gene.out_node_id):
+				gene.innovation = pair[1]
 				return
 
-		Genome.INNOVATION += 1
-		Genome.LAST_GENES.append(gene)
-
-		gene.innovation = Genome.INNOVATION
+		Genome.GENE_INNOVATION_PAIRS.append((gene, Genome.GENE_INNOVATION_PAIRS[-1][1] + 1))
+		gene.innovation = Genome.GENE_INNOVATION_PAIRS[-1][1]
 
 class Node:
 	def __init__(self, node_id, node_type, used = True):
