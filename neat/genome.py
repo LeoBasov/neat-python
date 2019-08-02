@@ -107,7 +107,7 @@ class Genome:
 		self.unused_nodes_ids = []
 		self.unused_nodes_current_id = 0
 		self.genes = []
-		self.unused_nodes_gene_index = 0
+		self.unused_gene_index = 0
 
 	def allocate_hidden_nodes(self, number):
 		for _ in range(number):
@@ -134,7 +134,7 @@ class Genome:
 
 		"""
 
-		self.unused_nodes_gene_index = len(self.genes)
+		self.unused_gene_index = len(self.genes)
 
 		for _ in range(number):
 			gene = Gene()
@@ -194,17 +194,17 @@ class Genome:
 		self.update_unused_nodes_gene_index()
 
 	def update_unused_nodes_gene_index(self):
-		self.unused_nodes_gene_index = 0
+		self.unused_gene_index = 0
 
 		for gene in self.genes:
 			if gene.used:
-				self.unused_nodes_gene_index += 1
+				self.unused_gene_index += 1
 			else:
 				break
 
 	def add_new_connection(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
 		if self.connection_possible(in_node_id, out_node_id):
-			gene = self.genes[self.unused_nodes_gene_index]
+			gene = self.genes[self.unused_gene_index]
 
 			gene.in_node_id = in_node_id
 			gene.out_node_id = out_node_id
@@ -212,7 +212,7 @@ class Genome:
 			gene.enabled = enabled
 			gene.used = True
 
-			self.unused_nodes_gene_index += 1
+			self.unused_gene_index += 1
 			self.add_gene(gene)
 
 			return True
@@ -220,7 +220,7 @@ class Genome:
 			return False
 
 	def add_new_connection_no_check(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
-		gene = self.genes[self.unused_nodes_gene_index]
+		gene = self.genes[self.unused_gene_index]
 
 		gene.in_node_id = in_node_id
 		gene.out_node_id = out_node_id
@@ -228,7 +228,7 @@ class Genome:
 		gene.enabled = enabled
 		gene.used = True
 
-		self.unused_nodes_gene_index += 1
+		self.unused_gene_index += 1
 		self.add_gene(gene)
 
 	def connection_possible(self, in_node_id, out_node_id):
@@ -257,8 +257,8 @@ class Genome:
 			new_node_id = self.add_hidden_node()
 			weight = self.genes[gene_id].weight
 
-			gene1 = self.genes[self.unused_nodes_gene_index]
-			gene2 = self.genes[self.unused_nodes_gene_index + 1]
+			gene1 = self.genes[self.unused_gene_index]
+			gene2 = self.genes[self.unused_gene_index + 1]
 
 			gene1.in_node_id = in_node_id
 			gene2.in_node_id = new_node_id
@@ -275,7 +275,7 @@ class Genome:
 			gene1.used = True
 			gene2.used = True
 
-			self.unused_nodes_gene_index += 2
+			self.unused_gene_index += 2
 			
 			self.add_gene(gene1)
 			self.add_gene(gene2)
