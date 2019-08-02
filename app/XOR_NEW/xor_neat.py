@@ -91,7 +91,8 @@ class XOR_NEAT(NEAT):
 
 	def __initialze_networks(self, number_networks, number_hidden_nodes, number_genes):
 		for _ in range(number_networks):
-			self.networks.append(self.__initialze_network(number_hidden_nodes, number_genes))
+			self.networks[0].append(self.__initialze_network(number_hidden_nodes, number_genes))
+			self.networks[1].append(self.__initialze_network(number_hidden_nodes, number_genes))
 
 	def __initialze_network(self, number_hidden_nodes, number_genes):
 		genome = Genome()

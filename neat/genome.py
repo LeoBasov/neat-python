@@ -289,6 +289,7 @@ class Genome:
 	def check_gene(self, gene):
 		for old_gene in Genome.LAST_GENES:
 			if old_gene.connection_exists(gene.in_node_id, gene.out_node_id):
+				gene.innovation = Genome.INNOVATION
 				return
 
 		Genome.INNOVATION += 1
