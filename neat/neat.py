@@ -64,9 +64,9 @@ class NEAT:
 		for species in self.species:
 			species.counter += 1
 
-			for network in species.networks:
-				if network.fitness > species.max_fitness:
-					species.max_fitness = network.fitness
+			for network_id in species.networks:
+				if self.networks[self.network_index][network_id].fitness > species.max_fitness:
+					species.max_fitness = self.networks[self.network_index][network_id].fitness
 					species.counter = 0
 
 		rest_species = []
@@ -81,8 +81,8 @@ class NEAT:
 		for species in self.species:
 			if species.counter < species.unimproved_life_time:
 				for i in range(len(species.networks)):
-					if species.networks[i].fitness < 0.76 or i > 0.3*len(species.networks):
-						self.mutator.mutate(species.networks[i])
+					if i > 0.3*len(species.networks):
+						self.mutator.mutate(self.networks[self.network_index][species.networks[i]])
 
 
 	def start(self, **kwargs):
@@ -173,27 +173,27 @@ class NEAT:
 		for species in self.species:
 				species.networks.clear()
 				
-		for network in self.networks[self.network_index]:
+		for i in range(len(self.networks[self.network_index])):
 			min_distance_species = [sys.float_info.max, None]
 
 			for species in self.species:
-				distance = species.compare(network.genome)
+				distance = species.compare(self.networks[self.network_index][i].genome)
 
 				if min_distance_species[0] > distance:
 					min_distance_species[0] = distance
 					min_distance_species[1] = species
 
 			if min_distance_species[0] > self.species_distance_max:
-				species  = Species(network.genome)
-				species.networks.append(network)
+				species  = Species(self.networks[self.network_index][i].genome)
+				species.networks.append(i)
 
 				self.species.append(species)
 			else:
-				min_distance_species[1].networks.append(network)
+				min_distance_species[1].networks.append(i)
 
 		for species in self.species:
 			if len(species.networks):
-				species.genome = random.choice(species.networks).genome
+				species.genome = self.networks[self.network_index][random.choice(species.networks)].genome
 
 
 class Species:
