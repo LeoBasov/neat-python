@@ -355,7 +355,7 @@ class Gene:
 	def __str__(self):
 		string = ""
 
-		string += f"IN: {'{:4d}'.format(self.in_node_id) if self.in_node_id else 'None'} "
+		string += f"IN: {'{:4d}'.format(self.in_node_id) if self.in_node_id != None else 'None'} "
 		string += f"OUT: {'{:4d}'.format(self.out_node_id) if self.out_node_id else 'None'} "
 		string += f"WEIGHT: {'{:6.3f}'.format(self.weight)} "
 		string += f"ENABLED: {'True ' if self.enabled else 'False'} "
