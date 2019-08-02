@@ -355,11 +355,11 @@ class Gene:
 	def __str__(self):
 		string = ""
 
-		string += "IN: " + str(self.in_node_id) + " "
-		string += "OUT: " + str(self.out_node_id) + " "
-		string += "WEIGHT: " + str(round(self.weight, 3)) + " "
-		string += "ENABLED: " + str(self.enabled) + " "
-		string += "INNOVATION: " + str(self.innovation) + " "
+		string += f"IN: {'{:4d}'.format(self.in_node_id) if self.in_node_id else 'None'} "
+		string += f"OUT: {'{:4d}'.format(self.out_node_id) if self.out_node_id else 'None'} "
+		string += f"WEIGHT: {'{:6.3f}'.format(self.weight)} "
+		string += f"ENABLED: {'True ' if self.enabled else 'False'} "
+		string += "INNOVATION: {:3d} ".format(self.innovation)
 		string += "USED: " + str(self.used)
 
 		return string
