@@ -80,9 +80,18 @@ class NEAT:
 	def mutate(self):
 		for species in self.species:
 			if species.counter < species.unimproved_life_time:
-				for i in range(len(species.networks)):
-					if i > 0.3*len(species.networks):
-						self.mutator.mutate(self.networks[self.network_index][species.networks[i]])
+				rest = int(round(0.5*len(species.networks)))
+
+				if rest:
+					for i in range(len(species.networks)):
+						parent_genome_1 = self.networks[self.network_index][random.choice(species.networks)].genome
+						parent_genome_2 = self.networks[self.network_index][random.choice(species.networks)].genome
+						child_genome = self.networks[int(not self.network_index)][species.networks[i]].genome
+
+						Genome.mate(parent_genome_1, parent_genome_2, child_genome)
+
+						self.networks[int(not self.network_index)][species.networks[i]].set_up(child_genome)
+						self.mutator.mutate(self.networks[int(not self.network_index)][species.networks[i]])
 
 
 	def start(self, **kwargs):
