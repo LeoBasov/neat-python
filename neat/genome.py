@@ -91,8 +91,9 @@ class Genome:
 				out_node_id = matches[0].out_node_id
 				weigth = 0.5*(matches[0].weight + matches[1].weight)
 				enabled = matches[0].enabled and matches[1].enabled
+				innovation = matches[0].innovation
 
-				genes.append(Gene(in_node_id, out_node_id, weigth, enabled))
+				genes.append(Gene(in_node_id, out_node_id, weigth, enabled, innovation))
 			elif len(matches) == 1:
 				genes.append(matches[0])
 
@@ -380,12 +381,12 @@ class OutputNode(HiddenNode):
 		super().__init__(node_id, NodeType.OUTPUT)
 
 class Gene:
-	def __init__(self, in_node_id = None, out_node_id = None, weight = 1.0, enabled = True):
+	def __init__(self, in_node_id = None, out_node_id = None, weight = 1.0, enabled = True, innovation = 0):
 		self.in_node_id = in_node_id
 		self.out_node_id = out_node_id
 		self.weight = weight
 		self.enabled = enabled and (in_node_id != None) and (out_node_id != None)
-		self.innovation = 0
+		self.innovation = innovation
 		self.used = (in_node_id != None) and (out_node_id != None)
 
 	def __str__(self):
