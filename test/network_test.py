@@ -14,6 +14,26 @@ from neat.network import Connection
 from neat.genome import Genome
 from neat.genome import Gene
 
+class TestGenome(Genome):
+	def __init__(self):
+		super().__init__()
+
+		self.allocate_hidden_nodes(1)
+
+		input_node_id_1 = self.add_input_node()
+		input_node_id_2 = self.add_input_node()
+
+		output_node_id = self.add_output_node()
+
+		genes = []
+
+		genes.append(Gene(0              , output_node_id))
+		genes.append(Gene(input_node_id_1, output_node_id))
+		genes.append(Gene(input_node_id_2, output_node_id))
+
+		self.set_genes(genes)
+		self.allocate_genes(2)
+
 class TestNetwork(Network):
 	def __init__(self):
 		super().__init__()
@@ -109,6 +129,28 @@ class NetworkSlimTest(unittest.TestCase):
 		self.assertEqual(int(value_21 != value_22), round(results2[5]))
 		self.assertEqual(int(value_31 != value_32), round(results3[5]))
 		self.assertEqual(int(value_41 != value_42), round(results4[5]))
+
+	def test_mate(self):
+		Genome.reset()
+
+		genome_parent_1 = TestGenome()
+		genome_parent_2 = TestGenome()
+		genome_child = TestGenome()
+
+		network_parent_1 = Network(genome_parent_1)
+		network_parent_2 = Network(genome_parent_2)
+		network_child = Network(genome_child)
+
+		genome_parent_1.add_new_node(0)
+		genome_parent_2.add_new_node(1)
+		genome_child.add_new_node(2)
+
+		Genome.mate(genome_parent_1, genome_parent_2, genome_child)
+
+		network_child.set_up(genome_child)
+
+		print('')
+		print(network_child.genome)
 
 class NodeSlimTest(unittest.TestCase):
 	def test_node_initialization(self):
