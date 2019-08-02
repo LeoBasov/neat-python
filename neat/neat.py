@@ -80,7 +80,7 @@ class NEAT:
 		for species in self.species:
 			if species.counter < species.unimproved_life_time:
 				for i in range(len(species.networks)):
-					if species.networks[i].fitness < 0.75 or i > 0.3*len(species.networks):
+					if species.networks[i].fitness < 0.76 or i > 0.3*len(species.networks):
 						self.mutator.mutate(species.networks[i])
 
 
@@ -185,6 +185,9 @@ class NEAT:
 				self.species.append(species)
 			else:
 				min_distance_species[1].networks.append(network)
+
+		for species in self.species:
+			species.genome = random.choice(species.networks).genome
 
 
 class Species:
