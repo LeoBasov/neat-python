@@ -169,6 +169,8 @@ class Genome:
 		self.nodes = [BiasNode()]
 
 		for node in nodes:
+			node.connected_nodes = []
+
 			if node.type == NodeType.OUTPUT:
 				self.output_nodes_ids.append(node.id)
 			elif node.type == NodeType.BIAS:
@@ -182,12 +184,23 @@ class Genome:
 		for gene in genes:
 			if gene not in self.genes:
 				self.genes.append(gene)
-				self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
+
+				if gene.used:
+					self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
 			else:
 				raise Error("Genome.set_genes", "Gene defined twice")
 
 		self.update_levels()
-		self.unused_nodes_gene_index = len(self.genes)
+		self.update_unused_nodes_gene_index()
+
+	def update_unused_nodes_gene_index(self):
+		self.unused_nodes_gene_index = 0
+
+		for gene in self.genes:
+			if gene.used:
+				self.unused_nodes_gene_index += 1
+			else:
+				break
 
 	def add_new_connection(self, in_node_id, out_node_id, weight = 1.0, enabled = True):
 		if self.connection_possible(in_node_id, out_node_id):
