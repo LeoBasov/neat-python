@@ -109,6 +109,26 @@ class Genome:
 		self.genes = []
 		self.unused_gene_index = 0
 
+	def __str__(self):
+		string = ''
+
+		string += 80*'-' + '\n'
+		string += 'NODES\n'
+		string += 80*'-' + '\n'
+
+		for node in self.nodes:
+			string += node.__str__() + '\n'
+
+		string += 80*'-' + '\n'
+		string += 'GENES\n'
+		string += 80*'-' + '\n'
+
+		for gene in self.genes:
+			string += gene.__str__() + '\n'
+
+		return string
+
+
 	def allocate_hidden_nodes(self, number):
 		for _ in range(number):
 			node_id = len(self.nodes)
