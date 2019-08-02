@@ -153,7 +153,7 @@ class NEAT:
 		print(80*"=")
 
 	def main_loop(self):
-		Genome.LAST_GENES = []
+		Genome.reset()
 
 		for i in range(self.number_itterations):
 			mean_fitness = 0
