@@ -101,6 +101,7 @@ class NetworkSlimTest(unittest.TestCase):
 		network = Network()
 
 	def test_execute(self):
+		Genome.reset()
 		network = XORNetwork()
 
 		value_11 = 1
@@ -133,6 +134,10 @@ class NetworkSlimTest(unittest.TestCase):
 	def test_mate(self):
 		Genome.reset()
 
+		for pair in Genome.GENE_INNOVATION_PAIRS:
+			print(pair[0])
+			print(pair[1])
+
 		genome_parent_1 = TestGenome()
 		genome_parent_2 = TestGenome()
 		genome_child = TestGenome()
@@ -149,8 +154,14 @@ class NetworkSlimTest(unittest.TestCase):
 
 		network_child.set_up(genome_child)
 
-		print('')
-		print(network_child.genome)
+		for i in range(-1, -4, -1):
+			self.assertTrue(network_child.genome.genes[i].enabled)
+			self.assertTrue(network_child.genome.genes[i].used)
+
+		
+		self.assertEqual(network_child.genome.genes[3].innovation, 1)
+		self.assertEqual(network_child.genome.genes[4].innovation, 2)
+		self.assertEqual(network_child.genome.genes[5].innovation, 3)
 
 class NodeSlimTest(unittest.TestCase):
 	def test_node_initialization(self):
