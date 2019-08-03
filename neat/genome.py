@@ -82,6 +82,8 @@ class Genome:
 		lists = Genome.set_up_lists(genome_parent_1, genome_parent_2)
 		nodes = genome_parent_1.nodes if len(genome_parent_1.nodes) > len(genome_parent_2.nodes) else genome_parent_2.nodes
 		genes = []
+		used_genes = []
+		unused_genes = []
 
 		for elem in lists:
 			matches = [x for x in elem if x]
@@ -97,6 +99,15 @@ class Genome:
 			elif len(matches) == 1:
 				genes.append(matches[0])
 
+		for gene in genes:
+			if gene.used:
+				used_genes.append(gene)
+			else:
+				unused_genes.append(gene)
+
+		genes = used_genes + unused_genes
+
+		genome_child.unused_gene_index = len(used_genes)
 		genome_child.set_nodes(nodes)
 		genome_child.set_genes(genes)
 
@@ -204,7 +215,7 @@ class Genome:
 			if gene not in self.genes:
 				self.genes.append(gene)
 
-				if gene.used:
+				if gene.used and gene.enabled:
 					self.nodes[gene.out_node_id].connected_nodes.append(self.nodes[gene.in_node_id])
 			else:
 				raise Error("Genome.set_genes", "Gene defined twice")
