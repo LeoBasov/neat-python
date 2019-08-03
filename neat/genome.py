@@ -27,7 +27,7 @@ class Genome:
 	GENE_INNOVATION_PAIRS = []
 
 	def reset():
-		GENE_INNOVATION_PAIRS = []
+		Genome.GENE_INNOVATION_PAIRS = []
 
 	def find_max_innovation(genom1, genom2):
 		max_innovation = 0
