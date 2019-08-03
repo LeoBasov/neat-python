@@ -27,10 +27,9 @@ class NEAT:
 		self.number_itterations = 1
 		self.number_sub_cycles = 1
 		self.species_distance_max = 3.0
-		self.networks = [[], []]
+		self.networks = []
 		self.species = []
 		self.mutator = Mutator()
-		self.network_index = 0
 
 		self.test_case_name = "PLACE HOLDER"
 		self.test_case_specifics = ["PLACE HOLDER"]
@@ -49,7 +48,7 @@ class NEAT:
 	#--------------------------------------------------------------
 
 	def evaluate_networks(self):
-		for network in self.networks[self.network_index]:
+		for network in self.networks:
 			mean_fitness = 0.0
 
 			for _ in range(self.number_sub_cycles):
@@ -57,16 +56,16 @@ class NEAT:
 
 			network.fitness = mean_fitness/self.number_sub_cycles
 
-		self.networks[self.network_index].sort()
-		self.networks[self.network_index].reverse()
+		self.networks.sort()
+		self.networks.reverse()
 
 	def evaluate_species(self):
 		for species in self.species:
 			species.counter += 1
 
 			for network_id in species.networks:
-				if self.networks[self.network_index][network_id].fitness > species.max_fitness:
-					species.max_fitness = self.networks[self.network_index][network_id].fitness
+				if self.networks[network_id].fitness > species.max_fitness:
+					species.max_fitness = self.networks[network_id].fitness
 					species.counter = 0
 
 		rest_species = []
@@ -78,23 +77,27 @@ class NEAT:
 		self.species = rest_species
 
 	def mutate(self):
+		new_networks =  copy.deepcopy(self.networks)
+
 		for species in self.species:
 			if species.counter < species.unimproved_life_time:
 				rest = int(round(0.5*len(species.networks)))
 
 				if rest:
 					for i in range(len(species.networks)):
-						parent_genome_1 = self.networks[self.network_index][random.choice(species.networks)].genome
-						parent_genome_2 = self.networks[self.network_index][random.choice(species.networks)].genome
-						child_genome = self.networks[int(not self.network_index)][species.networks[i]].genome
+						parent_genome_1 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
+						parent_genome_2 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
+						child_genome = copy.deepcopy(new_networks[species.networks[i]].genome)
 
 						Genome.mate(parent_genome_1, parent_genome_2, child_genome)
 
-						self.networks[int(not self.network_index)][species.networks[i]].set_up(child_genome)
-						self.mutator.mutate(self.networks[int(not self.network_index)][species.networks[i]])
+						new_networks[species.networks[i]].set_up(child_genome)
+						self.mutator.mutate(new_networks[species.networks[i]])
 
 
 	def start(self, **kwargs):
+		Genome.reset()
+
 		self.initiatlize(**kwargs)
 
 		self.print_header()
@@ -118,14 +121,14 @@ class NEAT:
 		print(80*"-")
 
 	def print_set_up(self):
-		print("NUMBER_NETWORKS", len(self.networks[self.network_index]))
+		print("NUMBER_NETWORKS", len(self.networks))
 		print("NUMBER_ITTERATIONS", self.number_itterations)
 		print("NUMBER_SUB_CYCLES", self.number_sub_cycles)
 		print(80*"-")
 
 	def print_best(self):
-		best_fintess = self.networks[self.network_index][0].fitness if len(self.networks[self.network_index]) > 0 else 0
-		best_network = self.networks[self.network_index][0] if len(self.networks[self.network_index]) > 0 else 0
+		best_fintess = self.networks[0].fitness if len(self.networks) > 0 else 0
+		best_network = self.networks[0] if len(self.networks) > 0 else 0
 
 		print("FITNESS OF BEST NETWORK:", best_fintess)
 		print(80*"-")
@@ -153,25 +156,20 @@ class NEAT:
 		print(80*"=")
 
 	def main_loop(self):
-		Genome.reset()
-
 		for i in range(self.number_itterations):
 			mean_fitness = 0
 
 			self.evaluate_networks()
 			self.evaluate_species()
 
-			for network in self.networks[self.network_index]:
+			for network in self.networks:
 				mean_fitness += network.fitness
 
-			mean_fitness /= len(self.networks[self.network_index])
+			mean_fitness /= len(self.networks)
 
 			print("MEAN FITNESS: %0.3f SPECIES NUMBER : %3.0d PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), len(self.species), i + 1, self.number_itterations), end="\r", flush=True)
 			
 			self.mutate()
-
-			self.network_index = int(not self.network_index)
-
 			self.sort_in_species()
 
 		self.evaluate_networks()
@@ -182,18 +180,18 @@ class NEAT:
 		for species in self.species:
 				species.networks.clear()
 				
-		for i in range(len(self.networks[self.network_index])):
+		for i in range(len(self.networks)):
 			min_distance_species = [sys.float_info.max, None]
 
 			for species in self.species:
-				distance = species.compare(self.networks[self.network_index][i].genome)
+				distance = species.compare(self.networks[i].genome)
 
 				if min_distance_species[0] > distance:
 					min_distance_species[0] = distance
 					min_distance_species[1] = species
 
 			if min_distance_species[0] > self.species_distance_max:
-				species  = Species(self.networks[self.network_index][i].genome)
+				species  = Species(self.networks[i].genome)
 				species.networks.append(i)
 
 				self.species.append(species)
@@ -202,7 +200,7 @@ class NEAT:
 
 		for species in self.species:
 			if len(species.networks):
-				species.genome = self.networks[self.network_index][random.choice(species.networks)].genome
+				species.genome = self.networks[random.choice(species.networks)].genome
 
 
 class Species:
