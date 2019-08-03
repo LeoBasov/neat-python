@@ -94,6 +94,7 @@ class NEAT:
 						new_networks[species.networks[i]].set_up(child_genome)
 						self.mutator.mutate(new_networks[species.networks[i]])
 
+		self.networks = new_networks
 
 	def start(self, **kwargs):
 		Genome.reset()
