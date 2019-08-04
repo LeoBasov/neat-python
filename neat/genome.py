@@ -108,6 +108,7 @@ class Genome:
 		genes = used_genes + unused_genes
 
 		genome_child.unused_gene_index = len(used_genes)
+		genome_child.unused_nodes_current_id = max(genome_parent_1.unused_nodes_current_id, genome_parent_2.unused_nodes_current_id)
 		genome_child.set_nodes(nodes)
 		genome_child.set_genes(genes)
 
