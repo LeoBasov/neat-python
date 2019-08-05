@@ -1,5 +1,6 @@
 import sys
 import random
+import copy
 
 sys.path.append('../../.')
 
@@ -113,3 +114,31 @@ class XOR_NEAT(NEAT):
 		genome.allocate_genes(number_genes)
 
 		return Network(genome)
+
+	def mutate(self):
+		new_networks =  copy.deepcopy(self.networks)
+
+		for species in self.species:
+			if species.counter < species.unimproved_life_time:
+				rest = int(round(0.5*len(species.networks)))
+
+				if rest:
+					for i in range(len(species.networks)):
+						rand = random.random()
+
+
+						if rand < 0.25:
+							parent_genome = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
+							new_networks[species.networks[i]].set_up(parent_genome)
+							self.mutator.mutate(new_networks[species.networks[i]])
+						else:
+							parent_genome_1 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
+							parent_genome_2 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
+							child_genome = copy.deepcopy(new_networks[species.networks[i]].genome)
+
+							Genome.mate(parent_genome_1, parent_genome_2, child_genome)
+
+							new_networks[species.networks[i]].set_up(child_genome)
+							self.mutator.mutate(new_networks[species.networks[i]])
+
+		self.networks = new_networks
