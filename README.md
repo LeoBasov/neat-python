@@ -4,5 +4,8 @@ Networks through Augmenting Topologies. MIT Press journals.](http://nn.cs.utexas
 
 ![alt text](https://github.com/LeoBasov/neat-python/blob/master/doc/genome.png "Display of genome idea")
 
+## Mutation
+![alt text](https://github.com/LeoBasov/neat-python/blob/master/doc/mutation.png "Display of mutation idea")
+
 ## Mating Process
-![alt text](https://github.com/LeoBasov/neat-python/blob/master/doc/mating_neat.png "Display of genome idea")
+![alt text](https://github.com/LeoBasov/neat-python/blob/master/doc/mating_neat.png "Display of mating idea")
