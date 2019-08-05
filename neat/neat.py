@@ -102,6 +102,8 @@ class NEAT:
 
 		self.initiatlize(**kwargs)
 
+		Genome.MAX_NUMBER_GENES = len(self.networks[0].genome.genes)
+
 		self.print_header()
 		self.print_set_up()
 

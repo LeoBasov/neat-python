@@ -25,6 +25,7 @@ class NodeType(Enum):
 
 class Genome:
 	GENE_INNOVATION_PAIRS = []
+	MAX_NUMBER_GENES = 0
 
 	def reset():
 		Genome.GENE_INNOVATION_PAIRS = []
@@ -111,6 +112,11 @@ class Genome:
 		genome_child.unused_nodes_current_id = max(genome_parent_1.unused_nodes_current_id, genome_parent_2.unused_nodes_current_id)
 		genome_child.set_nodes(nodes)
 		genome_child.set_genes(genes)
+
+		rest_gene_number = Genome.MAX_NUMBER_GENES - len(genes)
+
+		if rest_gene_number > 0:
+			genome_child.allocate_genes(rest_gene_number)
 
 	def __init__(self):
 		self.nodes = [BiasNode()]
