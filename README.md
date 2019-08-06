@@ -3,6 +3,8 @@ The work presented here is based on this paper: [Stanley K. O. and Miikkulainen 
 Networks through Augmenting Topologies. MIT Press journals.](http://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf)
 All pictures unless stated otherwise are taken from this source.
 
+[test](https://github.com/LeoBasov/neat-python/blob/master/doc/build/html/index.html)
+
 ![alt text](https://github.com/LeoBasov/neat-python/blob/master/doc/source/_static/genome.png "Display of genome idea")
 
 ## Mutation
