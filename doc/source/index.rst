@@ -12,6 +12,7 @@ This documentation discibes the functionaly and the model behind NEAT.
    :caption: Contents:
 
    files/model
+   files/test_cases
 
 Indices and tables
 ==================
