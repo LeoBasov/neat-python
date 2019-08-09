@@ -105,9 +105,9 @@ class XOR_NEAT(NEAT):
 
 		self.output_node = genome.add_output_node()
 
-		genes.append(Gene(0               , self.output_node, 20 - 10*random.random()))
-		genes.append(Gene(self.input_node1, self.output_node, 20 - 10*random.random()))
-		genes.append(Gene(self.input_node2, self.output_node, 20 - 10*random.random()))
+		genes.append(Gene(0               , self.output_node, 10 - 20*random.random()))
+		genes.append(Gene(self.input_node1, self.output_node, 10 - 20*random.random()))
+		genes.append(Gene(self.input_node2, self.output_node, 10 - 20*random.random()))
 
 		genome.set_genes(genes)
 
@@ -126,19 +126,22 @@ class XOR_NEAT(NEAT):
 					for i in range(len(species.networks)):
 						rand = random.random()
 
-
 						if rand < 0.25:
-							parent_genome = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
+							parent_genome = copy.deepcopy(new_networks[random.choice(species.networks[:rest])].genome)
 							new_networks[species.networks[i]].set_up(parent_genome)
 							self.mutator.mutate(new_networks[species.networks[i]])
 						else:
-							parent_genome_1 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
-							parent_genome_2 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
+							parent_genome_1 = copy.deepcopy(new_networks[random.choice(species.networks[:rest])].genome)
+							parent_genome_2 = copy.deepcopy(new_networks[random.choice(species.networks[:rest])].genome)
 							child_genome = copy.deepcopy(new_networks[species.networks[i]].genome)
 
 							Genome.mate(parent_genome_1, parent_genome_2, child_genome)
 
 							new_networks[species.networks[i]].set_up(child_genome)
 							self.mutator.mutate(new_networks[species.networks[i]])
+
+				else:
+					for net_id in species.networks:
+						self.mutator.mutate(new_networks[net_id])
 
 		self.networks = new_networks
