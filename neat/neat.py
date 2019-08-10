@@ -18,12 +18,15 @@ import copy
 import random
 from enum import Enum
 import sys
+import time
+import os
 
 from .network import Network
 from .genome import Genome
 
 class NEAT:
 	def __init__(self):
+		self.time_start = time.localtime()
 		self.number_itterations = 1
 		self.number_sub_cycles = 1
 		self.species_distance_max = 3.0
@@ -172,9 +175,10 @@ class NEAT:
 			mean_fitness /= len(self.networks)
 
 			print("MEAN FITNESS: %0.3f SPECIES NUMBER : %3.0d PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), len(self.species), i + 1, self.number_itterations), end="\r", flush=True)
-			
+
 			self.mutate()
 			self.sort_in_species()
+			self.write_to_file()
 
 		self.evaluate_networks()
 		print("")
@@ -183,7 +187,7 @@ class NEAT:
 	def sort_in_species(self):
 		for species in self.species:
 				species.networks.clear()
-				
+
 		for i in range(len(self.networks)):
 			min_distance_species = [sys.float_info.max, None]
 
@@ -206,6 +210,16 @@ class NEAT:
 			if len(species.networks):
 				species.genome = self.networks[random.choice(species.networks)].genome
 
+	def write_to_file(self):
+		try:
+			file_dir = './output/' + time.strftime('%Y%m%d_%H%M%S', self.time_start)
+			os.makedirs(file_dir)
+
+		except FileExistsError:
+			pass
+
+		else:
+			pass
 
 class Species:
 	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
@@ -219,7 +233,7 @@ class Species:
 		self.c3 = c3
 
 		self.networks = []
-		
+
 	def compare(self, genome):
 		N = max(len(self.genome.genes), len(genome.genes))
 		lists = Genome.set_up_lists(self.genome, genome)
