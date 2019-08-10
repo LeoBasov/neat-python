@@ -6,7 +6,7 @@ class Visualizer:
     def __init__(self, dir = ''):
         self.dir = dir
 
-    def plot_fitness(self, file_name):
+    def plot_fitness(self, file_name, fig_name):
         percentiles = []
         percentiles_fin = [[] for _ in range(10)]
         mean_vals = []
@@ -24,9 +24,9 @@ class Visualizer:
             for i in range(len(percentiles_fin)):
                 percentiles_fin[i].append(step[i])
 
-        self._plot_fitness(percentiles_fin, mean_vals)
+        self._plot_fitness(percentiles_fin, mean_vals, self.dir + '/' + fig_name)
 
-    def _plot_fitness(self, percentiles, mean_vals):
+    def _plot_fitness(self, percentiles, mean_vals, fig_name):
         plt.plot(mean_vals, label='Mean Fitness', color='black')
 
         plt.plot(percentiles[0], label='1 Percentile', linestyle = '--')
@@ -40,12 +40,14 @@ class Visualizer:
         plt.plot(percentiles[8], label='9 Percentile', linestyle = '--')
         plt.plot(percentiles[9], label='10 Percentile', linestyle = '--')
 
-        plt.xlabel('x label')
-        plt.ylabel('y label')
+        plt.xlabel('Generation [-]')
+        plt.ylabel('Fitness [-]')
 
-        plt.title("Simple Plot")
+        plt.title("Fitness plot")
 
-        plt.legend()
+        #plt.legend()
+
+        plt.savefig(fig_name)
 
         plt.show()
 
