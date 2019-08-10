@@ -47,7 +47,7 @@ class Visualizer:
 
         #plt.legend()
 
-        plt.savefig(fig_name)
+        plt.savefig(fig_name, dpi = 600)
 
         plt.show()
 
