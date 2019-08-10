@@ -20,6 +20,7 @@ from enum import Enum
 import sys
 import time
 import os
+import csv
 
 from .network import Network
 from .genome import Genome
@@ -102,6 +103,7 @@ class NEAT:
 
 	def start(self, **kwargs):
 		Genome.reset()
+		Species.reset()
 
 		self.initiatlize(**kwargs)
 
@@ -178,7 +180,7 @@ class NEAT:
 
 			self.mutate()
 			self.sort_in_species()
-			self.write_to_file()
+			self.write_to_file(i)
 
 		self.evaluate_networks()
 		print("")
@@ -210,7 +212,7 @@ class NEAT:
 			if len(species.networks):
 				species.genome = self.networks[random.choice(species.networks)].genome
 
-	def write_to_file(self):
+	def write_to_file(self, step):
 		try:
 			file_dir = './output/' + time.strftime('%Y%m%d_%H%M%S', self.time_start)
 			os.makedirs(file_dir)
@@ -218,11 +220,35 @@ class NEAT:
 		except FileExistsError:
 			pass
 
-		else:
-			pass
+		finally:
+			self.write_networks(file_dir, step)
+
+	def write_networks(self, file_dir, step):
+		file_name = file_dir + '/networks.csv'
+		row = []
+
+		for network in self.networks:
+			row.append(network.fitness)
+
+		with open(file_name, 'a') as csvfile:
+			writer = csv.writer(csvfile)
+			writer.writerow(row)
+
+	def write_header(self, file_name, field_names):
+		if not os.path.isfile(file_name):
+			with open(file_name, 'a') as csvfile:
+				writer = csv.writer(csvfile)
+				writer.writerow(field_names)
 
 class Species:
+	ID = 0
+
+	def reset():
+		Species.ID = 0
+
 	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
+		Species.ID += 1
+
 		self.genome = genome
 		self.unimproved_life_time = unimproved_life_time
 		self.counter = 0
