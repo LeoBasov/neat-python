@@ -1,13 +1,15 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 
 from xor_neat import XOR_NEAT
+from neat.visual import Visualizer
 
 def main():
 	neat = XOR_NEAT()
+	visualizer = Visualizer(neat.file_dir)
 	parameters = {}
 
 	parameters["number_networks"] = 150
-	parameters["number_itterations"] = 2000
+	parameters["number_itterations"] = 10
 	parameters["number_sub_cycles"] = 1
 
 	parameters["test_case_name"] = "XOR NETWORK EVOLUTION"
@@ -17,6 +19,8 @@ def main():
 	parameters["number_genes"] = 4
 
 	neat.start(**parameters)
+
+	visualizer.plot_fitness('networks.csv')
 
 if __name__ == '__main__':
 	main()
