@@ -168,8 +168,11 @@ class NEAT:
 		for i in range(self.number_itterations):
 			mean_fitness = 0
 
-			self.evaluate_networks()
+			self.mutate()
 			self.evaluate_species()
+			self.sort_in_species()
+			self.evaluate_networks()
+			self.write_to_file(i)
 
 			for network in self.networks:
 				mean_fitness += network.fitness
@@ -178,11 +181,6 @@ class NEAT:
 
 			print("MEAN FITNESS: %0.3f SPECIES NUMBER : %3.0d PERFORMED ITTERATIONS %0.0d/%0.0d" % (round(mean_fitness,3), len(self.species), i + 1, self.number_itterations), end="\r", flush=True)
 
-			self.mutate()
-			self.sort_in_species()
-			self.write_to_file(i)
-
-		self.evaluate_networks()
 		print("")
 		print(80*"-")
 
