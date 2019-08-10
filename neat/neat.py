@@ -27,7 +27,7 @@ from .genome import Genome
 
 class NEAT:
 	def __init__(self):
-		self.time_start = time.localtime()
+		self.file_dir = './output/' + time.strftime('%Y%m%d_%H%M%S', time.localtime())
 		self.number_itterations = 1
 		self.number_sub_cycles = 1
 		self.species_distance_max = 3.0
@@ -214,14 +214,13 @@ class NEAT:
 
 	def write_to_file(self, step):
 		try:
-			file_dir = './output/' + time.strftime('%Y%m%d_%H%M%S', self.time_start)
-			os.makedirs(file_dir)
+			os.makedirs(self.file_dir)
 
 		except FileExistsError:
 			pass
 
 		finally:
-			self.write_networks(file_dir, step)
+			self.write_networks(self.file_dir, step)
 
 	def write_networks(self, file_dir, step):
 		file_name = file_dir + '/networks.csv'
