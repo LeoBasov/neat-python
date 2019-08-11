@@ -6,6 +6,7 @@ sys.path.append('../.')
 
 from neat.neat import Mutator
 from neat.neat import Species
+from neat.neat import NEAT
 from neat.network import Network
 from neat.genome import Genome
 from neat.genome import Gene
@@ -54,6 +55,20 @@ class TestGenome3(Genome):
 		genes.append(Gene(self.input_node_id1, self.output_node_id1, weight = 5.0))
 
 		self.set_genes(genes)
+
+class NEATTest(unittest.TestCase):
+	def test_evaluate_species(self):
+		neat = NEAT()
+
+		neat.species.append(Species(TestGenome1(), unimproved_life_time = 1))
+		neat.species.append(Species(TestGenome1(), unimproved_life_time = 2))
+		neat.species.append(Species(TestGenome1(), unimproved_life_time = 3))
+
+		self.assertEqual(len(neat.species), 3)
+
+		neat.evaluate_species()
+
+		self.assertEqual(len(neat.species), 2)
 
 class MutatorTest(unittest.TestCase):
 	def test_add_new_connection(self):
