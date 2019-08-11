@@ -169,7 +169,7 @@ class NEAT:
 			mean_fitness = 0
 
 			self.mutate()
-			self.evaluate_species()
+			#self.evaluate_species()
 			self.sort_in_species()
 			self.evaluate_networks()
 			self.write_to_file(i)
