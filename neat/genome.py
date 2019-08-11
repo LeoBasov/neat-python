@@ -47,7 +47,7 @@ class Genome:
 		base_list = []
 
 		for i in range(min(len(genom1.genes), len(genom2.genes))):
-			if genom1.genes[i].innovation == 0:
+			if genom1.genes[i].innovation == 0 and genom1.genes[i].used:
 				base_list.append((genom1.genes[i], genom2.genes[i]))
 			else:
 				break
@@ -197,7 +197,7 @@ class Genome:
 
 	def add_hidden_node(self):
 		node_id = self.unused_nodes_ids[self.unused_nodes_current_id]
-		
+
 		self.unused_nodes_current_id += 1
 
 		return node_id
@@ -319,7 +319,7 @@ class Genome:
 			gene2.used = True
 
 			self.unused_gene_index += 2
-			
+
 			self.add_gene(gene1)
 			self.add_gene(gene2)
 
