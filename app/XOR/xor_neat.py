@@ -127,7 +127,7 @@ class XOR_NEAT(NEAT):
 				rest = int(round(0.5*len(species.networks)))
 
 				if rest:
-					for i in range(len(species.networks)):
+					for i in range(rest, len(species.networks)):
 						rand = random.random()
 
 						if rand < 0.25:
@@ -143,9 +143,5 @@ class XOR_NEAT(NEAT):
 
 							new_networks[species.networks[i]].set_up(child_genome)
 							self.mutator.mutate(new_networks[species.networks[i]])
-
-				else:
-					for net_id in species.networks:
-						self.mutator.mutate(new_networks[net_id])
 
 		self.networks = new_networks
