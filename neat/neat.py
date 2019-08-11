@@ -189,26 +189,18 @@ class NEAT:
 				species.networks.clear()
 
 		for i in range(len(self.networks)):
-			min_distance_species = [sys.float_info.max, None]
+			found = False
 
 			for species in self.species:
-				distance = species.compare(self.networks[i].genome)
+				if species.compare(self.networks[i].genome):
+					species.networks.append(i)
+					found = True
+					break
 
-				if min_distance_species[0] > distance:
-					min_distance_species[0] = distance
-					min_distance_species[1] = species
-
-			if min_distance_species[0] > self.species_distance_max:
-				species  = Species(copy.deepcopy(self.networks[i].genome))
+			if not found:
+				species  = Species(self.networks[i].genome)
 				species.networks.append(i)
-
 				self.species.append(species)
-			else:
-				min_distance_species[1].networks.append(i)
-
-		for species in self.species:
-			if len(species.networks):
-				species.genome = copy.deepcopy(self.networks[random.choice(species.networks)].genome)
 
 	def write_to_file(self, step):
 		try:
@@ -289,7 +281,7 @@ class Species:
 		Species.ID += 1
 
 		self.id = Species.ID
-		self.genome = genome
+		self.genome = Genome.get_species(genome)
 		self.unimproved_life_time = unimproved_life_time
 		self.counter = 0
 		self.max_fitness = 0.0
@@ -301,11 +293,7 @@ class Species:
 		self.networks = []
 
 	def compare(self, genome):
-		N = max(self.genome.unused_gene_index, genome.unused_gene_index)
-		lists = Genome.set_up_lists(self.genome, genome)
-		distance = self.calc_distance(lists, N)
-
-		return distance
+		return self.genome == Genome.get_species(genome)
 
 	def calc_distance(self, lists, N):
 		number_of_excesses = 0
