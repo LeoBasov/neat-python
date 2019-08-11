@@ -131,33 +131,8 @@ class XOR_NEAT(NEAT):
 				continue
 
 			rest = int(round(0.5*len(species.networks)))
-			rest_real = 0
 
-			for i in range(rest):
-				rest_real = i - 1
-
-				if self.networks[species.networks[i]].fitness <= 0.75:
-					break
-
-			if rest_real >= 0:
-				for i in range(rest, len(species.networks)):
-					net_id  = random.choice(species.networks[:rest])
-					self.networks[species.networks[i]] = copy.deepcopy(self.networks[net_id])
-					self.mutator.mutate(self.networks[species.networks[i]])
-
-			else:
-				for i in range(len(species.networks)):
-					self.mutator.mutate(self.networks[species.networks[i]])
-
-	def evaluate_networks(self):
-		for species in self.species:
-			for net_id in species.networks:
-				mean_fitness = 0.0
-
-				for _ in range(self.number_sub_cycles):
-					mean_fitness += self.evaluate_network(self.networks[net_id])
-
-				self.networks[net_id].fitness = mean_fitness/(self.number_sub_cycles)
-
-		self.networks.sort()
-		self.networks.reverse()
+			for i in range(rest, len(species.networks)):
+				net_id  = random.choice(species.networks[:rest])
+				self.networks[species.networks[i]] = copy.deepcopy(self.networks[net_id])
+				self.mutator.mutate(self.networks[species.networks[i]])

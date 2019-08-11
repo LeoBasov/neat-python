@@ -59,7 +59,7 @@ class NEAT:
 				for _ in range(self.number_sub_cycles):
 					mean_fitness += self.evaluate_network(self.networks[net_id])
 
-				self.networks[net_id].fitness = mean_fitness/(self.number_sub_cycles*len(species.networks))
+				self.networks[net_id].fitness = mean_fitness/(self.number_sub_cycles)
 
 		self.networks.sort()
 		self.networks.reverse()
