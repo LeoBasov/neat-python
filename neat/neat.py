@@ -246,7 +246,7 @@ class NEAT:
 
 	def write_species(self, file_dir, step):
 		for species in self.species:
-			file_name = file_dir + '/species_' + str(species.id) + '.csv'
+			file_name = file_dir + '/species_' + str(species.genome) + '.csv'
 			row = [step, len(species.networks)]
 
 			with open(file_name, 'a') as csvfile:

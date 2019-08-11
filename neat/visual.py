@@ -23,18 +23,19 @@ class Visualizer:
                     loc_species[0].append(int(row[0]))
                     loc_species[1].append(float(row[1]))
 
-            species.append(loc_species)
+            species.append((loc_species, file.name.split('_')[2].split('.')[0]))
 
         self._plot_species(species, self.dir + '/' + fig_name)
 
     def _plot_species(self, species, fig_name):
         for spec in species:
-            plt.plot(spec[0], spec[1])
+            plt.plot(spec[0][0], spec[0][1], label = spec[1])
 
         plt.xlabel('Generation [-]')
         plt.ylabel('Size [-]')
 
         plt.title("Species plot")
+        plt.legend()
 
         plt.savefig(fig_name, dpi = 600)
 
