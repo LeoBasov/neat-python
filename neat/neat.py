@@ -258,7 +258,7 @@ class Species:
 		self.networks = []
 
 	def compare(self, genome):
-		N = max(len(self.genome.genes), len(genome.genes))
+		N = max(self.genome.unused_gene_index, genome.unused_gene_index)
 		lists = Genome.set_up_lists(self.genome, genome)
 		distance = self.calc_distance(lists, N)
 
