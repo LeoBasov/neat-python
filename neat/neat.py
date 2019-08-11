@@ -199,7 +199,7 @@ class NEAT:
 					min_distance_species[1] = species
 
 			if min_distance_species[0] > self.species_distance_max:
-				species  = Species(self.networks[i].genome)
+				species  = Species(copy.deepcopy(self.networks[i].genome))
 				species.networks.append(i)
 
 				self.species.append(species)
@@ -208,7 +208,7 @@ class NEAT:
 
 		for species in self.species:
 			if len(species.networks):
-				species.genome = self.networks[random.choice(species.networks)].genome
+				species.genome = copy.deepcopy(self.networks[random.choice(species.networks)].genome)
 
 	def write_to_file(self, step):
 		try:
