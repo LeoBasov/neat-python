@@ -9,7 +9,7 @@ def main():
 	parameters = {}
 
 	parameters["number_networks"] = 150
-	parameters["number_itterations"] = 2
+	parameters["number_itterations"] = 100
 	parameters["number_sub_cycles"] = 1
 
 	parameters["test_case_name"] = "XOR NETWORK EVOLUTION"
@@ -21,7 +21,7 @@ def main():
 	neat.start(**parameters)
 
 	visualizer.plot_fitness('fitness.csv', 'fitness.png')
-	visualizer.plot_species()
+	visualizer.plot_species('species.png')
 
 if __name__ == '__main__':
 	main()
