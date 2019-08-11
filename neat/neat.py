@@ -214,6 +214,7 @@ class NEAT:
 		try:
 			os.makedirs(self.file_dir)
 			os.makedirs(self.file_dir + '/species')
+			os.makedirs(self.file_dir + '/networks')
 
 		except FileExistsError:
 			pass
@@ -221,6 +222,36 @@ class NEAT:
 		finally:
 			self.write_fitness(self.file_dir, step)
 			self.write_species(self.file_dir + '/species', step)
+			self.write_networks(self.file_dir + '/networks', step)
+
+	def write_networks(self, file_dir, step):
+		for i in range(len(self.networks)):
+			file_name = file_dir + '/network' + str(i) + '.csv'
+			row = []
+
+			for species in self.species:
+				if i in species.networks:
+					row.append(int(species.id))
+
+			for gene in self.networks[i].genome.genes:
+				row.append(int(gene.used))
+
+				if gene.used:
+					row.append(int(gene.innovation))
+					row.append(int(gene.enabled))
+					row.append(int(gene.in_node_id))
+					row.append(int(gene.out_node_id))
+					row.append(float(gene.weight))
+				else:
+					row.append(int(gene.innovation))
+					row.append(int(gene.enabled))
+					row.append('None')
+					row.append('None')
+					row.append(float(gene.weight))
+
+			with open(file_name, 'a') as csvfile:
+				writer = csv.writer(csvfile)
+				writer.writerow(row)
 
 	def write_species(self, file_dir, step):
 		for species in self.species:
