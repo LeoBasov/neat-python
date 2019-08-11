@@ -32,10 +32,16 @@ class Genome:
 
 	def get_species(genome):
 		spec = "0"
+		spec_vals = []
 
 		for gene in genome.genes:
 			if gene.innovation > 0:
-				spec += str(gene.innovation)
+				spec_vals.append(gene.innovation)
+
+		spec_vals.sort()
+
+		for val in spec_vals:
+			spec += str(val)
 
 		return int(spec)
 
