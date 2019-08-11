@@ -219,7 +219,7 @@ class NEAT:
 			pass
 
 		finally:
-			self.write_networks(self.file_dir, step)
+			self.write_fitness(self.file_dir, step)
 			self.write_species(self.file_dir + '/species', step)
 
 	def write_species(self, file_dir, step):
@@ -231,8 +231,8 @@ class NEAT:
 				writer = csv.writer(csvfile)
 				writer.writerow(row)
 
-	def write_networks(self, file_dir, step):
-		file_name = file_dir + '/networks.csv'
+	def write_fitness(self, file_dir, step):
+		file_name = file_dir + '/fitness.csv'
 		row = []
 
 		for network in self.networks:
