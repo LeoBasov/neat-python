@@ -1,10 +1,42 @@
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
+from os import listdir
+from os.path import isfile, join
 
 class Visualizer:
     def __init__(self, dir = ''):
         self.dir = dir
+
+    def plot_species(self):
+        path = self.dir + '/species'
+        files = [f for f in listdir(path) if isfile(join(path, f))]
+        species = []
+
+        for file in files:
+            loc_species = [[], []]
+
+            with open(path + '/' + file, 'r') as file:
+                reader = csv.reader(file)
+
+                for row in reader:
+                    loc_species[0].append(int(row[0]))
+                    loc_species[1].append(float(row[1]))
+
+            species.append(loc_species)
+
+        self._plot_species(species)
+
+    def _plot_species(self, species):
+        for spec in species:
+            plt.plot(spec[0], spec[1])
+
+        plt.xlabel('Generation [-]')
+        plt.ylabel('Size [-]')
+
+        plt.title("Species plot")
+
+        plt.show()
 
     def plot_fitness(self, file_name, fig_name):
         percentiles = []

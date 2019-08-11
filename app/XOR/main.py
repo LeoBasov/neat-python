@@ -8,7 +8,7 @@ def main():
 	visualizer = Visualizer(neat.file_dir)
 	parameters = {}
 
-	parameters["number_networks"] = 100
+	parameters["number_networks"] = 150
 	parameters["number_itterations"] = 10
 	parameters["number_sub_cycles"] = 1
 
@@ -21,6 +21,7 @@ def main():
 	neat.start(**parameters)
 
 	visualizer.plot_fitness('networks.csv', 'fitness.png')
+	visualizer.plot_species()
 
 if __name__ == '__main__':
 	main()
