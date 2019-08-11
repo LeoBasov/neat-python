@@ -8,7 +8,7 @@ class Visualizer:
     def __init__(self, dir = ''):
         self.dir = dir
 
-    def plot_species(self):
+    def plot_species(self, fig_name):
         path = self.dir + '/species'
         files = [f for f in listdir(path) if isfile(join(path, f))]
         species = []
@@ -25,9 +25,9 @@ class Visualizer:
 
             species.append(loc_species)
 
-        self._plot_species(species)
+        self._plot_species(species, self.dir + '/' + fig_name)
 
-    def _plot_species(self, species):
+    def _plot_species(self, species, fig_name):
         for spec in species:
             plt.plot(spec[0], spec[1])
 
@@ -35,6 +35,8 @@ class Visualizer:
         plt.ylabel('Size [-]')
 
         plt.title("Species plot")
+
+        plt.savefig(fig_name, dpi = 600)
 
         plt.show()
 
