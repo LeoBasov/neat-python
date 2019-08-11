@@ -19,17 +19,17 @@ class XOR_Mutator(Mutator):
 		genome = network.genome
 		rand_num = random.random()
 
-		if rand_num < 0.01:
+		"""if rand_num < 0.01:
 			self.change_connection_status(genome)
-			network.set_up(genome)
+			network.set_up(genome)"""
 
-		if rand_num < 0.03 and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
+		"""if rand_num < 0.03 and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
 			self.add_new_node(genome)
 			network.set_up(genome)
 
 		elif rand_num < 0.05:
 			self.add_new_connection(genome)
-			network.set_up(genome)
+			network.set_up(genome)"""
 
 		if rand_num < 0.8:
 			rand_num = random.random()
@@ -107,41 +107,57 @@ class XOR_NEAT(NEAT):
 		self.input_node1 = genome.add_input_node()
 		self.input_node2 = genome.add_input_node()
 
+		self.hidden_node = genome.add_hidden_node()
+
 		self.output_node = genome.add_output_node()
 
 		genes.append(Gene(0               , self.output_node, 10 - 20*random.random()))
 		genes.append(Gene(self.input_node1, self.output_node, 10 - 20*random.random()))
 		genes.append(Gene(self.input_node2, self.output_node, 10 - 20*random.random()))
 
-		genome.set_genes(genes)
+		genes.append(Gene(0               , self.hidden_node, 10 - 20*random.random()))
+		genes.append(Gene(self.input_node1, self.hidden_node, 10 - 20*random.random()))
+		genes.append(Gene(self.input_node2, self.hidden_node, 10 - 20*random.random()))
 
-		genome.allocate_genes(number_genes)
+		genes.append(Gene(self.hidden_node, self.output_node, 10 - 20*random.random()))
+
+		genome.set_genes(genes)
 
 		return Network(genome)
 
 	def mutate(self):
-		new_networks =  copy.deepcopy(self.networks)
-
 		for species in self.species:
-			if species.counter < species.unimproved_life_time:
-				rest = int(round(0.5*len(species.networks)))
+			if len(species.networks) < 2:
+				continue
 
-				if rest:
-					for i in range(rest, len(species.networks)):
-						rand = random.random()
+			rest = int(round(0.5*len(species.networks)))
+			rest_real = 0
 
-						if rand < 0.25:
-							parent_genome = copy.deepcopy(new_networks[random.choice(species.networks[:rest])].genome)
-							new_networks[species.networks[i]].set_up(parent_genome)
-							self.mutator.mutate(new_networks[species.networks[i]])
-						else:
-							parent_genome_1 = copy.deepcopy(new_networks[random.choice(species.networks[:rest])].genome)
-							parent_genome_2 = copy.deepcopy(new_networks[random.choice(species.networks[:rest])].genome)
-							child_genome = copy.deepcopy(new_networks[species.networks[i]].genome)
+			for i in range(rest):
+				rest_real = i - 1
 
-							Genome.mate(parent_genome_1, parent_genome_2, child_genome)
+				if self.networks[species.networks[i]].fitness <= 0.75:
+					break
 
-							new_networks[species.networks[i]].set_up(child_genome)
-							self.mutator.mutate(new_networks[species.networks[i]])
+			if rest_real >= 0:
+				for i in range(rest, len(species.networks)):
+					net_id  = random.choice(species.networks[:rest])
+					self.networks[species.networks[i]] = copy.deepcopy(self.networks[net_id])
+					self.mutator.mutate(self.networks[species.networks[i]])
 
-		self.networks = new_networks
+			else:
+				for i in range(len(species.networks)):
+					self.mutator.mutate(self.networks[species.networks[i]])
+
+	def evaluate_networks(self):
+		for species in self.species:
+			for net_id in species.networks:
+				mean_fitness = 0.0
+
+				for _ in range(self.number_sub_cycles):
+					mean_fitness += self.evaluate_network(self.networks[net_id])
+
+				self.networks[net_id].fitness = mean_fitness/(self.number_sub_cycles)
+
+		self.networks.sort()
+		self.networks.reverse()
