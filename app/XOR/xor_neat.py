@@ -23,7 +23,7 @@ class XOR_Mutator(Mutator):
 			self.change_connection_status(genome)
 			network.set_up(genome)
 
-		if rand_num < 0.03 and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
+		elif rand_num < 0.03 and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
 			self.add_new_node(genome)
 			network.set_up(genome)
 
@@ -31,7 +31,7 @@ class XOR_Mutator(Mutator):
 			self.add_new_connection(genome)
 			network.set_up(genome)
 
-		if rand_num < 0.8:
+		elif rand_num < 0.8:
 			rand_num = random.random()
 
 			if rand_num < 0.1:
