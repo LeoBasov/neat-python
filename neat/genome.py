@@ -30,6 +30,15 @@ class Genome:
 	def reset():
 		Genome.GENE_INNOVATION_PAIRS = []
 
+	def get_species(genome):
+		spec = "0"
+
+		for gene in genome.genes:
+			if gene.innovation > 0:
+				spec += str(gene.innovation)
+
+		return int(spec)
+
 	def find_max_innovation(genom1, genom2):
 		max_innovation = 0
 
