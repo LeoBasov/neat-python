@@ -52,14 +52,13 @@ class NEAT:
 	#--------------------------------------------------------------
 
 	def evaluate_networks(self):
-		for species in self.species:
-			for net_id in species.networks:
-				mean_fitness = 0.0
+		for network in self.networks:
+			mean_fitness = 0.0
 
-				for _ in range(self.number_sub_cycles):
-					mean_fitness += self.evaluate_network(self.networks[net_id])
+			for _ in range(self.number_sub_cycles):
+				mean_fitness += self.evaluate_network(network)
 
-				self.networks[net_id].fitness = mean_fitness/(self.number_sub_cycles)
+			network.fitness = mean_fitness/(self.number_sub_cycles)
 
 		self.networks.sort()
 		self.networks.reverse()
@@ -169,9 +168,9 @@ class NEAT:
 			mean_fitness = 0
 
 			self.mutate()
+			self.evaluate_networks()
 			#self.evaluate_species()
 			self.sort_in_species()
-			self.evaluate_networks()
 			self.write_to_file(i)
 
 			for network in self.networks:
