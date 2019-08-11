@@ -226,7 +226,7 @@ class NEAT:
 
 	def write_networks(self, file_dir, step):
 		for i in range(len(self.networks)):
-			file_name = file_dir + '/network' + str(i) + '.csv'
+			file_name = file_dir + '/network_' + str(i) + '.csv'
 			row = []
 
 			for species in self.species:
@@ -245,8 +245,8 @@ class NEAT:
 				else:
 					row.append(int(gene.innovation))
 					row.append(int(gene.enabled))
-					row.append('None')
-					row.append('None')
+					row.append(0)
+					row.append(0)
 					row.append(float(gene.weight))
 
 			with open(file_name, 'a') as csvfile:
