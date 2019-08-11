@@ -213,12 +213,23 @@ class NEAT:
 	def write_to_file(self, step):
 		try:
 			os.makedirs(self.file_dir)
+			os.makedirs(self.file_dir + '/species')
 
 		except FileExistsError:
 			pass
 
 		finally:
 			self.write_networks(self.file_dir, step)
+			self.write_species(self.file_dir + '/species', step)
+
+	def write_species(self, file_dir, step):
+		for species in self.species:
+			file_name = file_dir + '/species_' + str(species.id) + '.csv'
+			row = [step, len(species.networks)]
+
+			with open(file_name, 'a') as csvfile:
+				writer = csv.writer(csvfile)
+				writer.writerow(row)
 
 	def write_networks(self, file_dir, step):
 		file_name = file_dir + '/networks.csv'
@@ -246,6 +257,7 @@ class Species:
 	def __init__(self, genome, c1 = 1.0, c2 = 1.0, c3 = 0.4, unimproved_life_time = 15):
 		Species.ID += 1
 
+		self.id = Species.ID
 		self.genome = genome
 		self.unimproved_life_time = unimproved_life_time
 		self.counter = 0
