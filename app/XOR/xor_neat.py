@@ -127,6 +127,23 @@ class XOR_NEAT(NEAT):
 			rest = int(round(0.5*len(species.networks)))
 
 			for i in range(rest, len(species.networks)):
-				net_id  = random.choice(species.networks[:rest])
-				self.networks[species.networks[i]] = copy.deepcopy(self.networks[net_id])
-				self.mutator.mutate(self.networks[species.networks[i]])
+				rand_num =  random.random()
+
+				if rand_num < 0.001:
+					parent_species = random.choice(self.species)
+
+					while len(parent_species.networks) < 2:
+						parent_species = random.choice(self.species)
+
+					parent_id_1 = random.choice(parent_species.networks[:rest])
+					parent_id_2 = random.choice(species.networks[:rest])
+
+					self.networks[species.networks[i]] = copy.deepcopy(self.networks[parent_id_2])
+
+					Genome.mate(self.networks[parent_id_2].genome, self.networks[parent_id_2].genome, self.networks[species.networks[i]].genome)
+					self.networks[species.networks[i]].set_up(self.networks[species.networks[i]].genome)
+
+				else:
+					net_id  = random.choice(species.networks[:rest])
+					self.networks[species.networks[i]] = copy.deepcopy(self.networks[net_id])
+					self.mutator.mutate(self.networks[species.networks[i]])
