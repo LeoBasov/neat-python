@@ -107,21 +107,15 @@ class XOR_NEAT(NEAT):
 		self.input_node1 = genome.add_input_node()
 		self.input_node2 = genome.add_input_node()
 
-		self.hidden_node = genome.add_hidden_node()
-
 		self.output_node = genome.add_output_node()
 
 		genes.append(Gene(0               , self.output_node, 10 - 20*random.random()))
 		genes.append(Gene(self.input_node1, self.output_node, 10 - 20*random.random()))
 		genes.append(Gene(self.input_node2, self.output_node, 10 - 20*random.random()))
 
-		genes.append(Gene(0               , self.hidden_node, 10 - 20*random.random()))
-		genes.append(Gene(self.input_node1, self.hidden_node, 10 - 20*random.random()))
-		genes.append(Gene(self.input_node2, self.hidden_node, 10 - 20*random.random()))
-
-		genes.append(Gene(self.hidden_node, self.output_node, 10 - 20*random.random()))
-
 		genome.set_genes(genes)
+
+		genome.allocate_genes(4)
 
 		return Network(genome)
 
