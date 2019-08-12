@@ -24,3 +24,8 @@ def modified_sigmoid(value):
 			return 1.0
 		else:
 			return 0.0
+
+def linear_interpol(x_0, y_0, x_1, y_1, x):
+	frac = (x - x_0)/(x_1 - x_0)
+
+	return y_0*(1.0 - frac) + y_1*frac
