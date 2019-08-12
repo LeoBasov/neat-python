@@ -57,8 +57,6 @@ class LIN_NEAT(NEAT):
 			fitness = 1.0/(1.0 + abs(tuple[0] - tuple[1]))
 			ret_tuples.append((fitness, tuple[1], tuple[0]))
 
-		print(ret_tuples)
-
 		return ret_tuples
 
 	def initialze_network(self, **kwargs):
