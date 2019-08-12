@@ -11,37 +11,6 @@ from neat.genome import Genome
 from neat.network import Network
 from neat.utility import modified_sigmoid
 
-class XOR_Mutator(Mutator):
-	def __init__(self):
-		super().__init__()
-
-	def mutate(self, network):
-		genome = network.genome
-		rand_num = random.random()
-
-		if rand_num < 0.01:
-			self.change_connection_status(genome)
-			network.set_up(genome)
-
-		elif rand_num < 0.03 and (len(genome.unused_nodes_ids) != genome.unused_nodes_current_id):
-			self.add_new_node(genome)
-			network.set_up(genome)
-
-		elif rand_num < 0.05:
-			self.add_new_connection(genome)
-			network.set_up(genome)
-
-		elif rand_num < 0.8:
-			rand_num = random.random()
-
-			if rand_num < 0.1:
-				self.set_new_connection_weight(genome)
-				network.set_up(genome)
-
-			else:
-				self.modify_connection_weight(genome)
-				network.set_up(genome)
-
 class XOR_NEAT(NEAT):
 	def __init__(self):
 		super().__init__()
@@ -50,8 +19,6 @@ class XOR_NEAT(NEAT):
 		self.input_node2 = 0
 
 		self.output_node = 0
-
-		self.mutator = XOR_Mutator()
 
 	def initiatlize(self, **kwargs):
 		self.number_itterations = kwargs["number_itterations"]

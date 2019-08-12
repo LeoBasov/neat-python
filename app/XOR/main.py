@@ -9,7 +9,7 @@ def main():
 	parameters = {}
 
 	parameters["number_networks"] = 150
-	parameters["number_itterations"] = 40
+	parameters["number_itterations"] = 1000
 	parameters["number_sub_cycles"] = 1
 
 	parameters["test_case_name"] = "XOR NETWORK EVOLUTION"

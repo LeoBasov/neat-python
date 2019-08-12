@@ -346,7 +346,7 @@ class Mutator:
 		self.probabilities.append(Probability(MutationType.NEW_CONNECTION, 0.05))
 		self.probabilities.append(Probability(MutationType.NEW_NODE, 0.03))
 		self.probabilities.append(Probability(MutationType.MODIFY_WEIGHT, 0.72))
-		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.0))
+		self.probabilities.append(Probability(MutationType.CHANGE_CONNECTION_STATUS, 0.01))
 		self.probabilities.append(Probability(MutationType.NEW_WEIGHT, 0.08))
 
 		self.probabilities.sort()
