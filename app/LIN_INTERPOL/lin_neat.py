@@ -55,7 +55,7 @@ class LIN_NEAT(NEAT):
 
 		for tuple in ret_vals:
 			fitness = 1.0/(1.0 + abs(tuple[0] - tuple[1]))
-			ret_tuples.append((fitness, tuple[1], tuple[0]))
+			ret_tuples.append((tuple[1], tuple[0], fitness))
 
 		return ret_tuples
 
