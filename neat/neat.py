@@ -50,8 +50,10 @@ class NEAT:
 		return [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
 	#--------------------------------------------------------------
-	
+
 	def initiatlize(self, **kwargs):
+		self.mutator.new_weight_range = kwargs['new_weight_range']
+
 		self.number_itterations = kwargs["number_itterations"]
 		self.number_sub_cycles = kwargs["number_sub_cycles"]
 

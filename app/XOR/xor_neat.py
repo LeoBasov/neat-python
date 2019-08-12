@@ -56,6 +56,7 @@ class XOR_NEAT(NEAT):
 	def initialze_network(self, **kwargs):
 		number_hidden_nodes = kwargs['number_hidden_nodes']
 		number_genes = kwargs['number_genes']
+		new_weight_range = kwargs['new_weight_range']
 		genome = Genome()
 		genes = []
 
@@ -66,9 +67,9 @@ class XOR_NEAT(NEAT):
 
 		self.output_node = genome.add_output_node()
 
-		genes.append(Gene(0               , self.output_node, 10 - 20*random.random()))
-		genes.append(Gene(self.input_node1, self.output_node, 10 - 20*random.random()))
-		genes.append(Gene(self.input_node2, self.output_node, 10 - 20*random.random()))
+		genes.append(Gene(0               , self.output_node, new_weight_range - 2*new_weight_range*random.random()))
+		genes.append(Gene(self.input_node1, self.output_node, new_weight_range - 2*new_weight_range*random.random()))
+		genes.append(Gene(self.input_node2, self.output_node, new_weight_range - 2*new_weight_range*random.random()))
 
 		genome.set_genes(genes)
 

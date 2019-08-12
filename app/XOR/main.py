@@ -18,6 +18,8 @@ def main():
 	parameters["number_hidden_nodes"] = 1
 	parameters["number_genes"] = 4
 
+	parameters["new_weight_range"] = 10
+
 	neat.start(**parameters)
 
 	visualizer.plot_fitness('fitness.csv', 'fitness.png')
