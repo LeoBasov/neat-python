@@ -16,8 +16,8 @@ def main():
 	parameters["test_case_specifics"] = ["Evolution of XOR network starting with minimal configuration", "Two input and one output node"]
 
 	parameters['number_output_nodes'] = 4
-	parameters["number_hidden_nodes"] = 1
-	parameters["number_genes"] = 4
+	parameters["number_hidden_nodes"] = 0
+	parameters["number_genes"] = 0
 
 	parameters["new_weight_range"] = 10
 
