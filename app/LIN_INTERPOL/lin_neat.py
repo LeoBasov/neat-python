@@ -24,10 +24,14 @@ class LIN_NEAT(NEAT):
 	def evaluate_network(self, network):
 		val_1 = random.random()
 		val_2 = random.random()
+		ret_val = 0
 
-		ret_val = self.execute_network(val_1, val_2, network)
+		ret_vals = self.execute_network(val_1, val_2, network)
 
-		return 0
+		for tuple in ret_vals:
+			ret_val += 1.0/(1.0 + abs(tuple[0] - tuple[1]))
+
+		return ret_val/len(ret_vals)
 
 	def execute_network(self, val_1, val_2, network):
 		input_vals = ((val_1, self.input_node1), (val_2, self.input_node2))
