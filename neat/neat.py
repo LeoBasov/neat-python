@@ -81,24 +81,45 @@ class NEAT:
 		self.species = rest_species
 
 	def mutate(self):
-		new_networks =  copy.deepcopy(self.networks)
+		copy_list = [elem for elem in self.species]
 
 		for species in self.species:
-			if species.counter < species.unimproved_life_time:
-				rest = int(round(0.5*len(species.networks)))
+			if len(species.networks) < 2:
+				continue
 
-				if rest:
-					for i in range(len(species.networks)):
-						parent_genome_1 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
-						parent_genome_2 = copy.deepcopy(new_networks[random.choice(species.networks)].genome)
-						child_genome = copy.deepcopy(new_networks[species.networks[i]].genome)
+			rest = int(round(0.5*len(species.networks)))
 
-						Genome.mate(parent_genome_1, parent_genome_2, child_genome)
+			for i in range(rest, len(species.networks)):
+				rand_num =  random.random()
 
-						new_networks[species.networks[i]].set_up(child_genome)
-						self.mutator.mutate(new_networks[species.networks[i]])
+				if len(self.species) > 2 and rand_num < 0.1 and species.genome != 0:
+					random.shuffle(copy_list)
+					found = False
 
-		self.networks = new_networks
+					for parent_species in copy_list:
+						if len(parent_species.networks) > 2 and parent_species.genome != species.genome and parent_species.genome != 0:
+							found = True
+							break
+
+					if not found:
+						continue
+
+					parent_id_1 = random.choice(parent_species.networks[:rest])
+					parent_id_2 = random.choice(species.networks[:rest])
+
+					self.networks[species.networks[i]] = copy.deepcopy(self.networks[parent_id_2])
+
+					genome_parent_1 = self.networks[parent_id_1].genome
+					genome_parent_2 = self.networks[parent_id_2].genome
+					genome_child = self.networks[species.networks[i]].genome
+
+					Genome.mate(genome_parent_1, genome_parent_2, genome_child)
+					self.networks[species.networks[i]].set_up(genome_child)
+
+				else:
+					net_id  = random.choice(species.networks[:rest])
+					self.networks[species.networks[i]] = copy.deepcopy(self.networks[net_id])
+					self.mutator.mutate(self.networks[species.networks[i]])
 
 	def start(self, **kwargs):
 		Genome.reset()
