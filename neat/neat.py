@@ -374,7 +374,7 @@ class Mutator:
 
 		for probability in self.probabilities:
 			if probability.value > rand_num:
-				if probability.type == MutationType.NEW_CONNECTION:
+				if probability.type == MutationType.NEW_CONNECTION and genome.unused_gene_index != len(genome.genes):
 					self.add_new_connection(genome)
 					network.set_up(genome)
 					break
