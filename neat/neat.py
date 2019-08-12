@@ -182,7 +182,7 @@ class NEAT:
 		fitness_real_calc = self.evaluate_best_network(best_network)
 
 		for vals in fitness_real_calc:
-			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(int(vals[0]), int(round(vals[1], 0)), round(vals[2], 3)))
+			print("EXPECTED VALUE: {} CALCULATED VALUE: {} FITNESS: {}".format(vals[0], vals[1], vals[2]))
 
 		print(80*"-")
 
