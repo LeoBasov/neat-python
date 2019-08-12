@@ -24,14 +24,14 @@ class LIN_NEAT(NEAT):
 	def evaluate_network(self, network):
 		val_1 = random.random()
 		val_2 = random.random()
-		ret_val = 0
+		fitness = 0
 
 		ret_vals = self.execute_network(val_1, val_2, network)
 
 		for tuple in ret_vals:
-			ret_val += 1.0/(1.0 + abs(tuple[0] - tuple[1]))
+			fitness += 1.0/(1.0 + abs(tuple[0] - tuple[1]))
 
-		return ret_val/len(ret_vals)
+		return fitness/len(ret_vals)
 
 	def execute_network(self, val_1, val_2, network):
 		input_vals = ((val_1, self.input_node1), (val_2, self.input_node2))
@@ -45,25 +45,21 @@ class LIN_NEAT(NEAT):
 
 		return ret_vals
 
-	"""def evaluate_best_network(self, network):
-		val1 = (0, 0)
-		val2 = (0, 1)
-		val3 = (1, 0)
-		val4 = (1, 1)
+	def evaluate_best_network(self, network):
+		val_1 = random.random()
+		val_2 = random.random()
+		fitness = 0
+		ret_tuples = []
 
-		turple1 = self.exceute_network(val1[0], val1[1], network)
-		turple2 = self.exceute_network(val2[0], val2[1], network)
-		turple3 = self.exceute_network(val3[0], val3[1], network)
-		turple4 = self.exceute_network(val4[0], val4[1], network)
+		ret_vals = self.execute_network(val_1, val_2, network)
 
-		return (turple1, turple2, turple3, turple4)
+		for tuple in ret_vals:
+			fitness = 1.0/(1.0 + abs(tuple[0] - tuple[1]))
+			ret_tuples.append((fitness, tuple[1], tuple[0]))
 
-	def exceute_network(self, val1, val2, network):
-		input_vals = ((val1, self.input_node1), (val2, self.input_node2))
-		output_vals = network.execute(input_vals)
+		print(ret_tuples)
 
-		return (float(val1 != val2), (output_vals[self.output_node]) ,(1.0 - abs(float(val1 != val2) - output_vals[self.output_node])))"""
-
+		return ret_tuples
 
 	def initialze_network(self, **kwargs):
 		number_hidden_nodes = kwargs['number_hidden_nodes']
@@ -78,12 +74,21 @@ class LIN_NEAT(NEAT):
 		self.input_node1 = genome.add_input_node()
 		self.input_node2 = genome.add_input_node()
 
-		for _ in range(number_output_nodes):
-			self.output_nodes.append(genome.add_output_node())
+		if not len(self.output_nodes):
+			for _ in range(number_output_nodes):
+				self.output_nodes.append(genome.add_output_node())
 
-			genes.append(Gene(0               , self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
-			genes.append(Gene(self.input_node1, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
-			genes.append(Gene(self.input_node2, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(0               , self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(self.input_node1, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(self.input_node2, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
+
+		else:
+			for _ in range(number_output_nodes):
+				genome.add_output_node()
+
+				genes.append(Gene(0               , self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(self.input_node1, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(self.input_node2, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
 
 		genome.set_genes(genes)
 
