@@ -81,12 +81,12 @@ class LIN_NEAT(NEAT):
 				genes.append(Gene(self.input_node2, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
 
 		else:
-			for _ in range(number_output_nodes):
+			for i in range(number_output_nodes):
 				genome.add_output_node()
 
-				genes.append(Gene(0               , self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
-				genes.append(Gene(self.input_node1, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
-				genes.append(Gene(self.input_node2, self.output_nodes[-1], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(0               , self.output_nodes[i], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(self.input_node1, self.output_nodes[i], new_weight_range - 2*new_weight_range*random.random()))
+				genes.append(Gene(self.input_node2, self.output_nodes[i], new_weight_range - 2*new_weight_range*random.random()))
 
 		genome.set_genes(genes)
 
