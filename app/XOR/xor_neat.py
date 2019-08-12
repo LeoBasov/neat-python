@@ -20,15 +20,6 @@ class XOR_NEAT(NEAT):
 
 		self.output_node = 0
 
-	def initiatlize(self, **kwargs):
-		self.number_itterations = kwargs["number_itterations"]
-		self.number_sub_cycles = kwargs["number_sub_cycles"]
-
-		self.test_case_name = kwargs["test_case_name"]
-		self.test_case_specifics = kwargs["test_case_specifics"]
-
-		self.__initialze_networks(kwargs["number_networks"], kwargs["number_hidden_nodes"], kwargs["number_genes"])
-
 	def evaluate_network(self, network):
 		val1 = (0, 0)
 		val2 = (0, 1)
@@ -61,11 +52,10 @@ class XOR_NEAT(NEAT):
 
 		return (float(val1 != val2), (output_vals[self.output_node]) ,(1.0 - abs(float(val1 != val2) - output_vals[self.output_node])))
 
-	def __initialze_networks(self, number_networks, number_hidden_nodes, number_genes):
-		for _ in range(number_networks):
-			self.networks.append(self.__initialze_network(number_hidden_nodes, number_genes))
 
-	def __initialze_network(self, number_hidden_nodes, number_genes):
+	def initialze_network(self, **kwargs):
+		number_hidden_nodes = kwargs['number_hidden_nodes']
+		number_genes = kwargs['number_genes']
 		genome = Genome()
 		genes = []
 

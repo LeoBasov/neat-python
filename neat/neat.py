@@ -40,7 +40,7 @@ class NEAT:
 
 	#--------------------------------------------------------------
 	#To be implemented
-	def initiatlize(self, **kwargs):
+	def initialze_network(self, **kwargs):
 		pass
 
 	def evaluate_network(self, network):
@@ -50,6 +50,21 @@ class NEAT:
 		return [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
 
 	#--------------------------------------------------------------
+	
+	def initiatlize(self, **kwargs):
+		self.number_itterations = kwargs["number_itterations"]
+		self.number_sub_cycles = kwargs["number_sub_cycles"]
+
+		self.test_case_name = kwargs["test_case_name"]
+		self.test_case_specifics = kwargs["test_case_specifics"]
+
+		self.initialze_networks(**kwargs)
+
+	def initialze_networks(self, **kwargs):
+		number_networks = kwargs['number_networks']
+
+		for _ in range(number_networks):
+			self.networks.append(self.initialze_network(**kwargs))
 
 	def evaluate_networks(self):
 		for network in self.networks:
