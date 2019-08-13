@@ -9,15 +9,15 @@ def main():
 	parameters = {}
 
 	parameters["number_networks"] = 150
-	parameters["number_itterations"] = 1
+	parameters["number_itterations"] = 500
 	parameters["number_sub_cycles"] = 1
 
-	parameters["test_case_name"] = "XOR NETWORK EVOLUTION"
-	parameters["test_case_specifics"] = ["Evolution of XOR network starting with minimal configuration", "Two input and one output node"]
+	parameters["test_case_name"] = "LINEAR INTERPOLATION NETWORK EVOLUTION"
+	parameters["test_case_specifics"] = ["Evolution of linear interpolation network starting with minimal configuration.", "Two input and variable output nodes."]
 
-	parameters['number_output_nodes'] = 4
-	parameters["number_hidden_nodes"] = 0
-	parameters["number_genes"] = 0
+	parameters['number_output_nodes'] = 1
+	parameters["number_hidden_nodes"] = 1
+	parameters["number_genes"] = 4
 
 	parameters["new_weight_range"] = 10
 
