@@ -35,7 +35,7 @@ class Visualizer:
         plt.ylabel('Size [-]')
 
         plt.title("Species plot")
-        plt.legend()
+        #plt.legend()
 
         plt.savefig(fig_name, dpi = 600)
 

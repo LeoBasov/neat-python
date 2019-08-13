@@ -30,6 +30,13 @@ class Genome:
 	def reset():
 		Genome.GENE_INNOVATION_PAIRS = []
 
+	def exists_in_revers(gene):
+		for pair in Genome.GENE_INNOVATION_PAIRS:
+			if pair[0].out_node_id == gene.in_node_id and pair[0].in_node_id == gene.out_node_id:
+				return True
+
+		return False
+
 	def get_species(genome):
 		spec = "0"
 		spec_vals = []
@@ -309,6 +316,8 @@ class Genome:
 
 	def add_new_node(self, gene_id):
 		if self.genes[gene_id].enabled and self.genes[gene_id].used and ((self.unused_gene_index + 1) < len(self.genes)):
+			genems = copy.deepcopy(self.genes)
+
 			self.genes[gene_id].enabled = False
 			in_node_id = self.genes[gene_id].in_node_id
 			out_node_id = self.genes[gene_id].out_node_id
@@ -335,9 +344,15 @@ class Genome:
 
 			self.unused_gene_index += 2
 
+			if Genome.exists_in_revers(gene1) or Genome.exists_in_revers(gene2):
+				self.genes[gene_id].enabled = True
+				self.unused_nodes_current_id -= 1
+				self.unused_gene_index -= 2
+				return
+
 			self.add_gene(gene1)
 			self.add_gene(gene2)
-
+			
 			self.update_levels()
 
 	def update_levels(self):
