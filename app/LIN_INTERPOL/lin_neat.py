@@ -29,9 +29,14 @@ class LIN_NEAT(NEAT):
 		ret_vals = self.execute_network(val_1, val_2, network)
 
 		for tuple in ret_vals:
-			fitness += 1.0/(1.0 + abs(tuple[0] - tuple[1]))
+			fitness += self.calc_fitness(tuple[0], tuple[1])
 
 		return fitness/len(ret_vals)
+
+	def calc_fitness(self, expected_val, calculated_val):
+		diff = min(abs(expected_val - calculated_val), expected_val)
+
+		return (expected_val - diff)/expected_val
 
 	def execute_network(self, val_1, val_2, network):
 		input_vals = ((val_1, self.input_node1), (val_2, self.input_node2))
@@ -54,7 +59,7 @@ class LIN_NEAT(NEAT):
 		ret_vals = self.execute_network(val_1, val_2, network)
 
 		for tuple in ret_vals:
-			fitness = 1.0/(1.0 + abs(tuple[0] - tuple[1]))
+			fitness = self.calc_fitness(tuple[0], tuple[1])
 			ret_tuples.append((tuple[1], tuple[0], fitness))
 
 		return ret_tuples
